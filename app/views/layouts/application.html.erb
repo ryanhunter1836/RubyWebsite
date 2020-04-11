@@ -11,7 +11,7 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= render 'layouts/shim' %>
   </head>
-  <body>
+  <body class="<%= controller_name %> <%= action_name %>">
     <%= render 'layouts/header' %>
     <div class="container">
       <% flash.each do |message_type, message| %>

@@ -1,0 +1,29 @@
+<% provide(:title, "Add Vehicle") %>
+<div class="row">
+    <div class="col-12">
+        <h1>Add a new vehicle</h1>
+    </div>
+    <div class="container full-width">
+        <div class="col-12">
+            <div id="smartwizard">
+                <ul>
+                    <li><a href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
+                    <li><a href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
+                    <li><a href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
+                </ul>
+                
+                <div>
+                    <div id="step-1" class="">
+                        <%= render 'vehicle' %>
+                    </div>
+                    <div id="step-2" class="">
+                        <%= render 'quality' %>
+                    </div>
+                    <div id="step-3" class="">
+                        <%= render 'frequency' %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
