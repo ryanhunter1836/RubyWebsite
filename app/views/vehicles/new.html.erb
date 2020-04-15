@@ -5,25 +5,44 @@
     </div>
     <div class="container full-width">
         <div class="col-12">
-            <div id="smartwizard">
-                <ul>
-                    <li><a href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
-                    <li><a href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
-                    <li><a href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
-                </ul>
-                
-                <div>
-                    <div id="step-1" class="">
-                        <%= render 'vehicle' %>
-                    </div>
-                    <div id="step-2" class="">
-                        <%= render 'quality' %>
-                    </div>
-                    <div id="step-3" class="">
-                        <%= render 'frequency' %>
+            <%= form_with model: @order_option, url: vehicles_path do |f| %>
+                <div id="smartwizard">
+                    <ul>
+                        <li><a href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
+                        <li><a href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
+                        <li><a href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
+                    </ul>
+                    <div>
+                        <div id="step-1" class="row mt-4">
+                            <div class="col-md-6 offset-md-3">
+                                <h1>Select Vehicle</h1>
+                                <%= f.label :Make %>
+                                <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), id: "make-selector", include_blank: true %><br>
+                                <%= f.label :Model %>
+                                <%= select_tag "", "", id: "model-selector", include_blank: true %>
+                                <%= f.label :Year %>
+                                <%= f.select :vehicle_id, "vehicle_id", id: "year-selector", include_blank: true %>
+                            </div> 
+                        </div>
+                        <div id="step-2" class="row mt-4">
+                            <div class="col-md-6 offset-md-3">
+                                <h1>Select Quality</h1>
+                                <%= f.radio_button :quality, 'good' %> Good<br />
+                                <%= f.radio_button :quality, 'better' %> Better<br />
+                                <%= f.radio_button :quality, 'best' %> Best<br />
+                            </div> 
+                        </div>
+                        <div id="step-3" class="row mt-4">
+                            <div class="col-md-6 offset-md-3">
+                                <h1>Select Frequency</h1>
+                                <%= f.radio_button :frequency, 'three_months' %> Every 3 Months<br />
+                                <%= f.radio_button :frequency, 'six_months' %> Every 6 Months<br />
+                                <%= f.submit "Finish", class: "btn btn-primary" %>
+                            </div> 
+                        </div>
                     </div>
                 </div>
-            </div>
+            <% end %>
         </div>
     </div>
 </div>

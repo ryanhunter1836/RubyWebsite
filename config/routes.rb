@@ -10,7 +10,9 @@ Rails.application.routes.draw do
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
   resources :users
+  resources :vehicles
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
-  resources :vehicles,            only: [:new, :edit, :delete]
+  get '/get_models_by_make', to: 'vehicles#get_models_by_make'
+  get '/get_years_by_model', to: 'vehicles#get_years_by_model'
 end
