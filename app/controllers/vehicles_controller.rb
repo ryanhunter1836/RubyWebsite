@@ -1,4 +1,6 @@
 class VehiclesController < ApplicationController
+    before_action :logged_in_user, only: [:create, :edit, :update ]
+    before_action :correct_user, only: :destroy
 
     #Renders the 'new' page.  Not actually bound to a model in this case
     def new
@@ -9,18 +11,21 @@ class VehiclesController < ApplicationController
     #Recieves the form results
     def create
         @order_option = current_user.order_options.build(add_vehicle_params)
-        if @order_option.save!
-            flash[:info] = "Successfully added vehicle"
+        if @order_option.save
+            flash[:info] = "Successfully added subscription"
         else
             flash[:danger] = "Could not save"
         end
-        redirect_to users_path
+        redirect_to user_path(current_user.id)
     end
 
     def edit
     end
 
-    def delete
+    def destroy
+        @subscription.destroy
+        flash[:success] = "Cancelled Subscription"
+        redirect_to user_path(current_user.id)
     end
 
     #Ajax calls
@@ -47,5 +52,10 @@ class VehiclesController < ApplicationController
         
         def add_vehicle_params
             params.require(:order_option).permit(:vehicle_id, :quality, :frequency, :user_id)
+        end
+
+        def correct_user
+            @subscription = current_user.order_options.find_by(id: params[:id])
+            redirect_to root_url if @subscription.nil?
         end
 end
