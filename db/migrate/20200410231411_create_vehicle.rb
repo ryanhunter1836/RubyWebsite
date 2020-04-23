@@ -14,7 +14,7 @@ class CreateVehicle < ActiveRecord::Migration[6.0]
       t.datetime "created_at", precision: 6, null: false
       t.datetime "updated_at", precision: 6, null: false
       t.datetime "next_delivery", precision: 6
-      t.belongs_to :user
+      t.belongs_to :shopping_cart
       t.belongs_to :vehicle, index: { unique: true }, foreign_key: true
     end
   end

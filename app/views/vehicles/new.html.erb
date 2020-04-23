@@ -11,6 +11,7 @@
                         <li><a href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
                         <li><a href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
                         <li><a href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
+                        <li><a href="#step-3">Step 4<br /><small>Review</small></a></li>
                     </ul>
                     <div>
                         <div id="step-1" class="row mt-4">
@@ -33,6 +34,13 @@
                             </div> 
                         </div>
                         <div id="step-3" class="row mt-4">
+                            <div class="col-md-6 offset-md-3">
+                                <h1>Select Frequency</h1>
+                                <%= f.radio_button :frequency, 'three_months' %> Every 3 Months<br />
+                                <%= f.radio_button :frequency, 'six_months' %> Every 6 Months<br />
+                            </div> 
+                        </div>
+                        <div id="step-4" class="row mt-4">
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Frequency</h1>
                                 <%= f.radio_button :frequency, 'three_months' %> Every 3 Months<br />
