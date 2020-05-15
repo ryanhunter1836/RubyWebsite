@@ -1,23 +1,53 @@
 <% provide(:title, "Home") %>
-<div class="center jumbotron">
-  <h1>Welcome to Wipers to You!</h1>
-</div>
-<div class="home-page">
+<div class="home-page"></div>
+  <h1>How It Works...</h1>
   <div class="row">
-    <div class="col-sm-5 offset-1 mr-2 text-center border border-secondary">
-      <div class="m-3">  
-        <h1>Returning User</h1>
-        <%= render 'sessions/new' %>
-      </div>
+    <div class="col-3 text-center">
+      <i class="material-icons md-64 md-dark">directions_car</i>
+      <h5>Enter Vehicle Information</h5>
+      <p>Enter information about your car.  We'll find the right sized wipers for you</p>
     </div>
-    <div class="col-sm-5 ml-2 text-center border border-secondary">
-      <div class="m-3">
-        <h1>New User</h1>
-        <p>Join our subscription service and shipping on
-          your first order is free!
-        </p>
-        <a class="btn btn-primary" href="<%=signup_path%>" role="button">Get Started!</a>
-      </div>
+    <div class="col-3 text-center">
+      <i class="material-icons md-64 md-dark">today</i>
+      <h5>Enter Frequency</h5>
+      <p>Select how often you would like a new set of wipers sent to you</p>
+    </div>
+    <div class="col-3 text-center">
+      <i class="material-icons md-64 md-dark">check_box</i>
+      <h5>Select Quality</h5>
+      <p>Determine the type of wiper that best fits your needs</p>
+    </div>
+    <div class="col-3 text-center">
+      <i class="material-icons md-64 md-dark">local_shipping</i>
+      <h5>Automate Delivery</h5>
+      <p>The correct size and type of wiper is shipped to you on your schedule</p>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-6 offset-3 text-center">
+      <h1>We Make It Easy!</h1>
+      <%= link_to 'Start Free Trial', new_vehicle_path, class: "btn btn-primary"%>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6 offset-3 text-center">
+      <p>We will ship a brand new set of wipers to your door just when your existing wipers are starting to wear out!</p>
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col-3 offset-1 text-center border border-secondary rounded p-1">
+      <p>No need to remeber to replace your wipers</p>
+    </div>
+    <div class="col-3 text-center border border-secondary rounded p-1 ml-5 mr-5">
+      <p>No need to keep looking up the right size wipers for your car</p>
+    </div>
+    <div class="col-3 text-center border border-secondary rounded p-1">
+      <p>No need to get caught in the rain or snow with streaky wipers</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <%= link_to 'Walk Me Through The Process', new_vehicle_path, class: "btn btn-primary"%>
     </div>
   </div>
 </div>

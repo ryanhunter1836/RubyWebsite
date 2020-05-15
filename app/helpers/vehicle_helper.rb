@@ -24,4 +24,17 @@ module VehicleHelper
         year = vehicle.year
         "#{year} #{make} #{model}"
     end
+    
+
+    def get_vehicle_make(vehicle_id)
+        Vehicle.find(vehicle_id).make
+    end
+
+    def get_vehicle_model(vehicle_id)
+        Vehicle.find(vehicle_id).model
+    end
+
+    def get_vehicle_year(vehicle_id)
+        Vehicle.find(vehicle_id).year
+    end
 end

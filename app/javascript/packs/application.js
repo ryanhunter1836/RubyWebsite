@@ -22,9 +22,15 @@ $( document ).on('turbolinks:load', function() {
   $('#smartwizard').smartWizard({
     theme: 'arrows',
     transitionEffect: 'fade',
+    keyNavigation: false,
+    autoAdjustHeight: false,
     toolbarSettings: {
       toolbarPosition: 'bottom',
       toolbarButtonPosition: 'left'
+    },
+    anchorSettings: {
+      removeDoneStepOnNavigateBack: true,
+      anchorClickable: false
     }
   });
 })
@@ -34,7 +40,7 @@ $( document ).on('turbolinks:load', function() {
     var make_id = $(this).val();
     $.get( "/get_models_by_make", { id: make_id }, function( data ) {
       $("#model-selector").html("");
-      $("#order_option_vehicle_id").html("");
+      $("#vehicle_id").html("");
       //Include a blank row
       $("#model-selector").append( "<option value label=\" \"</option>" );
       $.each( data, function( index, value ) {
@@ -49,11 +55,11 @@ $( document ).on('turbolinks:load', function() {
   $('#model-selector').change(function() {
     var make_id = $(this).val();
     $.get( "/get_years_by_model", { id: make_id }, function( data ) {
-      $("#order_option_vehicle_id").html("");
+      $("#vehicle_id").html("");
       //Include a blank row
-      $("#order_option_vehicle_id").append( "<option value label=\" \"</option>" );
+      $("#vehicle_id").append( "<option value label=\" \"</option>" );
       $.each( data, function( index, value ) {
-        $("#order_option_vehicle_id").append( "<option value='" + value.id + "'>" + value.year + "</option>" );
+        $("#vehicle_id").append( "<option value='" + value.id + "'>" + value.year + "</option>" );
       });
     });
   });

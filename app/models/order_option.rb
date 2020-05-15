@@ -1,6 +1,5 @@
 class OrderOption < ApplicationRecord
     belongs_to :shopping_cart
-    validates :user_id, presence: true
     has_one :vehicle
     before_save :update_next_delivery
 

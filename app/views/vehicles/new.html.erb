@@ -1,4 +1,5 @@
 <% provide(:title, "Add Vehicle") %>
+<%= javascript_include_tag "update" %>
 <div class="row">
     <div class="col-12">
         <h1>Add a new vehicle</h1>
@@ -11,41 +12,93 @@
                         <li><a href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
                         <li><a href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
                         <li><a href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
-                        <li><a href="#step-3">Step 4<br /><small>Review</small></a></li>
+                        <li><a href="#step-4">Step 4<br /><small>Review</small></a></li>
                     </ul>
                     <div>
                         <div id="step-1" class="row mt-4">
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Vehicle</h1>
                                 <%= f.label :Make %>
-                                <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), id: "make-selector", include_blank: true %><br>
+                                <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), id: "make-selector", include_blank: true, class: 'form-control', onChange: 'updateMake(this.options[this.selectedIndex].text)' %><br>
                                 <%= f.label :Model %>
-                                <%= select_tag "", "", id: "model-selector", include_blank: true %>
+                                <%= select_tag "", "", id: "model-selector", include_blank: true, class: 'form-control', onChange: 'updateModel(this.options[this.selectedIndex].text)' %>
                                 <%= f.label :Year %>
-                                <%= f.select :vehicle_id, "vehicle_id", id: "year-selector", include_blank: true %>
+                                <%= f.select :vehicle_id, 'vehicle_id', { include_blank: true }, { class: 'form-control', onChange: 'updateYear(this.options[this.selectedIndex].text)'} %>
                             </div> 
                         </div>
                         <div id="step-2" class="row mt-4">
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Quality</h1>
-                                <%= f.radio_button :quality, 'good' %> Good<br />
-                                <%= f.radio_button :quality, 'better' %> Better<br />
-                                <%= f.radio_button :quality, 'best' %> Best<br />
+                                <div class="btn-group-toggle row" data-toggle="buttons">
+                                    <label class="btn btn-primary btn-lg active col-3">
+                                        <%= f.radio_button :quality, 'good', onChange: 'updateQuality(this.value)' %>Good
+                                    </label>
+                                    <label class="btn btn-primary btn-lg col-3 offset-1">
+                                        <%= f.radio_button :quality, 'better', onChange: 'updateQuality(this.value)' %>Better
+                                    </label>
+                                    <label class="btn btn-primary btn-lg col-3 offset-1">
+                                        <%= f.radio_button :quality, 'best', onChange: 'updateQuality(this.value)' %>Best
+                                    </label>
+                                  </div>
                             </div> 
                         </div>
                         <div id="step-3" class="row mt-4">
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Frequency</h1>
-                                <%= f.radio_button :frequency, 'three_months' %> Every 3 Months<br />
-                                <%= f.radio_button :frequency, 'six_months' %> Every 6 Months<br />
+                                <div class="btn-group-toggle row" data-toggle="buttons">
+                                    <label class="btn btn-primary btn-lg active col-5">
+                                        <%= f.radio_button :frequency, 'three_months', onChange: 'updateFrequency(this.value)' %> Every 3 Months
+                                    </label>
+                                    <label class="btn btn-primary btn-lg col-5 offset-1">
+                                        <%= f.radio_button :frequency, 'six_months', onChange: 'updateFrequency(this.value)' %> Every 6 Months
+                                    </label>
+                                </div>
                             </div> 
                         </div>
                         <div id="step-4" class="row mt-4">
-                            <div class="col-md-6 offset-md-3">
-                                <h1>Select Frequency</h1>
-                                <%= f.radio_button :frequency, 'three_months' %> Every 3 Months<br />
-                                <%= f.radio_button :frequency, 'six_months' %> Every 6 Months<br />
-                                <%= f.submit "Finish", class: "btn btn-primary" %>
+                            <div class="col-md-10 offset-md-1">
+                                <h1>Confirm Details</h1>
+                                    <div class="row mb-4">
+                                        <% if @order_options.any? %>
+                                        <%= render partial: "order_option", collection: (@order_options) %>
+                                        <% end %>
+                                        <div id="preview-container" class="col-4 border border-danger">
+                                            <h4><b>Car Info # </b></h4>
+                                            <div class="ml-2 mb-2">
+                                                <table style="width:100%">
+                                                    <tr>
+                                                        <td><b>Year:</b></td>
+                                                        <td id="preview-year"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Make:</b></td>
+                                                        <td id="preview-make"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Model:</b></td>
+                                                        <td id="preview-model"></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <h4><b>Wiper Info</b></h4>
+                                            <div class="ml-2 mb-2">
+                                                <table style="width:100%">
+                                                    <tr>
+                                                        <td><b>Frequency:</b></td>
+                                                        <td id="preview-frequency"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Quality:</b></td>
+                                                        <td id="preview-quality"></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% if @order_options.count < 2 %>
+                                    <%= f.submit "Add Another Car", class: "btn btn-primary" %>
+                                <% end %>
+                                <%= f.submit "Next", formaction: shopping_carts_path, class: "btn btn-success" %>
                             </div> 
                         </div>
                     </div>

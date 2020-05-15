@@ -5,18 +5,24 @@ class VehiclesController < ApplicationController
     #Renders the 'new' page.  Not actually bound to a model in this case
     def new
         @makes = Vehicle.select(:id,:make).group(:id,:make)
-        @order_option = OrderOption.new
+        @order = OrderOption.new
+        @order_options = current_shopping_cart.order_options.all
     end
 
-    #Recieves the form results
+    #Recieves the form results.  Adds the vehicle to the shopping cart then renders the add vehicle page again
     def create
-        @order_option = current_user.order_options.build(add_vehicle_params)
-        if @order_option.save
-            flash[:info] = "Successfully added subscription"
+        @order = current_shopping_cart.order_options.build(add_vehicle_params)
+        if @order.save!
+            flash[:info] = "Successfully added vehicle"
         else
-            flash[:danger] = "Could not save"
+            flash[:danger] = "Could not add vehicle"
         end
-        redirect_to user_path(current_user.id)
+
+        @makes = Vehicle.select(:id,:make).group(:id,:make)
+        @order_option = OrderOption.new
+        @shopping_cart = current_shopping_cart.order_options.all
+        
+        redirect_to new_vehicle_path
     end
 
     def edit
@@ -46,7 +52,6 @@ class VehiclesController < ApplicationController
             format.json { render :json => @years }
         end
     end
-
 
     private 
         
