@@ -1,6 +1,5 @@
 class VehiclesController < ApplicationController
-    before_action :logged_in_user, only: [:create, :edit, :update ]
-    before_action :correct_user, only: :destroy
+    before_action :logged_in_user, only: [:new, :create, :edit, :update]
 
     #Renders the 'new' page.  Not actually bound to a model in this case
     def new
@@ -28,12 +27,6 @@ class VehiclesController < ApplicationController
     def edit
     end
 
-    def destroy
-        @subscription.destroy
-        flash[:success] = "Cancelled Subscription"
-        redirect_to user_path(current_user.id)
-    end
-
     #Ajax calls
     def get_models_by_make
         make = Vehicle.find(params[:id]).make
@@ -57,10 +50,5 @@ class VehiclesController < ApplicationController
         
         def add_vehicle_params
             params.require(:order_option).permit(:vehicle_id, :quality, :frequency, :user_id)
-        end
-
-        def correct_user
-            @subscription = current_user.order_options.find_by(id: params[:id])
-            redirect_to root_url if @subscription.nil?
         end
 end
