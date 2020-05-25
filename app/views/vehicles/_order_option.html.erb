@@ -1,0 +1,32 @@
+<div class="review col-4">
+    <h4><b>Car Info # </b></h4>
+    <div class="ml-2 mb-2">
+        <table style="width:100%">
+            <tr>
+                <td><b>Year:</b></td>
+                <td><%= get_vehicle_year(order_option.vehicle_id) %></td>
+            </tr>
+            <tr>
+                <td><b>Make:</b></td>
+                <td><%= get_vehicle_make(order_option.vehicle_id) %></td>
+            </tr>
+            <tr>
+                <td><b>Model:</b></td>
+                <td><%= get_vehicle_model(order_option.vehicle_id) %></td>
+            </tr>
+        </table>
+    </div>
+    <h4><b>Wiper Info</b></h4>
+    <div class="ml-2 mb-2">
+        <table style="width:100%">
+            <tr>
+                <td><b>Frequency:</b></td>
+                <td><%= get_frequency_string(order_option.frequency) %></td>
+            </tr>
+            <tr>
+                <td><b>Quality:</b></td>
+                <td><%= get_quality_string(order_option.quality) %></td>
+            </tr>
+        </table>
+    </div>
+</div>

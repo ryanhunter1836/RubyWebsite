@@ -1,0 +1,10 @@
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-header"><%= get_vehicle_name(order_option.vehicle_id) %></h5>
+        <p class="card-text"><b>Quality:</b> <%= get_quality_string(order_option.quality) %></p>
+        <p class="card-text"><b>Frequency:</b> <%= get_frequency_string(order_option.frequency) %></p>
+        <p class="card-text"><b>Next Shipment:</b> <%= order_option.next_delivery.strftime("%m/%d/%Y") %></p>
+        <a href="#" class="btn btn-success">Reorder Now</a>
+        <%= link_to "Cancel Subscription", vehicle_path(order_option.id), method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' %>
+    </div>
+</div>

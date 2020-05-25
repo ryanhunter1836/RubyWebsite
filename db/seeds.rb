@@ -1,3 +1,5 @@
+require 'csv'
+
 # Create a main sample user.
 User.create!(name:  "Example User",
              email: "example@railstutorial.org",
@@ -18,4 +20,13 @@ User.create!(name:  "Example User",
               password_confirmation: password,
               activated: true,
               activated_at: Time.zone.now)
+end
+
+CSV.foreach(Rails.root.join('lib', 'seeds', 'sample_wipersizes.csv'), headers: true) do |row|
+  Vehicle.create(make: row[0],
+                 model: row[1],
+                 year: row[2],
+                 driver_front: row[3].to_i,
+                 passenger_front: row[4].to_i
+  )
 end
