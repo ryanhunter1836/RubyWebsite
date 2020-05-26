@@ -1,5 +1,5 @@
 class VehiclesController < ApplicationController
-    before_action :logged_in_user, only: [:new, :create, :edit, :update]
+    before_action :logged_in_user, only: [:edit, :update]
 
     #Renders the 'new' page.  Not actually bound to a model in this case
     def new
@@ -10,8 +10,8 @@ class VehiclesController < ApplicationController
 
     #Recieves the form results.  Adds the vehicle to the shopping cart then renders the add vehicle page again
     def create
-        @order = current_shopping_cart.order_options.build(add_vehicle_params)
-        if @order.save!
+        current_order = current_shopping_cart.order_options.build(add_vehicle_params)
+        if current_order.save
             flash[:info] = "Successfully added vehicle"
         else
             flash[:danger] = "Could not add vehicle"
@@ -49,6 +49,30 @@ class VehiclesController < ApplicationController
     private 
         
         def add_vehicle_params
-            params.require(:order_option).permit(:vehicle_id, :quality, :frequency, :user_id)
+            params.require(:order_option).permit(:vehicle_id, :quality, :frequency)
         end
-end
+
+        #Returns the current shopping cart
+        def current_shopping_cart
+            if logged_in?
+                #Create a new shopping cart
+                if current_user.shopping_cart.nil?
+                    current_user.shopping_cart = ShoppingCart.create
+                    @current_shopping_cart = current_user.shopping_cart
+                else
+                    @current_shopping_cart ||= current_user.shopping_cart
+                end
+            end
+            #User is shopping anonymously
+            else
+                #Check if there is already a shopping cart associated with this session
+                if session[:shopping_cart]
+                    @current_shopping_cart ||= ShoppingCart.find(session[:shopping_cart])
+                #If not, create a new cart and associate it with this session
+                else
+                    @current_shopping_cart = ShoppingCart.create
+                    session[:shopping_cart] = @current_shopping_cart.id
+                    @current_shopping_cart
+                end
+            end
+        end

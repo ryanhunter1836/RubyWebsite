@@ -1,33 +1,32 @@
 <% provide(:title, "Add Vehicle") %>
 <%= javascript_include_tag "update" %>
-<%= javascript_include_tag 'https://checkout.stripe.com/checkout.js' %>
 <div class="row">
     <div class="col-12">
         <h1>Add a new vehicle</h1>
     </div>
     <div class="container full-width">
         <div class="col-12">
-            <%= form_with model: @order_option, url: vehicles_path do |f| %>
+            <%= form_with model: @order, url: vehicles_path do |f| %>
                 <div id="smartwizard">
-                    <ul>
-                        <li><a href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
-                        <li><a href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
-                        <li><a href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
-                        <li><a href="#step-4">Step 4<br /><small>Review</small></a></li>
+                    <ul class="nav">
+                        <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
+                        <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
+                        <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
+                        <li><a class="nav-link" href="#step-4">Step 4<br /><small>Review</small></a></li>
                     </ul>
-                    <div>
-                        <div id="step-1" class="row mt-4">
+                    <div class="tab-content">
+                        <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Vehicle</h1>
                                 <%= f.label :Make %>
-                                <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), id: "make-selector", include_blank: true, class: 'form-control', onChange: 'updateMake(this.options[this.selectedIndex].text)' %><br>
+                                <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), id: "make-selector", include_blank: true, class: 'form-control', onChange: 'updateMake(this.options[this.selectedIndex].text)' %>
                                 <%= f.label :Model %>
                                 <%= select_tag "", "", id: "model-selector", include_blank: true, class: 'form-control', onChange: 'updateModel(this.options[this.selectedIndex].text)' %>
                                 <%= f.label :Year %>
                                 <%= f.select :vehicle_id, 'vehicle_id', { include_blank: true }, { class: 'form-control', onChange: 'updateYear(this.options[this.selectedIndex].text)'} %>
                             </div> 
                         </div>
-                        <div id="step-2" class="row mt-4">
+                        <div id="step-2" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Quality</h1>
                                 <div class="btn-group-toggle row" data-toggle="buttons">
@@ -43,7 +42,7 @@
                                   </div>
                             </div> 
                         </div>
-                        <div id="step-3" class="row mt-4">
+                        <div id="step-3" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Frequency</h1>
                                 <div class="btn-group-toggle row" data-toggle="buttons">
@@ -56,7 +55,7 @@
                                 </div>
                             </div> 
                         </div>
-                        <div id="step-4" class="row mt-4">
+                        <div id="step-4" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
                             <div class="col-md-10 offset-md-1">
                                 <h1>Confirm Details</h1>
                                     <div class="row mb-4">
@@ -100,7 +99,7 @@
                                     <%= f.submit "Add Another Car", class: "btn btn-primary" %>
                                 <% end %>
                                 <%= f.submit "Next", formaction: shopping_carts_path, class: "btn btn-success" %>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </div>

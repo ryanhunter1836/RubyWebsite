@@ -1,0 +1,3 @@
+Seed database with CSV: https://itnext.io/how-to-seed-a-rails-database-with-a-csv-file-105a7ba0e88c
+Integrate Stripe: https://rails.devcamp.com/trails/ruby-gem-walkthroughs/campsites/payment/guides/how-to-implement-subscriptions-in-stripe
+Getting started with SmartWizard: http://techlaboratory.net/jquery-smartwizard

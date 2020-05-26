@@ -30,28 +30,6 @@ module SessionsHelper
     user == current_user
   end
 
-  def current_shopping_cart
-    #Get the shopping cart associated with the user
-    if logged_in?
-      #Create a new shopping cart
-      if current_user.shopping_cart.nil?
-        @current_user.shopping_cart = ShoppingCart.create
-        shopping_cart = current_user.shopping_cart
-      else
-        shopping_cart = current_user.shopping_cart
-      end
-    else
-      #Check if there is already a shopping cart associated with this session
-      if session[:shopping_cart]
-        shopping_cart = ShoppingCart.find(session[:shopping_cart])
-      #If not, create a new cart and associate it with this session
-      else
-        shopping_cart = ShoppingCart.create
-        session[:shopping_cart] = shopping_cart.id
-      end
-    end
-  end
-
   # Returns true if the user is logged in, false otherwise.
   def logged_in?
     !current_user.nil?
