@@ -14,8 +14,12 @@ Rails.application.routes.draw do
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
   resources :shopping_carts,      only: [:create]
-  resources :checkouts,           only: [:new, :create]
-  get 'thankyou', to: 'checkouts#thankyou', as: 'thankyou'
+  get '/checkouts/success',  to: 'checkouts#success'
+  get '/checkouts/cancelled',to: 'checkouts#cancelled'
   get '/get_models_by_make', to: 'vehicles#get_models_by_make'
   get '/get_years_by_model', to: 'vehicles#get_years_by_model'
+  get   '/setup',   to: 'checkouts#setup'
+  post  '/create-checkout-session', to: 'checkouts#create_checkout_session'
+  post  '/webhook', to: 'checkouts#webhook'
+
 end

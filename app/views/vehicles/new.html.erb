@@ -1,5 +1,9 @@
 <% provide(:title, "Add Vehicle") %>
+<%= javascript_pack_tag "dynamic_dropdowns" %>
 <%= javascript_include_tag "update" %>
+<%= javascript_include_tag "https://js.stripe.com/v3/" %>
+<%= javascript_pack_tag "stripe.js" %>
+
 <div class="row">
     <div class="col-12">
         <h1>Add a new vehicle</h1>
@@ -98,7 +102,7 @@
                                 <% if @order_options.count < 2 %>
                                     <%= f.submit "Add Another Car", class: "btn btn-primary" %>
                                 <% end %>
-                                <%= f.submit "Next", formaction: shopping_carts_path, class: "btn btn-success" %>
+                                <%= f.submit "Next", formaction: shopping_carts_path, class: "btn btn-success", id: "submit-button" %>
                             </div>
                         </div>
                     </div>
