@@ -10,10 +10,10 @@ module VehicleHelper
     end
 
     def get_frequency_string(frequency)
-        if frequency == 'three_months'
-            "Every 3 Months"
-        else
+        if frequency == 'six_months'
             "Every 6 Months"
+        else
+            "Every 12 Months"
         end
     end
 

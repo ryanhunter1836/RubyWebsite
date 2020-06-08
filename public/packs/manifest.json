@@ -19,26 +19,6 @@
       "js.map": [
         "/packs/js/dynamic_dropdowns-d2e1cb802570d00d29e7.js.map"
       ]
-    },
-    "stripe_backup": {
-      "js": [
-        "/packs/js/stripe_backup-cb7c8b12e7209f67c504.js"
-      ],
-      "js.map": [
-        "/packs/js/stripe_backup-cb7c8b12e7209f67c504.js.map"
-      ]
-    },
-    "stripe": {
-      "js": [
-        "/packs/js/stripe-74b0b370b87fe24add63.js"
-      ],
-      "js.map": [
-        "/packs/js/stripe-74b0b370b87fe24add63.js.map"
-      ]
     }
-  },
-  "stripe.js": "/packs/js/stripe-74b0b370b87fe24add63.js",
-  "stripe.js.map": "/packs/js/stripe-74b0b370b87fe24add63.js.map",
-  "stripe_backup.js": "/packs/js/stripe_backup-cb7c8b12e7209f67c504.js",
-  "stripe_backup.js.map": "/packs/js/stripe_backup-cb7c8b12e7209f67c504.js.map"
+  }
 }

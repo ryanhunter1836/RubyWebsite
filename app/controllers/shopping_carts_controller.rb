@@ -1,8 +1,15 @@
 class ShoppingCartsController < ApplicationController
-    before_action :logged_in_user,  only: [:create]
-    #Converts the shopping cart into an order
+    #Construct an order from the shopping cart
     def create
-        puts("Received shopping cart")
-        head :ok
+        current_order = current_shopping_cart.order_options.build(add_vehicle_params)
+        current_order.save
+        
+        redirect_to checkouts_path
     end
+
+    private 
+        
+        def add_vehicle_params
+            params.require(:order_option).permit(:vehicle_id, :quality, :frequency)
+        end
 end

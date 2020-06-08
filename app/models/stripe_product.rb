@@ -1,0 +1,2 @@
+class StripeProduct < ApplicationRecord
+end

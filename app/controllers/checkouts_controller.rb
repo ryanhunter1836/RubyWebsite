@@ -1,58 +1,179 @@
 class CheckoutsController < ApplicationController
-before_action :logged_in_user,  only: [:new]
-before_action :calculate_total
+protect_from_forgery except: :stripe_webhook
 
-def success
+def index
+  @user = User.new
+  @user.shipping_addresses.build
+  @order_options = current_shopping_cart.order_options.all
+  @price = calculate_total_price(@order_options)
 end
 
-def cancelled
+#Create the user account
+def create
+  @user = User.create(signup_params)
+
+  #Need to save the shipping address to the order as well
+  if @user.save
+    @user.send_activation_email
+    flash[:info] = "Please check your email to activate your account."
+    redirect_to root_url
+  else
+    redirect_to checkouts_path
+  end
 end
 
 def setup
   respond_to do |format|
-    msg = { :publishableKey => Rails.application.credentials.publishable_key,
-            :basicPrice => 'price_HOCBNh8YbXGni6',
-            :proPrice => 'price_HOCCywRPMNyAFh' }
+    msg = { :publishableKey => Rails.application.credentials.publishable_key }
     format.json { render :json => msg } 
   end
 end
 
-def create_checkout_session
+def create_customer
   data = JSON.parse request.body.read
-  # Create new Checkout Session for the order
-  # Other optional params include:
-  # [billing_address_collection] - to display billing address details on the page
-  # [customer] - if you have an existing Stripe Customer ID
-  # [customer_email] - lets you prefill the email input in the form
-  # For full details see https:#stripe.com/docs/api/checkout/sessions/create
 
-  # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-  session = Stripe::Checkout::Session.create(
-    customer_email: current_user.email,
-    success_url: 'http://localhost:3000/checkouts/success.html?session_id={CHECKOUT_SESSION_ID}',
-    cancel_url: 'http://localhost:3000/checkouts/canceled.html',
-    payment_method_types: ['card'],
-    mode: 'subscription',
-    billing_address_collection: 'auto',
-    shipping_address_collection: {
-    allowed_countries: ['US'],
-    },
-    line_items: [{
-      quantity: 1,
-      price: data['priceId'],
-    }]
+  # Create a new customer object
+  customer = Stripe::Customer.create(
+    email: data['email']
   )
 
   respond_to do |format|
-    msg = { :sessionId => session['id'] }
+    msg = { :customer => customer }
     format.json { render :json => msg } 
   end
 end
 
-def webhook
+def create_subscription
+  data = JSON.parse request.body.read
+
+  begin
+    Stripe::PaymentMethod.attach(
+      data['paymentMethodId'],
+      { customer: data['customerId'] }
+    )
+  rescue Stripe::CardError => e
+    halt 200, { 'Content-Type' => 'application/json' }, { 'error': { message: e.error.message } }.to_json
+  end
+
+  # Set the default payment method on the customer
+  Stripe::Customer.update(
+    data['customerId'],
+    invoice_settings: {
+      default_payment_method: data['paymentMethodId']
+    }
+  )
+
+  # Create the subscription
+  subscription = Stripe::Subscription.create(
+    customer: data['customerId'],
+    items: [
+      {
+        #For the time being, just use a sample ID
+        price: "price_1GrDNNK9cC716JE2Xn39tnIP"
+      }
+    ],
+    expand: ['latest_invoice.payment_intent']
+  )
+
+  render json: subscription
+end
+
+def retry_invoice
+  data = JSON.parse request.body.read
+
+  begin
+    Stripe::PaymentMethod.attach(
+      data['paymentMethodId'],
+      { customer: data['customerId'] }
+    )
+  rescue Stripe::CardError => e
+    halt 200, { 'Content-Type' => 'application/json' }, { 'error': { message: e.error.message } }.to_json
+  end
+
+  # Set the default payment method on the customer
+  Stripe::Customer.update(
+    data['customerId'],
+    invoice_settings: {
+      default_payment_method: data['paymentMethodId']
+    }
+  )
+
+  invoice = Stripe::Invoice.retrieve({
+                                       id: data['invoiceId'],
+                                       expand: ['payment_intent']
+                                     })
+
+  render json: invoice
+end
+
+def retreive_upcoming_invoice
+  data = JSON.parse request.body.read
+
+  subscription = Stripe::Subscription.retrieve(
+    data['subscriptionId']
+  )
+
+  invoice = Stripe::Invoice.upcoming(
+    customer: data['customerId'],
+    subscription: data['subscriptionId'],
+    subscription_items: [
+      {
+        id: subscription.items.data[0].id,
+        deleted: true
+      },
+      {
+        price: ENV[data['newPriceId']],
+        deleted: false
+      }
+    ]
+  )
+
+  render json: invoice
+end
+
+def cancel_subscription
+  data = JSON.parse request.body.read
+
+  deleted_subscription = Stripe::Subscription.delete(data['subscriptionId'])
+
+  render json: deleted_subscription
+end
+
+#Need to implement later
+def update_subscription
+  content_type 'application/json'
+  data = JSON.parse request.body.read
+
+  subscription = Stripe::Subscription.retrieve(data['subscriptionId'])
+
+  updated_subscription = Stripe::Subscription.update(
+    data['subscriptionId'],
+    cancel_at_period_end: false,
+    items: [
+      {
+        id: subscription.items.data[0].id,
+        price: ENV[data['newPriceId']]
+      }
+    ]
+  )
+
+  render json: subscription
+end
+
+def retreive_customer_payment_method
+  data = JSON.parse request.body.read
+
+  payment_method = Stripe::PaymentMethod.retrieve(
+    data['paymentMethodId']
+  )
+
+  render json: payment_method
+end
+
+def stripe_webhook
   # You can use webhooks to receive information about asynchronous payment events.
   # For more about our webhook events check out https://stripe.com/docs/webhooks.
-  webhook_secret = ENV['STRIPE_WEBHOOK_SECRET']
+  webhook_secret = Rails.application.credentials.webhook_secret
   payload = request.body.read
   if !webhook_secret.empty?
     # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
@@ -65,12 +186,12 @@ def webhook
       )
     rescue JSON::ParserError => e
       # Invalid payload
-      status 400
+      head :bad_request
       return
     rescue Stripe::SignatureVerificationError => e
       # Invalid signature
       puts '⚠️  Webhook signature verification failed.'
-      status 400
+      head :bad_request
       return
     end
   else
@@ -82,20 +203,57 @@ def webhook
   data = event['data']
   data_object = data['object']
 
-  puts '🔔  Payment succeeded!' if event_type == 'checkout.session.completed'
+  if event_type == 'invoice.payment_succeeded'
+    # Used to provision services after the trial has ended.
+    # The status of the invoice will show up as paid. Store the status in your
+    # database to reference when a user accesses your service to avoid hitting rate
+    # limits.
+    # puts data_object
+  end
 
-  content_type 'application/json'
-  {
-    status: 'success'
-  }.to_json
+  if event_type == 'invoice.payment_failed'
+    # If the payment fails or the customer does not have a valid payment method,
+    # an invoice.payment_failed event is sent, the subscription becomes past_due.
+    # Use this webhook to notify your user that their payment has
+    # failed and to retrieve new card details.
+    # puts data_object
+  end
+
+  if event_type == 'invoice.finalized'
+    # If you want to manually send out invoices to your customers
+    # or store them locally to reference to avoid hitting Stripe rate limits.
+    # puts data_object
+  end
+
+  if event_type == 'customer.subscription.deleted'
+    # handle subscription cancelled automatically based
+    # upon your subscription settings. Or if the user cancels it.
+    # puts data_object
+  end
+
+  if event_type == 'customer.subscription.trial_will_end'
+    # Send notification to your user that the trial will end
+    # puts data_object
+  end
+
+  respond_to do |format|
+    msg = { :status => 'success' }
+    format.json { render :json => msg } 
+  end
 end
 
+private 
 
-private
+  def calculate_total_price(order_options)
+    totalPrice = 0
+    order_options.each do |t|
+      totalPrice += t.total_price
+    end
+    totalPrice
+  end
 
-#Method to calculate the total price of the subscription
-def calculate_total
-    500
-end
+  def signup_params
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, shipping_addresses_attributes: [:address1, :address2, :city, :state, :postal])
+  end
 
 end

@@ -1,8 +1,6 @@
 <% provide(:title, "Add Vehicle") %>
 <%= javascript_pack_tag "dynamic_dropdowns" %>
 <%= javascript_include_tag "update" %>
-<%= javascript_include_tag "https://js.stripe.com/v3/" %>
-<%= javascript_pack_tag "stripe.js" %>
 
 <div class="row">
     <div class="col-12">
@@ -51,10 +49,10 @@
                                 <h1>Select Frequency</h1>
                                 <div class="btn-group-toggle row" data-toggle="buttons">
                                     <label class="btn btn-primary btn-lg active col-5">
-                                        <%= f.radio_button :frequency, 'three_months', onChange: 'updateFrequency(this.value)' %> Every 3 Months
+                                        <%= f.radio_button :frequency, 'six_months', onChange: 'updateFrequency(this.value)' %> Every 6 Months
                                     </label>
                                     <label class="btn btn-primary btn-lg col-5 offset-1">
-                                        <%= f.radio_button :frequency, 'six_months', onChange: 'updateFrequency(this.value)' %> Every 6 Months
+                                        <%= f.radio_button :frequency, 'one_year', onChange: 'updateFrequency(this.value)' %> Every 12 Months
                                     </label>
                                 </div>
                             </div> 
@@ -67,7 +65,7 @@
                                         <%= render partial: "order_option", collection: (@order_options) %>
                                         <% end %>
                                         <div id="preview-container" class="col-4 border border-danger">
-                                            <h4><b>Car Info # </b></h4>
+                                            <h4><b>Car Info #<%= @order_options.count + 1 || 1 %></b></h4>
                                             <div class="ml-2 mb-2">
                                                 <table style="width:100%">
                                                     <tr>

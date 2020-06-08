@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_23_042132) do
+ActiveRecord::Schema.define(version: 2020_06_07_233643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,9 +24,23 @@ ActiveRecord::Schema.define(version: 2020_04_23_042132) do
     t.bigint "shopping_cart_id"
     t.bigint "user_id"
     t.bigint "vehicle_id"
+    t.string "stripe_product", default: [], array: true
+    t.integer "total_price"
     t.index ["shopping_cart_id"], name: "index_order_options_on_shopping_cart_id"
     t.index ["user_id"], name: "index_order_options_on_user_id"
     t.index ["vehicle_id"], name: "index_order_options_on_vehicle_id", unique: true
+  end
+
+  create_table "shipping_addresses", force: :cascade do |t|
+    t.string "address1"
+    t.string "address2"
+    t.string "city"
+    t.string "state"
+    t.integer "postal"
+    t.bigint "order_option_id"
+    t.bigint "user_id"
+    t.index ["order_option_id"], name: "index_shipping_addresses_on_order_option_id"
+    t.index ["user_id"], name: "index_shipping_addresses_on_user_id"
   end
 
   create_table "shopping_carts", force: :cascade do |t|
@@ -34,6 +48,14 @@ ActiveRecord::Schema.define(version: 2020_04_23_042132) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_shopping_carts_on_user_id"
+  end
+
+  create_table "stripe_products", force: :cascade do |t|
+    t.string "stripe_id"
+    t.integer "price"
+    t.integer "size"
+    t.integer "quality"
+    t.integer "frequency"
   end
 
   create_table "users", force: :cascade do |t|
@@ -49,6 +71,7 @@ ActiveRecord::Schema.define(version: 2020_04_23_042132) do
     t.datetime "activated_at"
     t.string "reset_digest"
     t.datetime "reset_sent_at"
+    t.string "stripeCustomerId"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

@@ -1,0 +1,80 @@
+
+<%= javascript_include_tag "https://js.stripe.com/v3/" %>
+<%= javascript_include_tag "stripe.js" %>
+
+<div class="row">
+  <div class="col-12">
+    <h1><b>Checkout</b></h1>
+  </div>
+  <div class="col-lg-5 col-12">
+    <%= form_for(@user, url: checkouts_path) do |f| %>
+      <div class="row mb-5">
+        <div class="col-12">
+          <h1>Account Information</h1>
+          <%= render 'shared/error_messages', object: f.object %>
+
+          <%= f.label :name %>
+          <%= f.text_field :name, class: 'form-control', id: 'billing-name' %>
+
+          <%= f.label :email %>
+          <%= f.email_field :email, class: 'form-control', id: 'email-field' %>
+
+          <%= f.label :password %>
+          <%= f.password_field :password, class: 'form-control' %>
+
+          <%= f.label :password_confirmation, "Confirmation" %>
+          <%= f.password_field :password_confirmation, class: 'form-control' %>
+        </div>
+      </div>
+      <div class="row mb-5">
+        <div class="col-12">
+          <h1>Shipping Information</h1>
+          <%= f.fields_for :shipping_addresses do |shipping_fields|%>
+            <%= render 'shared/error_messages', object: shipping_fields.object %>
+
+            <%= shipping_fields.label :address1, "Address Line 1" %>
+            <%= shipping_fields.text_field :address1, class: 'form-control' %>
+
+            <%= shipping_fields.label :address2, "Address Line 2" %>
+            <%= shipping_fields.text_field :address2, class: 'form-control' %>
+
+            <%= shipping_fields.label :city, "City" %>
+            <%= shipping_fields.text_field :city, class: 'form-control' %>
+
+            <%= shipping_fields.label :state, "State" %>
+            <%= shipping_fields.text_field :state, class: 'form-control' %>
+
+            <%= shipping_fields.label :postal, "Zip Code" %>
+            <%= shipping_fields.text_field :postal, class: 'form-control' %>
+          <% end %>
+        </div>
+      </div>
+      <div class="row mb-5">
+        <div class="col-12">
+          <h1>Billing Information</h1>
+          <div class="gray-box-rounded">
+            <div id="card-element" class="MyCardElement"></div>
+            <div id="card-element-errors" role="alert"></div>
+          </div>
+        </div>
+      </div>
+    <%= f.submit "Submit Order", class: "btn btn-primary", id: "submit-button" %>
+    <% end %>
+  </div>
+  <div class="col-lg-7 col-12">
+    <div style="top: 50px; position: sticky;">
+      <h1>Review Order</h1>
+      <div class="gray-box-rounded">
+        <div class="row">
+          <div class="col-6">
+            <h2>Vehicles</h2>
+            <%= render partial: "order_option", collection: (@order_options) %>
+          </div>
+          <div class="col-6">
+            <h2>Total Price: <%= pretty_amount(@price) %></h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -30,3 +30,20 @@ CSV.foreach(Rails.root.join('lib', 'seeds', 'sample_wipersizes.csv'), headers: t
                  passenger_front: row[4].to_i
   )
 end
+
+wiperSizes = [12,13,14,16,17,18,19,20,21,22,24,26,28]
+quality = [0,1,2]
+frequency = [0,1]
+
+wiperSizes.each_with_index do |f, wiperIndex|
+  quality.each_with_index do |g, qualityIndex|
+    frequency.each_with_index do |h, frequencyIndex|
+      StripeProduct.create(stripe_id: 'prod_HQ3U8iF3zBAlAh',
+                           price: 2000,
+                           size: wiperSizes[wiperIndex],
+                           quality: quality[qualityIndex],
+                           frequency: frequency[frequencyIndex],            
+      )
+    end
+  end
+end
