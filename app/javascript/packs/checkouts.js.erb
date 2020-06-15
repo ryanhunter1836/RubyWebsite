@@ -82,6 +82,6 @@ $(document).on('ajax:success', '#user-form', event => {
 
     //Tell Stripe to process the payment
     if(!errors) {
-        console.log("Processing payment");
+        runStripe();
     }
 });

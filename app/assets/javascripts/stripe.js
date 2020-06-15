@@ -38,38 +38,38 @@
           displayError(event);
         });
       }
+    }
 
-      let submitButton = document.getElementById('submit-button');
-      if (submitButton) {
-        submitButton.addEventListener('click', function (evt) {
+    //If you are sniffing around, don't call this
+    //All you will do is create a charge without a user account
+    function runStripe() {
+      // Create customer
+      createCustomer().then((result) => {
+        customer = result.customer;
+        customerId = customer.id;
+        customerName = result.name;
 
-          // Create customer
-          createCustomer().then((result) => {
-            customer = result.customer;
-            customerId = customer.id;
+        // If a previous payment was attempted, get the lastest invoice
+        const latestInvoicePaymentIntentStatus = localStorage.getItem(
+          'latestInvoicePaymentIntentStatus'
+        );
 
-            // If a previous payment was attempted, get the lastest invoice
-            const latestInvoicePaymentIntentStatus = localStorage.getItem(
-              'latestInvoicePaymentIntentStatus'
-            );
-
-            if (latestInvoicePaymentIntentStatus === 'requires_payment_method') {
-              const invoiceId = localStorage.getItem('latestInvoiceId');
-              const isPaymentRetry = true;
-              // create new payment method & retry payment on invoice with new payment method
-              createPaymentMethod({
-                card,
-                customerId,
-                isPaymentRetry,
-                invoiceId,
-              });
-            } else {
-              // create new payment method & create subscription
-              createPaymentMethod({ card, customerId});
-            }
+        if (latestInvoicePaymentIntentStatus === 'requires_payment_method') {
+          const invoiceId = localStorage.getItem('latestInvoiceId');
+          const isPaymentRetry = true;
+          // create new payment method & retry payment on invoice with new payment method
+          createPaymentMethod({
+            card,
+            customerId,
+            customerName,
+            isPaymentRetry,
+            invoiceId,
           });
-        });
-      }
+        } else {
+          // create new payment method & create subscription
+          createPaymentMethod({ card, customerId, customerName });
+        }
+      });
     }
     
     function displayError(event) {
@@ -81,10 +81,9 @@
       }
     }
   
-    function createPaymentMethod({ card, customerId, isPaymentRetry, invoiceId }) {
+    function createPaymentMethod({ card, customerId, billingName, isPaymentRetry, invoiceId }) {
       // Set up payment method for recurring usage
-      let billingName = document.getElementById('billing-name').value;
-  
+ 
       stripe
         .createPaymentMethod({
           type: 'card',
@@ -116,17 +115,13 @@
     }
   
     function createCustomer() {
-      let billingEmail = document.querySelector('#email-field').value;
   
       return fetch('/create-customer', {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-          email: billingEmail,
-        }),
+        }
       })
         .then((response) => {
           return response.json();
@@ -217,12 +212,15 @@
       console.log(result);
       // Payment was successful. Provision access to your service.
       // Remove invoice from localstorage because payment is now complete.
-      clearCache();
-      // Change your UI to show a success message to your customer.
-      onSubscriptionSampleDemoComplete(result);
-      // Call your backend to grant access to your service based on
-      // the product your customer subscribed to.
-      // Get the product by using result.subscription.price.product
+      localStorage.clear();
+
+      fetch('/subscription-complete', {
+        method: 'post',
+        headers: {
+          'Content-type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        }
+      });
     }
   
     function createSubscription({ customerId, paymentMethodId, priceId }) {
@@ -531,46 +529,4 @@
         customerId +
         '&paymentMethodId=' +
         paymentMethodId;
-    }
-  
-    function demoChangePrice() {
-      document.querySelector('#basic').classList.remove('border-pasha');
-      document.querySelector('#premium').classList.remove('border-pasha');
-      document.querySelector('#price-change-form').classList.add('hidden');
-  
-      // Grab the priceId from the URL
-      // This is meant for the demo, replace with a cache or database.
-      const params = new URLSearchParams(document.location.search.substring(1));
-      const priceId = params.get('priceId').toLowerCase();
-  
-      // Show the change price screen
-      document.querySelector('#prices-form').classList.remove('hidden');
-      document
-        .querySelector('#' + priceId.toLowerCase())
-        .classList.add('border-pasha');
-  
-      let elements = document.querySelectorAll(
-        '#submit-' + priceId + '-button-text'
-      );
-      for (let i = 0; i < elements.length; i++) {
-        elements[0].childNodes[3].innerText = 'Current';
-      }
-      if (priceId === 'premium') {
-        document.getElementById('submit-premium').disabled = true;
-        document.getElementById('submit-basic').disabled = false;
-      } else {
-        document.getElementById('submit-premium').disabled = false;
-        document.getElementById('submit-basic').disabled = true;
-      }
-    }
-  
-    // Show a spinner on subscription submission
-    function changeLoadingState(isLoading) {
-      if (isLoading) {
-        document.querySelector('#submit-button').classList.add('hidden');
-        document.querySelector('#submit-button').disabled = true;
-      } else {
-        document.querySelector('#submit-button').classList.remove('hidden');
-        document.querySelector('#submit-button').disabled = false;
-      }
     }

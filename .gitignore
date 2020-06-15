@@ -3490,3 +3490,7 @@ tmp/cache/bootsnap-load-path-cache
 tmp/cache/webpacker/last-compilation-digest-development
 public/packs/manifest.json
 log/development.log
+log/development.log
+public/packs/js/checkouts-29a44df957dd2708208d.js
+public/packs/js/checkouts-29a44df957dd2708208d.js.map
+public/packs/manifest.json

@@ -25,5 +25,6 @@ Rails.application.routes.draw do
   post '/cancel-subscription',        to: 'checkouts#cancel_subscription'
   post '/update-subscription',        to: 'checkouts#update_subscription'
   post '/retrieve-customer-payment-method', to: 'checkouts#retrieve_customer_payment_method'
+  post '/subscription-complete',      to: 'checkouts#subscription_complete'
   post '/stripe-webhook',             to: 'checkouts#stripe_webhook'
 end

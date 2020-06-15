@@ -23,12 +23,11 @@ def create
       f.save
     end
 
-    #Send a success message to the form to allow the payment to complete
-    puts "Success"
+    #Log in the user for use in the Stripe payment
+    log_in @user
+
     render json: @user.errors
   else
-    #Generate a hash with the errors
-    puts "Found errors"
     render json: @user.errors
   end
 end
@@ -40,20 +39,23 @@ def setup
   end
 end
 
+#Create a new Stripe customer
 def create_customer
-  data = JSON.parse request.body.read
-
   # Create a new customer object
   customer = Stripe::Customer.create(
-    email: data['email']
+    email: current_user.email
   )
 
+  current_user.stripeCustomerId = customer.id
+  current_user.save
+
   respond_to do |format|
-    msg = { :customer => customer }
+    msg = { :customer => customer, :name => current_user.name }
     format.json { render :json => msg } 
   end
 end
 
+#Create a subscription for the customer
 def create_subscription
   data = JSON.parse request.body.read
 
@@ -179,6 +181,16 @@ def retreive_customer_payment_method
   )
 
   render json: payment_method
+end
+
+#Payment was successful.  Mark as paid in DB
+def subscription_complete
+  current_user.order_options.each do |f|
+    f.active = true
+    f.save
+  end
+
+  flash[:success] = "Thank you for your order!"
 end
 
 def stripe_webhook
