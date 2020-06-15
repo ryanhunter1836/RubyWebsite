@@ -42,7 +42,6 @@
       let submitButton = document.getElementById('submit-button');
       if (submitButton) {
         submitButton.addEventListener('click', function (evt) {
-          //evt.preventDefault();
 
           // Create customer
           createCustomer().then((result) => {

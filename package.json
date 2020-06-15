@@ -10,6 +10,7 @@
     "jquery": "^3.4.1",
     "material-design-icons": "^3.0.1",
     "popper.js": "^1.16.1",
+    "rails-erb-loader": "^5.5.2",
     "smartwizard": "^5.0.0",
     "turbolinks": "^5.2.0"
   },

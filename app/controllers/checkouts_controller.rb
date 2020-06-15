@@ -16,9 +16,20 @@ def create
   if @user.save
     @user.send_activation_email
     flash[:info] = "Please check your email to activate your account."
-    redirect_to root_url
+
+    #Link the order options to the user account
+    current_shopping_cart.order_options.each do |f|
+      f.user_id = @user.id 
+      f.save
+    end
+
+    #Send a success message to the form to allow the payment to complete
+    puts "Success"
+    render json: @user.errors
   else
-    redirect_to checkouts_path
+    #Generate a hash with the errors
+    puts "Found errors"
+    render json: @user.errors
   end
 end
 

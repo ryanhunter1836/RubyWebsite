@@ -1,6 +1,8 @@
 {
   "application.js": "/packs/js/application-2ec7862d383f427d8252.js",
   "application.js.map": "/packs/js/application-2ec7862d383f427d8252.js.map",
+  "checkouts.js": "/packs/js/checkouts-d5c8a05d577dfeb62d03.js",
+  "checkouts.js.map": "/packs/js/checkouts-d5c8a05d577dfeb62d03.js.map",
   "dynamic_dropdowns.js": "/packs/js/dynamic_dropdowns-d2e1cb802570d00d29e7.js",
   "dynamic_dropdowns.js.map": "/packs/js/dynamic_dropdowns-d2e1cb802570d00d29e7.js.map",
   "entrypoints": {
@@ -10,6 +12,14 @@
       ],
       "js.map": [
         "/packs/js/application-2ec7862d383f427d8252.js.map"
+      ]
+    },
+    "checkouts": {
+      "js": [
+        "/packs/js/checkouts-d5c8a05d577dfeb62d03.js"
+      ],
+      "js.map": [
+        "/packs/js/checkouts-d5c8a05d577dfeb62d03.js.map"
       ]
     },
     "dynamic_dropdowns": {
