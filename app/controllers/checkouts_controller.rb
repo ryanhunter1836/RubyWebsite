@@ -79,14 +79,11 @@ def create_subscription
   # Create the subscription
   subscription = Stripe::Subscription.create(
     customer: data['customerId'],
-    items: [
-      {
-        #For the time being, just use a sample ID
-        price: "price_1GrDNNK9cC716JE2Xn39tnIP"
-      }
-    ],
+    items: create_products_list,
     expand: ['latest_invoice.payment_intent']
   )
+
+  puts subscription
 
   render json: subscription
 end
@@ -190,6 +187,9 @@ def subscription_complete
     f.save
   end
 
+  #Delete the current shopping cart since the account has been created and orders tied to the account
+  current_shopping_cart.destroy
+  
   flash[:success] = "Thank you for your order!"
 end
 
@@ -273,6 +273,38 @@ private
       totalPrice += t.total_price
     end
     totalPrice
+  end
+
+  #Method to create list of products user is subscribing to
+  def create_products_list
+    products = []
+    current_user.order_options.each do |f|
+      f.stripe_product.each do |g|
+
+        #Search through the list to see if the product has already been added
+        #If it has, increment the quantity
+        found = false
+        products.each do |h|
+          if(h[0] == g)
+            h[1] += 1
+            found = true
+          end
+        end
+
+        #Otherwise, add a new product to the list
+        if(!found)
+          products.push([g, 1])
+        end
+      end
+    end
+
+    #Create a map of the products
+    productsMap = []
+    products.each do |item|
+      productsMap.append({ price: item[0], quantity: item[1] })
+    end
+
+    productsMap
   end
 
   def signup_params

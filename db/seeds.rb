@@ -38,7 +38,7 @@ frequency = [0,1]
 wiperSizes.each_with_index do |f, wiperIndex|
   quality.each_with_index do |g, qualityIndex|
     frequency.each_with_index do |h, frequencyIndex|
-      StripeProduct.create(stripe_id: 'prod_HQ3U8iF3zBAlAh',
+      StripeProduct.create(stripe_id: 'price_1GrDNNK9cC716JE2Xn39tnIP',
                            price: 2000,
                            size: wiperSizes[wiperIndex],
                            quality: quality[qualityIndex],
