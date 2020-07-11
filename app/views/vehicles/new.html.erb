@@ -1,5 +1,8 @@
 <% provide(:title, "Add Vehicle") %>
-<%= javascript_include_tag "update" %>
+<%= javascript_include_tag "https://js.stripe.com/v3/" %>
+<%= javascript_include_tag "stripe.js" %>
+<%= javascript_pack_tag "update" %>
+<%= javascript_pack_tag "checkouts" %>
 
 <div class="row">
     <div class="col-12">
@@ -7,104 +10,140 @@
     </div>
     <div class="container full-width">
         <div class="col-12">
-            <%= form_with model: @order, url: vehicles_path do |f| %>
-                <div id="smartwizard">
-                    <ul class="nav">
-                        <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
-                        <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
-                        <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
-                        <li><a class="nav-link" href="#step-4">Step 4<br /><small>Review</small></a></li>
-                    </ul>
+            <%= form_for @user, url: checkouts_path, html: { id: 'user-form', 'data-type' => 'json' }, remote: true do |f| %>
+            <div id="smartwizard">
+                <ul class="nav">
+                    <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicles</small></a></li>
+                    <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
+                    <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
+                    <li><a class="nav-link" href="#step-4">Step 4<br /><small>Checkout</small></a></li>
+                </ul>
+                <%= f.fields_for :order_options do |order_fields| %>
                     <div class="tab-content">
                         <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                            <div class="col-md-6 offset-md-3">
-                                <h1>Select Vehicle</h1>
-                                <%= f.label :Make %>
-                                <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), id: "make-selector", include_blank: true, class: 'form-control', onChange: 'updateMake(this.options[this.selectedIndex].text)' %>
-                                <%= f.label :Model %>
-                                <%= select_tag "", "", id: "model-selector", include_blank: true, class: 'form-control', onChange: 'updateModel(this.options[this.selectedIndex].text)' %>
-                                <%= f.label :Year %>
-                                <%= f.select :vehicle_id, 'vehicle_id', { include_blank: true }, { class: 'form-control', onChange: 'updateYear(this.options[this.selectedIndex].text)'} %>
-                            </div> 
+                            <div class="col-12">
+                                <h1>Select Vehicles</h1>
+                                <div id="vehicle_container" class="row d-flex justify-content-center">
+                                    <%= render :partial => 'vehicle', :locals => { :order_fields => order_fields } %>
+                                </div>
+                                <div class="btn btn-success col-4 offset-4 mb-2" id="add_vehicle_button"
+                                    onclick="addVehicle()">Add Another Vehicle</div>
+                                <div class="btn btn-danger col-4 offset-4" style="visibility:hidden"
+                                    id="remove_vehicle_button" onclick="removeVehicle()">Remove a Vehicle</div>
+                            </div>
                         </div>
                         <div id="step-2" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Quality</h1>
                                 <div class="btn-group-toggle row" data-toggle="buttons">
-                                    <label class="btn btn-primary btn-lg active col-3">
-                                        <%= f.radio_button :quality, 'good', onChange: 'updateQuality(this.value)' %>Good
+                                    <label class="btn btn-outline-primary btn-lg col-3">
+                                        <%= order_fields.radio_button :quality, 'good', :id => 'good_button', :name => 'user[order_options_attributes][0][quality]' %>Good
                                     </label>
-                                    <label class="btn btn-primary btn-lg col-3 offset-1">
-                                        <%= f.radio_button :quality, 'better', onChange: 'updateQuality(this.value)' %>Better
+                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1">
+                                        <%= order_fields.radio_button :quality, 'better', :id => 'better_button', :name => 'user[order_options_attributes][0][quality]' %>Better
                                     </label>
-                                    <label class="btn btn-primary btn-lg col-3 offset-1">
-                                        <%= f.radio_button :quality, 'best', onChange: 'updateQuality(this.value)' %>Best
+                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1">
+                                        <%= order_fields.radio_button :quality, 'best', :id => 'best_button', :name => 'user[order_options_attributes][0][quality]' %>Best
                                     </label>
-                                  </div>
-                            </div> 
+                                </div>
+                            </div>
                         </div>
                         <div id="step-3" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Frequency</h1>
                                 <div class="btn-group-toggle row" data-toggle="buttons">
-                                    <label class="btn btn-primary btn-lg active col-5">
-                                        <%= f.radio_button :frequency, 'six_months', onChange: 'updateFrequency(this.value)' %> Every 6 Months
+                                    <label class="btn btn-outline-primary btn-lg col-5">
+                                        <%= order_fields.radio_button :frequency, 'six_months', :id => 'months_button', :name => 'user[order_options_attributes][0][frequency]' %>
+                                        Every 6 Months
                                     </label>
-                                    <label class="btn btn-primary btn-lg col-5 offset-1">
-                                        <%= f.radio_button :frequency, 'one_year', onChange: 'updateFrequency(this.value)' %> Every 12 Months
+                                    <label class="btn btn-outline-primary btn-lg col-5 offset-1">
+                                        <%= order_fields.radio_button :frequency, 'one_year', :id => 'year_button', :name => 'user[order_options_attributes][0][frequency]' %>
+                                        Every 12 Months
                                     </label>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
-                        <div id="step-4" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                            <div class="col-md-10 offset-md-1">
-                                <h1>Confirm Details</h1>
-                                    <div class="row mb-4">
-                                        <% if @order_options.any? %>
-                                        <%= render partial: "order_option", collection: (@order_options) %>
-                                        <% end %>
-                                        <div id="preview-container" class="col-4 border border-danger">
-                                            <h4><b>Car Info #<%= @order_options.count + 1 || 1 %></b></h4>
-                                            <div class="ml-2 mb-2">
-                                                <table style="width:100%">
-                                                    <tr>
-                                                        <td><b>Year:</b></td>
-                                                        <td id="preview-year"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Make:</b></td>
-                                                        <td id="preview-make"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Model:</b></td>
-                                                        <td id="preview-model"></td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                            <h4><b>Wiper Info</b></h4>
-                                            <div class="ml-2 mb-2">
-                                                <table style="width:100%">
-                                                    <tr>
-                                                        <td><b>Frequency:</b></td>
-                                                        <td id="preview-frequency"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Quality:</b></td>
-                                                        <td id="preview-quality"></td>
-                                                    </tr>
-                                                </table>
+                        <script type='text/javascript'>
+                            let numVehicles = 1;
+                
+                            function addVehicle() {
+                                numVehicles++;
+                                document.getElementById("remove_vehicle_button").style.visibility = "visible";
+                                htmlToInsert = "<%= j render :partial => 'vehicle', :locals => { :order_fields => order_fields } %>";
+                                htmlToInsert = htmlToInsert.replace("make-selector-1", "make-selector-" + numVehicles)
+                                    .replace("model-selector-1", "model-selector-" + numVehicles)
+                                    .replace("vehicle-id-1", "vehicle-id-" + numVehicles)
+                                    .replace(/name=\"1\"/g, "name=\"" + numVehicles + "\"");
+                                document.getElementById("vehicle_container").insertAdjacentHTML('beforeend', htmlToInsert);
+                                if (numVehicles === 3) {
+                                    document.getElementById("add_vehicle_button").style.visibility = "hidden";
+                                }
+                            }
+                
+                            function removeVehicle() {
+                                numVehicles--;
+                                document.getElementById("add_vehicle_button").style.visibility = "visible";
+                                if (numVehicles == 1) {
+                                    document.getElementById("remove_vehicle_button").style.visibility = "hidden";
+                                }
+                                //Remove the last form from the page
+                                elementList = document.getElementsByClassName("vehicle-form");
+                                element = elementList[elementList.length - 1];
+                                element.parentNode.removeChild(element);
+                            }
+                        </script>
+                    <% end %>
+                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
+                        <div class="col-12">
+                            <h1>Checkout</h1>
+                            <div class="row col-12">
+                                <div class="col-lg-5 col-12">
+                                    <div id="user-details">
+                                        <%= render :partial => 'users/new', :locals => { :f => f } %>
+                                    </div>
+                                    <div class="row mb-5">
+                                        <div class="col-12">
+                                            <h1>Billing Information</h1>
+                                            <div class="gray-box-rounded">
+                                                <div id="card-element" class="MyCardElement"></div>
+                                                <div id="card-element-errors" role="alert"></div>
                                             </div>
                                         </div>
                                     </div>
-                                <% if @order_options.count < 2 %>
-                                    <%= f.submit "Add Another Car", class: "btn btn-primary" %>
-                                <% end %>
-                                <%= f.submit "Next", formaction: shopping_carts_path, class: "btn btn-success", id: "submit-button" %>
-                            </div>
+                                    <input type="submit" name="commit" value="Submit Order" form="user-form"
+                                        id="submit-button" class="btn btn-primary" data-disable-with="Submit Order">
+                                </div>
+                                <div class="col-lg-7 col-12">
+                                    <h1>Review Order</h1>
+                                    <div class="gray-box-rounded">
+                                        <div class="row">
+                                            <div class="col-6 p-0">
+                                                <div class="row col-12 mb-2">
+                                                    <h5 class="col-12">Vehicles</h5>
+                                                    <div id="vehicle_preview_container">
+                                                        <div id="vehicle_preview_1" class="vehicle-preview col-12"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row col-12 mb-2">
+                                                    <h5 class="col-12">Quality</h5>
+                                                    <div id="quality_preview" class="col-12"></div>
+                                                </div>
+                                                <div class="row col-12">
+                                                    <h5 class="col-6">Frequency</h5>
+                                                    <div id="frequency_preview" class="col-12"></div>
+                                                </div>  
+                                            </div>
+                                            <div class="col-6">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
                         </div>
                     </div>
                 </div>
-            <% end %>
+            </div>
         </div>
+        <% end %>
     </div>
 </div>

@@ -1,5 +1,28 @@
 require 'csv'
 
+def getSize(sizeString)
+  size = sizeString.split[2]
+  size.first(2).to_i
+end
+
+def getQuality(qualityString)
+  if(qualityString.include? "Good")
+    0
+  elsif(qualityString.include? "Better")
+    1
+  else
+    1
+  end
+end
+
+def getFrequency(interval, count)
+  if(interval.include? "month")
+    0
+  else
+    1
+  end
+end
+
 # Create a main sample user.
 User.create!(name:  "Example User",
              email: "example@example.com",
@@ -22,7 +45,7 @@ User.create!(name:  "Example User",
               activated_at: Time.zone.now)
 end
 
-CSV.foreach(Rails.root.join('lib', 'seeds', 'sample_wipersizes.csv'), headers: true) do |row|
+CSV.foreach(Rails.root.join('lib', 'seeds', 'sample_wipersizes.csv'), headers: false) do |row|
   Vehicle.create(make: row[0],
                  model: row[1],
                  year: row[2],
@@ -31,19 +54,13 @@ CSV.foreach(Rails.root.join('lib', 'seeds', 'sample_wipersizes.csv'), headers: t
   )
 end
 
-wiperSizes = [12,13,14,16,17,18,19,20,21,22,24,26,28]
-quality = [0,1,2]
-frequency = [0,1]
-
-wiperSizes.each_with_index do |f, wiperIndex|
-  quality.each_with_index do |g, qualityIndex|
-    frequency.each_with_index do |h, frequencyIndex|
-      StripeProduct.create(stripe_id: 'price_1GrDNNK9cC716JE2Xn39tnIP',
-                           price: 2000,
-                           size: wiperSizes[wiperIndex],
-                           quality: quality[qualityIndex],
-                           frequency: frequency[frequencyIndex],            
-      )
-    end
-  end
+#Seed method for Stripe products
+CSV.foreach(Rails.root.join('lib', 'seeds', 'prices.csv'), headers: true) do |row|
+  StripeProduct.create(
+    stripe_id: row['Price ID'],
+    price: row['Amount'],
+    size: getSize(row['Product Name']),
+    quality: getQuality(row['Product Name']),
+    frequency: getFrequency(row['Interval'], row['Interval Count'])
+    )
 end

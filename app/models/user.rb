@@ -1,9 +1,8 @@
 class User < ApplicationRecord
   attr_accessor :remember_token, :activation_token, :reset_token
-  has_one :shopping_cart, dependent: :destroy
   has_many :shipping_addresses, dependent: :destroy, inverse_of: :user
-  accepts_nested_attributes_for :shipping_addresses
-  has_many :order_options, dependent: :destroy
+  has_many :order_options, dependent: :destroy, inverse_of: :user
+  accepts_nested_attributes_for :shipping_addresses, :order_options
   before_save   :downcase_email
   before_create :create_activation_digest
   validates :name,  presence: true, length: { maximum: 50 }

@@ -4,24 +4,17 @@ protect_from_forgery except: :stripe_webhook
 def index
   @user = User.new
   @user.shipping_addresses.build
-  @order_options = current_shopping_cart.order_options.all
   @price = calculate_total_price(@order_options)
 end
 
 #Create the user account
 def create
-  @user = User.create(signup_params)
-
+  @user = User.create!(signup_params)
+  puts "here"
   #Need to save the shipping address to the order as well
   if @user.save
     @user.send_activation_email
     flash[:info] = "Please check your email to activate your account."
-
-    #Link the order options to the user account
-    current_shopping_cart.order_options.each do |f|
-      f.user_id = @user.id 
-      f.save
-    end
 
     #Log in the user for use in the Stripe payment
     log_in @user
@@ -83,9 +76,28 @@ def create_subscription
     expand: ['latest_invoice.payment_intent']
   )
 
-  puts subscription
+  #Save the subscription id to the order options
+  current_user.order_options.each do |f|
+    f.subscription_id = subscription.id
+    f.subscription_item_id = getSubscriptionIdList(f, subscription)
+    f.save
+  end
 
   render json: subscription
+end
+
+def getSubscriptionIdList(orderOption, subscription)
+  subscriptionIds = []
+  #Loop through all the data items and find the one that matches the price ID
+  orderOption.stripe_product.each do |stripeProduct|
+    subscription.items.data.each do |item|
+      if(item.price.id == stripeProduct)
+        subscriptionIds.append(item.id)
+      end
+    end
+  end
+
+  subscriptionIds
 end
 
 def retry_invoice
@@ -141,35 +153,6 @@ def retreive_upcoming_invoice
   render json: invoice
 end
 
-def cancel_subscription
-  data = JSON.parse request.body.read
-
-  deleted_subscription = Stripe::Subscription.delete(data['subscriptionId'])
-
-  render json: deleted_subscription
-end
-
-#Need to implement later
-def update_subscription
-  content_type 'application/json'
-  data = JSON.parse request.body.read
-
-  subscription = Stripe::Subscription.retrieve(data['subscriptionId'])
-
-  updated_subscription = Stripe::Subscription.update(
-    data['subscriptionId'],
-    cancel_at_period_end: false,
-    items: [
-      {
-        id: subscription.items.data[0].id,
-        price: ENV[data['newPriceId']]
-      }
-    ]
-  )
-
-  render json: subscription
-end
-
 def retreive_customer_payment_method
   data = JSON.parse request.body.read
 
@@ -180,7 +163,7 @@ def retreive_customer_payment_method
   render json: payment_method
 end
 
-#Payment was successful.  Mark as paid in DB
+#Payment was successful.  Mark as paid in DB and update the stripe subscription id
 def subscription_complete
   current_user.order_options.each do |f|
     f.active = true
@@ -189,7 +172,7 @@ def subscription_complete
 
   #Delete the current shopping cart since the account has been created and orders tied to the account
   current_shopping_cart.destroy
-  
+
   flash[:success] = "Thank you for your order!"
 end
 
@@ -275,19 +258,26 @@ private
     totalPrice
   end
 
+  def signup_params
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, 
+      shipping_addresses_attributes: [:address1, :address2, :city, :state, :postal],
+      order_options_attributes: [:quality, :frequency, vehicle_id: []])
+  end
+
   #Method to create list of products user is subscribing to
   def create_products_list
     products = []
     current_user.order_options.each do |f|
-      f.stripe_product.each do |g|
+    f.stripe_product.each do |g|
+
 
         #Search through the list to see if the product has already been added
         #If it has, increment the quantity
         found = false
         products.each do |h|
           if(h[0] == g)
-            h[1] += 1
-            found = true
+              h[1] += 1
+              found = true
           end
         end
 
@@ -306,9 +296,4 @@ private
 
     productsMap
   end
-
-  def signup_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, shipping_addresses_attributes: [:address1, :address2, :city, :state, :postal])
-  end
-
 end

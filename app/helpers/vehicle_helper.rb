@@ -24,7 +24,6 @@ module VehicleHelper
         year = vehicle.year
         "#{year} #{make} #{model}"
     end
-    
 
     def get_vehicle_make(vehicle_id)
         Vehicle.find(vehicle_id).make
@@ -37,4 +36,8 @@ module VehicleHelper
     def get_vehicle_year(vehicle_id)
         Vehicle.find(vehicle_id).year
     end
+
+    # def pretty_amount(amount_in_cents)
+    #     number_to_currency(amount_in_cents / 100)
+    # end
 end

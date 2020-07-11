@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_10_040220) do
+ActiveRecord::Schema.define(version: 2020_07_04_232131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,15 +21,14 @@ ActiveRecord::Schema.define(version: 2020_06_10_040220) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "next_delivery", precision: 6
-    t.bigint "shopping_cart_id"
     t.bigint "user_id"
-    t.bigint "vehicle_id"
     t.string "stripe_product", default: [], array: true
     t.integer "total_price"
     t.boolean "active"
-    t.index ["shopping_cart_id"], name: "index_order_options_on_shopping_cart_id"
+    t.string "subscription_id"
+    t.string "subscription_item_id"
+    t.integer "vehicle_id", default: [], array: true
     t.index ["user_id"], name: "index_order_options_on_user_id"
-    t.index ["vehicle_id"], name: "index_order_options_on_vehicle_id", unique: true
   end
 
   create_table "shipping_addresses", force: :cascade do |t|
@@ -85,5 +84,4 @@ ActiveRecord::Schema.define(version: 2020_06_10_040220) do
     t.integer "rear"
   end
 
-  add_foreign_key "order_options", "vehicles"
 end

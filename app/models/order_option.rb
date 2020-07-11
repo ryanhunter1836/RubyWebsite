@@ -1,9 +1,8 @@
 class OrderOption < ApplicationRecord
-    belongs_to :shopping_cart
-    has_one :vehicle
+    belongs_to :user
     has_one :shipping_address
     before_save :update_next_delivery
-    before_save :calculate_stripe_products
+    # before_save :calculate_stripe_products
 
     enum frequency: [ :six_months, :one_year ]
     enum quality: [ :good, :better, :best ]
