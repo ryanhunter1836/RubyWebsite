@@ -23,7 +23,7 @@
                         <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
                             <div class="col-12">
                                 <h1>Select Vehicles</h1>
-                                <div id="vehicle_container" class="row d-flex justify-content-center">
+                                <div id="vehicle_container" class="row d-flex justify-content-center mb-3">
                                     <%= render :partial => 'vehicle', :locals => { :order_fields => order_fields } %>
                                 </div>
                                 <div class="btn btn-success col-4 offset-4 mb-2" id="add_vehicle_button"
@@ -101,7 +101,7 @@
                                     <div id="user-details">
                                         <%= render :partial => 'users/new', :locals => { :f => f } %>
                                     </div>
-                                    <div class="row mb-5">
+                                    <div class="row mb-3">
                                         <div class="col-12">
                                             <h1>Billing Information</h1>
                                             <div class="gray-box-rounded">
@@ -110,8 +110,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <input type="submit" name="commit" value="Submit Order" form="user-form"
-                                        id="submit-button" class="btn btn-primary" data-disable-with="Submit Order">
+                                    <%= f.button "Submit Order", class: "btn btn-primary w-100 mb-4", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>
+                                    <span class='sr-only'>Processing...</span>".html_safe } %>
                                 </div>
                                 <div class="col-lg-7 col-12">
                                     <h1>Review Order</h1>

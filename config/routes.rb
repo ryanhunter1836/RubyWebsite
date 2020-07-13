@@ -26,4 +26,5 @@ Rails.application.routes.draw do
   post '/retrieve-customer-payment-method', to: 'checkouts#retrieve_customer_payment_method'
   post '/subscription-complete',      to: 'checkouts#subscription_complete'
   post '/stripe-webhook',             to: 'checkouts#stripe_webhook'
+  post '/retrieve-customer-payment-method', to: 'users#retrieve_customer_payment_method'
 end

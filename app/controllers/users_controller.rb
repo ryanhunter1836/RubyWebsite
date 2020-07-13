@@ -25,6 +25,7 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find(params[:id])
+    @paymentMethod = getCardString(Stripe::PaymentMethod.retrieve(@user.paymentMethodId))
   end
 
   def update
@@ -43,10 +44,18 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
+  def retrieve_customer_payment_method
+    data = JSON.parse request.body.read
+  
+    payment_method = Stripe::PaymentMethod.retrieve(data['paymentMethodId'])
+  
+    payment_method.to_json
+  end
+
   private
 
     def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+      params.require(:user).permit(:name, :email, :password, :password_confirmation, :paymentMethodId)
     end
 
     # Confirms an admin user.
@@ -58,5 +67,9 @@ class UsersController < ApplicationController
   def correct_user
     @user = User.find(params[:id])
     redirect_to(root_url) unless current_user?(@user)
+  end
+
+  def getCardString(paymentMethod)
+    paymentMethod.card.brand.capitalize() + " ••••" + paymentMethod.card.last4
   end
 end

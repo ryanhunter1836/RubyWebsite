@@ -1,28 +1,18 @@
 class CheckoutsController < ApplicationController
 protect_from_forgery except: :stripe_webhook
 
-def index
-  @user = User.new
-  @user.shipping_addresses.build
-  @price = calculate_total_price(@order_options)
-end
-
-#Create the user account
+#Create the user account             
 def create
-  @user = User.create!(signup_params)
-  puts "here"
+  @user = User.create(signup_params)
+
   #Need to save the shipping address to the order as well
   if @user.save
     @user.send_activation_email
-    flash[:info] = "Please check your email to activate your account."
 
     #Log in the user for use in the Stripe payment
     log_in @user
-
-    render json: @user.errors
-  else
-    render json: @user.errors
   end
+  render json: @user.errors
 end
 
 def setup
@@ -35,9 +25,7 @@ end
 #Create a new Stripe customer
 def create_customer
   # Create a new customer object
-  customer = Stripe::Customer.create(
-    email: current_user.email
-  )
+  customer = Stripe::Customer.create(email: current_user.email)
 
   current_user.stripeCustomerId = customer.id
   current_user.save
@@ -60,6 +48,10 @@ def create_subscription
   rescue Stripe::CardError => e
     halt 200, { 'Content-Type' => 'application/json' }, { 'error': { message: e.error.message } }.to_json
   end
+
+  #Save the payment id to the user
+  current_user.paymentMethodId = data['paymentMethodId']
+  current_user.save
 
   # Set the default payment method on the customer
   Stripe::Customer.update(
@@ -84,20 +76,6 @@ def create_subscription
   end
 
   render json: subscription
-end
-
-def getSubscriptionIdList(orderOption, subscription)
-  subscriptionIds = []
-  #Loop through all the data items and find the one that matches the price ID
-  orderOption.stripe_product.each do |stripeProduct|
-    subscription.items.data.each do |item|
-      if(item.price.id == stripeProduct)
-        subscriptionIds.append(item.id)
-      end
-    end
-  end
-
-  subscriptionIds
 end
 
 def retry_invoice
@@ -165,14 +143,8 @@ end
 
 #Payment was successful.  Mark as paid in DB and update the stripe subscription id
 def subscription_complete
-  current_user.order_options.each do |f|
-    f.active = true
-    f.save
-  end
-
-  #Delete the current shopping cart since the account has been created and orders tied to the account
-  current_shopping_cart.destroy
-
+  current_user.order_options[0].active = true
+  #Redirect to thank you page
   flash[:success] = "Thank you for your order!"
 end
 
@@ -249,6 +221,19 @@ def stripe_webhook
 end
 
 private 
+  def getSubscriptionIdList(orderOption, subscription)
+    subscriptionIds = []
+    #Loop through all the data items and find the one that matches the price ID
+    orderOption.stripe_product.each do |stripeProduct|
+      subscription.items.data.each do |item|
+        if(item.price.id == stripeProduct)
+          subscriptionIds.append(item.id)
+        end
+      end
+    end
+
+    subscriptionIds
+  end
 
   def calculate_total_price(order_options)
     totalPrice = 0
@@ -269,8 +254,6 @@ private
     products = []
     current_user.order_options.each do |f|
     f.stripe_product.each do |g|
-
-
         #Search through the list to see if the product has already been added
         #If it has, increment the quantity
         found = false
