@@ -3,16 +3,21 @@ protect_from_forgery except: :stripe_webhook
 
 #Create the user account             
 def create
-  @user = User.create(signup_params)
+  user = User.create(signup_params)
 
-  #Need to save the shipping address to the order as well
-  if @user.save
-    @user.send_activation_email
+  if user.save
+    user.order_options[0].initialize_stripe_products()
+    user.send_activation_email
+    #Tie the shipping addresses to the order option
+    #Use the first entry in the collection since there is only 1 because this
+    # is a new user
+    user.shipping_addresses[0].order_option_id = user.order_options[0].id
+    user.save
 
     #Log in the user for use in the Stripe payment
-    log_in @user
+    log_in user
   end
-  render json: @user.errors
+  render json: user.errors
 end
 
 def setup
@@ -39,6 +44,8 @@ end
 #Create a subscription for the customer
 def create_subscription
   data = JSON.parse request.body.read
+  @order = current_user.order_options[0]
+  @order.initialize_stripe_products
 
   begin
     Stripe::PaymentMethod.attach(
@@ -64,16 +71,13 @@ def create_subscription
   # Create the subscription
   subscription = Stripe::Subscription.create(
     customer: data['customerId'],
-    items: create_products_list,
+    items: @order.get_products_hash,
     expand: ['latest_invoice.payment_intent']
   )
 
-  #Save the subscription id to the order options
-  current_user.order_options.each do |f|
-    f.subscription_id = subscription.id
-    f.subscription_item_id = getSubscriptionIdList(f, subscription)
-    f.save
-  end
+  @order.subscription_id = subscription.id
+  @order.add_subscription_ids(subscription)
+  @order.save
 
   render json: subscription
 end
@@ -131,21 +135,15 @@ def retreive_upcoming_invoice
   render json: invoice
 end
 
-def retreive_customer_payment_method
-  data = JSON.parse request.body.read
-
-  payment_method = Stripe::PaymentMethod.retrieve(
-    data['paymentMethodId']
-  )
-
-  render json: payment_method
-end
-
 #Payment was successful.  Mark as paid in DB and update the stripe subscription id
 def subscription_complete
-  current_user.order_options[0].active = true
-  #Redirect to thank you page
-  flash[:success] = "Thank you for your order!"
+  order = current_user.order_options[0]
+  order.active = true
+  order.save
+end
+
+def success
+  @userId = current_user.id
 end
 
 def stripe_webhook
@@ -221,62 +219,9 @@ def stripe_webhook
 end
 
 private 
-  def getSubscriptionIdList(orderOption, subscription)
-    subscriptionIds = []
-    #Loop through all the data items and find the one that matches the price ID
-    orderOption.stripe_product.each do |stripeProduct|
-      subscription.items.data.each do |item|
-        if(item.price.id == stripeProduct)
-          subscriptionIds.append(item.id)
-        end
-      end
-    end
-
-    subscriptionIds
-  end
-
-  def calculate_total_price(order_options)
-    totalPrice = 0
-    order_options.each do |t|
-      totalPrice += t.total_price
-    end
-    totalPrice
-  end
-
   def signup_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation, 
       shipping_addresses_attributes: [:address1, :address2, :city, :state, :postal],
       order_options_attributes: [:quality, :frequency, vehicle_id: []])
-  end
-
-  #Method to create list of products user is subscribing to
-  def create_products_list
-    products = []
-    current_user.order_options.each do |f|
-    f.stripe_product.each do |g|
-        #Search through the list to see if the product has already been added
-        #If it has, increment the quantity
-        found = false
-        products.each do |h|
-          if(h[0] == g)
-              h[1] += 1
-              found = true
-          end
-        end
-
-        #Otherwise, add a new product to the list
-        if(!found)
-          products.push([g, 1])
-        end
-      end
-    end
-
-    #Create a map of the products
-    productsMap = []
-    products.each do |item|
-      productsMap.append({ price: item[0], quantity: item[1] })
-    end
-
-    productsMap
   end
 end

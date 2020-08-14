@@ -1,0 +1,128 @@
+<% provide(:title, "Edit Subscription") %>
+<%= javascript_pack_tag "edit_update" %>
+<%= javascript_pack_tag "checkouts" %>
+
+<div class="row">
+    <div class="col-12">
+        <h1>Update Subscription</h1>
+    </div>
+    <div class="container full-width">
+        <div class="col-12">
+            <%= form_for @user, url: vehicle_path, local: true do |f| %>
+            <div id="smartwizard">
+                <ul class="nav">
+                    <li><a class="nav-link" href="#step-1">Step 1<br /><small>Edit Vehicles</small></a></li>
+                    <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
+                    <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
+                    <li><a class="nav-link" href="#step-4">Step 4<br /><small>Shipping</small></a></li>
+                    <li><a class="nav-link" href="#step-5">Step 5<br /><small>Review & Confirm</small></a></li>
+                </ul>
+                <div class="tab-content">
+                    <%= f.fields_for :order_options do |order_fields| %>
+                        <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                            <div class="col-12">
+                                <h1>Edit Vehicles</h1>
+                                <div id="vehicle_container" class="row d-flex justify-content-center mb-3">
+                                    <% @order_option.vehicle_id.each_with_index do |vehicle_id, index| %>
+                                        <%= render partial: 'vehicle', :locals => { f: order_fields, vehicle_id: vehicle_id, index: index } %>
+                                        <button class="btn btn-primary undo-button h-25 col-4 text-center" type="button" style="display:none;">Undo</button> 
+                                    <% end %>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="step-2" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                            <div class="col-md-6 offset-md-3">
+                                <h1>Select Quality</h1>
+                                <div class="btn-group-toggle row" data-toggle="buttons">
+                                    <label class="btn btn-outline-primary btn-lg col-3">
+                                        <%= f.radio_button :quality, 'good', :id => 'good_button', :name => 'user[order_options_attributes][0][quality]', checked: (@order_option.quality == 'good') %>Good
+                                    </label>
+                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1">
+                                        <%= f.radio_button :quality, 'better', :id => 'better_button', :name => 'user[order_options_attributes][0][quality]', checked: (@order_option.quality == 'better') %>Better
+                                    </label>
+                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1">
+                                        <%= f.radio_button :quality, 'best', :id => 'best_button', :name => 'user[order_options_attributes][0][quality]', checked: (@order_option.quality == 'best') %>Best
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="step-3" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                            <div class="col-md-6 offset-md-3">
+                                <h1>Select Frequency</h1>
+                                <div class="btn-group-toggle row" data-toggle="buttons">
+                                    <label class="btn btn-outline-primary btn-lg col-5">
+                                        <%= f.radio_button :frequency, 'six_months', :id => 'months_button', :name => 'user[order_options_attributes][0][frequency]', checked: (@order_option.frequency == 'six_months') %>
+                                        Every 6 Months
+                                    </label>
+                                    <label class="btn btn-outline-primary btn-lg col-5 offset-1">
+                                        <%= f.radio_button :frequency, 'one_year', :id => 'year_button', :name => 'user[order_options_attributes][0][frequency]', checked: (@order_option.frequency == 'one_year') %>
+                                        Every 12 Months
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    <% end %>
+                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
+                        <div class="col-12">
+                            <h1>Shipping Information</h1>
+                            <%= f.fields_for :shipping_addresses do |shipping_fields|%>
+                                <%= shipping_fields.label :address1, "Address Line 1" %>
+                                <%= shipping_fields.text_field :address1, class: 'form-control', id: 'address1_field', placeholder: "Address line 1", value: @shipping_address.address1 %>
+                                <div id = "address1_error" class="help-block"></div>
+
+                                <%= shipping_fields.label :address2, "Address Line 2" %>
+                                <%= shipping_fields.text_field :address2, class: 'form-control', id: 'address2_field', placeholder: "Address line 2", value: @shipping_address.address2 %>
+
+                                <%= shipping_fields.label :city, "City" %>
+                                <%= shipping_fields.text_field :city, class: 'form-control', id: 'city_field', placeholder: "City", value: @shipping_address.city %>
+                                <div id = "city_error" class="help-block"></div>
+
+                                <%= shipping_fields.label :state, "State" %>
+                                <%= shipping_fields.text_field :state, class: 'form-control', id: 'state_field', placeholder: "State", value: @shipping_address.state %>
+                                <div id = "state_error" class="help-block"></div>
+
+                                <%= shipping_fields.label :postal, "Zip Code" %>
+                                <%= shipping_fields.text_field :postal, class: 'form-control mb-4', id: 'postal_field', placeholder: "Zip code", value: @shipping_address.postal %>
+                                <div id = "postal_error" class="help-block"></div>
+                            <% end %>
+                        </div>
+                    </div>
+                    <div id="step-5" class="row mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
+                        <div class="col-12 col-lg-8 offset-lg-2">
+                            <h1>Review Details</h1>
+                            <div class="gray-box-rounded">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6">
+                                        <div class="row mb-2">
+                                            <h5 class="col-12">Vehicles</h5>
+                                            <div id="vehicle_preview_container">
+                                                <% @order_option.vehicle_id.each_with_index do |vehicle, index| %>
+                                                    <div id="vehicle_preview_<%= (index + 1).to_s %>" class="vehicle-preview col-12"><%= get_vehicle_name(vehicle) %></div>
+                                                <% end %>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <h5 class="col-12">Quality</h5>
+                                            <div id="quality_preview" class="col-12"><%= get_quality_string(@order_option.quality) %></div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <h5 class="col-6">Frequency</h5>
+                                            <div id="frequency_preview" class="col-12"><%= get_frequency_string(@order_option.frequency) %></div>
+                                        </div>
+                                        <div class="row"> 
+                                            <h5 class="col-12">Shipping Address</h5>
+                                            <div class="col-12" id="shipping_preview"><%= get_shipping_string(@order_option.shipping_address) %></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <%= f.button "Update Subscription", class: "btn btn-success w-100 mt-4 mb-2" %>
+                            <a class="btn btn-danger w-100 mb-4" type="button" href="<%= user_path(id: @order_option.user_id) %>">Cancel Changes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% end %>
+        </div>      
+    </div>
+</div>

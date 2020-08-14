@@ -8,30 +8,15 @@ class UsersController < ApplicationController
     @order_options = @user.order_options
   end
 
-  def new
-    @user = User.new
-  end
-
-  def create
-    @user = User.new(user_params)
-    if @user.save
-      @user.send_activation_email
-      flash[:info] = "Please check your email to activate your account."
-      redirect_to root_url
-    else
-      render 'new'
-    end
-  end
-
   def edit
     @user = User.find(params[:id])
     @paymentMethod = getCardString(Stripe::PaymentMethod.retrieve(@user.paymentMethodId))
   end
 
   def update
-    @user = User.find(params[:id])
-    if @user.update(user_params)
-      flash[:success] = "Profile updated"
+    user = User.find(params[:id])
+    if user.update(user_params)
+      flash[:success] = "Profile updated!"
       redirect_to @user
     else
       render 'edit'
@@ -42,14 +27,6 @@ class UsersController < ApplicationController
     User.find(params[:id]).destroy
     flash[:success] = "User deleted"
     redirect_to users_url
-  end
-
-  def retrieve_customer_payment_method
-    data = JSON.parse request.body.read
-  
-    payment_method = Stripe::PaymentMethod.retrieve(data['paymentMethodId'])
-  
-    payment_method.to_json
   end
 
   private

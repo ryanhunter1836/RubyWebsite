@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :checkouts,           only: [:index, :create]
   get '/get_models_by_make',          to: 'vehicles#get_models_by_make'
   get '/get_years_by_model',          to: 'vehicles#get_years_by_model'
+  get '/checkouts/success',           to: 'checkouts#success'
   get '/setup',                       to: 'checkouts#setup'
   post '/create-customer',            to: 'checkouts#create_customer'
   post '/create-subscription',        to: 'checkouts#create_subscription'
@@ -24,7 +25,6 @@ Rails.application.routes.draw do
   post '/cancel-subscription',        to: 'checkouts#cancel_subscription'
   post '/update-subscription',        to: 'checkouts#update_subscription'
   post '/retrieve-customer-payment-method', to: 'checkouts#retrieve_customer_payment_method'
-  post '/subscription-complete',      to: 'checkouts#subscription_complete'
+  get '/subscription-complete',       to: 'checkouts#subscription_complete'
   post '/stripe-webhook',             to: 'checkouts#stripe_webhook'
-  post '/retrieve-customer-payment-method', to: 'users#retrieve_customer_payment_method'
 end

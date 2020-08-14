@@ -5,10 +5,10 @@
       <h2><%= @user.name %></h2>
     </div>
     <div class="row mb-2">
-      <a class="btn btn-primary" href="<%=new_vehicle_path%>" role="button">Add a new vehicle</a>
+      <a class="btn btn-primary w-50" href="<%=new_vehicle_path%>" role="button">Add a new vehicle</a>
     </div>
     <div class="row">
-      <a class="btn btn-primary" href="<%= edit_user_path %>" role="button">Edit Profile</a>
+      <a class="btn btn-primary w-50" href="<%= edit_user_path %>" role="button">Edit Profile</a>
     </div>
   </div>
   <div class="col-md-8">
@@ -16,6 +16,8 @@
       <h3>Current Subscriptions</h3>
       <% if @user.order_options.any? %>
         <%= render partial: "order_option", collection: (@order_options) %>
+      <% else %>
+        <h4>You currently do not have any subscriptions</h4>
       <% end %>
     </div>
   </div>

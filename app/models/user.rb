@@ -1,9 +1,12 @@
 class User < ApplicationRecord
+  include ActiveModel::Dirty
+
   attr_accessor :remember_token, :activation_token, :reset_token
   has_many :shipping_addresses, dependent: :destroy, inverse_of: :user
   has_many :order_options, dependent: :destroy, inverse_of: :user
   accepts_nested_attributes_for :shipping_addresses, :order_options
-  before_save   :downcase_email
+  before_save :downcase_email
+  before_save :update_billing_method, if: :will_save_change_to_paymentMethodId?
   before_create :create_activation_digest
   validates :name,  presence: true, length: { maximum: 50 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -72,7 +75,38 @@ class User < ApplicationRecord
   end
 
   private
+    def update_billing_method
+      unless paymentMethodId_change_to_be_saved[0].nil?
+        #Attach new payment method to customer
+        puts "Updating billing method"
+        begin
+          Stripe::PaymentMethod.attach(paymentMethodId_change_to_be_saved[1],
+            { customer: self.stripeCustomerId })
 
+          #Display an error screen if something goes wrong
+          rescue Stripe::CardError => e
+            errors.add(:paymentMethodId, "Error attaching payment method")
+            raise ActiveRecord::RecordInvalid.new(self)
+            #Need to log this
+            #halt 200, { 'Content-Type' => 'application/json' }, { 'error': { message: e.error.message } }.to_json
+        end
+
+        #Set the new payment method as default
+        Stripe::Customer.update(
+          self.stripeCustomerId,
+          invoice_settings: {
+            default_payment_method: paymentMethodId_change_to_be_saved[1]
+          }
+        )
+
+        #Remove the old payment method
+        Stripe::PaymentMethod.detach(
+          paymentMethodId_change_to_be_saved[0]
+        )
+      end
+    end
+    
+      
     # Converts email to all lower-case.
     def downcase_email
       self.email = email.downcase
@@ -83,4 +117,4 @@ class User < ApplicationRecord
       self.activation_token  = User.new_token
       self.activation_digest = User.digest(activation_token)
     end
-end
+  end

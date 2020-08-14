@@ -3,6 +3,8 @@
   "application.js.map": "/packs/js/application-a611f71e42ed646c761a.js.map",
   "checkouts.js": "/packs/js/checkouts-29a44df957dd2708208d.js",
   "checkouts.js.map": "/packs/js/checkouts-29a44df957dd2708208d.js.map",
+  "edit_update.js": "/packs/js/edit_update-91cf40fb19dbd824df1c.js",
+  "edit_update.js.map": "/packs/js/edit_update-91cf40fb19dbd824df1c.js.map",
   "entrypoints": {
     "application": {
       "js": [
@@ -18,6 +20,14 @@
       ],
       "js.map": [
         "/packs/js/checkouts-29a44df957dd2708208d.js.map"
+      ]
+    },
+    "edit_update": {
+      "js": [
+        "/packs/js/edit_update-91cf40fb19dbd824df1c.js"
+      ],
+      "js.map": [
+        "/packs/js/edit_update-91cf40fb19dbd824df1c.js.map"
       ]
     },
     "update": {

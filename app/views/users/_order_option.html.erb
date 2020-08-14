@@ -1,14 +1,31 @@
-<% order_option.vehicle_id.each do |vehicle| %>
-    <div class="card mb-2">
-        <div class="card-header">
-            <h5><%= get_vehicle_name(vehicle) %></h5>
-        </div>
-        <div class="card-body">
-            <p class="card-text"><b>Quality:</b> <%= get_quality_string(order_option.quality) %></p>
-            <p class="card-text"><b>Frequency:</b> <%= get_frequency_string(order_option.frequency) %></p>
-            <p class="card-text"><b>Next Shipment:</b> <%= order_option.next_delivery.strftime("%m/%d/%Y") %></p>
-            <a href="#" class="btn btn-success">Reorder Now</a>
-            <%= link_to "Cancel Subscription", vehicle_path(order_option.id), method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' %>
-        </div>
+<div class="card mb-2">
+    <div class="card-header">
+        <h5>Subscription #<%= (order_option_counter + 1) %></h5>
     </div>
-<% end %>
+    <div class="card-body">
+        <div class="row col-12 mb-2">
+            <h5 class="col-12">Vehicles</h5>
+            <% order_option.vehicle_id.each do |i| %>
+            <div class="col-12"><%= get_vehicle_name(i) %></div>
+            <% end %>
+        </div>
+        <div class="row col-12 mb-2">
+            <h5 class="col-12">Quality</h5>
+            <div class="col-12"><%= get_quality_string(order_option.quality) %></div>
+        </div>
+        <div class="row col-12 mb-2">
+            <h5 class="col-12">Frequency</h5>
+            <div class="col-12"><%= get_frequency_string(order_option.frequency) %></div>        
+        </div>
+        <div class="row col-12 mb-2">
+            <h5 class="col-12">Shipping Address</h5>
+        </div>
+        <div class="row col-12 mb-3">
+            <h5 class="col-12">Next Shipment</h5>
+            <div class="col-12"><%= order_option.next_delivery.strftime("%m/%d/%Y") %></div>
+        </div>
+        <%= link_to "Edit Subscription", edit_vehicle_path(:id => order_option.id), class: 'btn btn-success' %>
+        <%= link_to "Cancel Subscription", vehicle_path(order_option.id), method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' %>
+    </div>
+</div>
+

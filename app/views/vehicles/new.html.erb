@@ -24,7 +24,7 @@
                             <div class="col-12">
                                 <h1>Select Vehicles</h1>
                                 <div id="vehicle_container" class="row d-flex justify-content-center mb-3">
-                                    <%= render :partial => 'vehicle', :locals => { :order_fields => order_fields } %>
+                                    <%= render :partial => 'vehicle', :locals => { order_fields: order_fields } %>
                                 </div>
                                 <div class="btn btn-success col-4 offset-4 mb-2" id="add_vehicle_button"
                                     onclick="addVehicle()">Add Another Vehicle</div>

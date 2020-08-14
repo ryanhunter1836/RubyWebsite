@@ -215,12 +215,15 @@
       localStorage.clear();
 
       fetch('/subscription-complete', {
-        method: 'post',
+        method: 'get',
         headers: {
           'Content-type': 'application/json',
           'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
         }
       });
+
+      //Redirect to thank you page
+      window.location='/checkouts/success'
     }
   
     function createSubscription({ customerId, paymentMethodId, priceId }) {
@@ -328,28 +331,7 @@
           })
       );
     }
-  
-    function retrieveUpcomingInvoice(customerId, subscriptionId, newPriceId) {
-      return fetch('/retrieve-upcoming-invoice', {
-        method: 'post',
-        headers: {
-          'Content-type': 'application/json',
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-          customerId: customerId,
-          subscriptionId: subscriptionId,
-          newPriceId: newPriceId,
-        }),
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((invoice) => {
-          return invoice;
-        });
-    }
-  
+
     function cancelSubscription() {
       const params = new URLSearchParams(document.location.search.substring(1));
       const subscriptionId = params.get('subscriptionId');
@@ -372,45 +354,6 @@
         });
     }
   
-    function updateSubscription(priceId, subscriptionId) {
-      return fetch('/update-subscription', {
-        method: 'post',
-        headers: {
-          'Content-type': 'application/json',
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-          subscriptionId: subscriptionId,
-          newPriceId: priceId,
-        }),
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((response) => {
-          return response;
-        });
-    }
-  
-    function retrieveCustomerPaymentMethod(paymentMethodId) {
-      return fetch('/retrieve-customer-payment-method', {
-        method: 'post',
-        headers: {
-          'Content-type': 'application/json',
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-          paymentMethodId: paymentMethodId,
-        }),
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((response) => {
-          return response;
-        });
-    }
-  
     function getConfig() {
       return fetch('/setup', {
         method: 'get',
@@ -428,105 +371,3 @@
     }
   
     getConfig();
-  
-    /* ------ Sample helpers ------- */
-  
-    function getFormattedAmount(amount) {
-      // Format price details and detect zero decimal currencies
-      var amount = amount;
-      var numberFormat = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        currencyDisplay: 'symbol',
-      });
-      var parts = numberFormat.formatToParts(amount);
-      var zeroDecimalCurrency = true;
-      for (var part of parts) {
-        if (part.type === 'decimal') {
-          zeroDecimalCurrency = false;
-        }
-      }
-      amount = zeroDecimalCurrency ? amount : amount / 100;
-      var formattedAmount = numberFormat.format(amount);
-  
-      return formattedAmount;
-    }
-  
-    function capitalizeFirstLetter(string) {
-      let tempString = string.toLowerCase();
-      return tempString.charAt(0).toUpperCase() + tempString.slice(1);
-    }
-  
-    function getDateStringFromUnixTimestamp(date) {
-      let nextPaymentAttemptDate = new Date(date * 1000);
-      let day = nextPaymentAttemptDate.getDate();
-      let month = nextPaymentAttemptDate.getMonth() + 1;
-      let year = nextPaymentAttemptDate.getFullYear();
-  
-      return month + '/' + day + '/' + year;
-    }
-  
-    // For demo purpose only
-    function getCustomersPaymentMethod() {
-      let params = new URLSearchParams(document.location.search.substring(1));
-  
-      let paymentMethodId = params.get('paymentMethodId');
-      if (paymentMethodId) {
-        retrieveCustomerPaymentMethod(paymentMethodId).then(function (response) {
-          document.getElementById('credit-card-last-four').innerText =
-            capitalizeFirstLetter(response.card.brand) +
-            ' •••• ' +
-            response.card.last4;
-  
-          document.getElementById(
-            'subscribed-price'
-          ).innerText = capitalizeFirstLetter(params.get('priceId'));
-        });
-      }
-    }
-  
-    getCustomersPaymentMethod();
-  
-    // Shows the cancellation response
-    function subscriptionCancelled() {
-      document.querySelector('#subscription-cancelled').classList.remove('hidden');
-      document.querySelector('#subscription-settings').classList.add('hidden');
-    }
-  
-    /* Shows a success / error message when the payment is complete */
-    function onSubscriptionSampleDemoComplete({
-      priceId: priceId,
-      subscription: subscription,
-      paymentMethodId: paymentMethodId,
-      invoice: invoice,
-    }) {
-      let subscriptionId;
-      let currentPeriodEnd;
-      let customerId;
-      if (subscription) {
-        subscriptionId = subscription.id;
-        currentPeriodEnd = subscription.current_period_end;
-        if (typeof subscription.customer === 'object') {
-          customerId = subscription.customer.id;
-        } else {
-          customerId = subscription.customer;
-        }
-      } else {
-        const params = new URLSearchParams(document.location.search.substring(1));
-        subscriptionId = invoice.subscription;
-        currentPeriodEnd = params.get('currentPeriodEnd');
-        customerId = invoice.customer;
-      }
-  
-      window.location.href =
-        '/account.html?subscriptionId=' +
-        subscriptionId +
-        '&priceId=' +
-        priceId +
-        '&currentPeriodEnd=' +
-        currentPeriodEnd +
-        '&customerId=' +
-        customerId +
-        '&paymentMethodId=' +
-        paymentMethodId;
-    }
