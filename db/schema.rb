@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_19_224020) do
+ActiveRecord::Schema.define(version: 2020_08_16_193730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 2020_07_19_224020) do
     t.datetime "reset_sent_at"
     t.string "stripeCustomerId"
     t.string "paymentMethodId"
+    t.boolean "accountCreated"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

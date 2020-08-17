@@ -3,21 +3,40 @@ protect_from_forgery except: :stripe_webhook
 
 #Create the user account             
 def create
-  user = User.create(signup_params)
+  existing_user = User.find_by(email: params[:user][:email])
 
-  if user.save
-    user.order_options[0].initialize_stripe_products()
-    user.send_activation_email
-    #Tie the shipping addresses to the order option
-    #Use the first entry in the collection since there is only 1 because this
-    # is a new user
-    user.shipping_addresses[0].order_option_id = user.order_options[0].id
-    user.save
+  #Update an existing record
+  if (!existing_user.nil? && existing_user.accountCreated == false)
+    existing_user.assign_attributes(signup_params)
+    if existing_user.valid?
+      existing_user.order_options[0].initialize_stripe_products()
+      existing_user.shipping_addresses[0].order_option_id = existing_user.order_options[0].id
+      existing_user.save
 
-    #Log in the user for use in the Stripe payment
-    log_in user
-  end
-  render json: user.errors
+      log_in existing_user
+      render json: existing_user.errors, status: 200
+    else
+      render json: existing_user.errors, status: 400
+    end
+  else
+    new_user = User.create(signup_params)
+    new_user.accountCreated = false
+
+    if new_user.valid?
+      new_user.order_options[0].initialize_stripe_products()
+      #Tie the shipping addresses to the order option
+      #Use the first entry in the collection since there is only 1 because this
+      # is a new user
+      new_user.shipping_addresses[0].order_option_id = new_user.order_options[0].id
+      new_user.save
+  
+      log_in new_user
+      render json: new_user.errors, status: 200
+    else
+      render json: new_user.errors, status: 400
+    end
+
+  end  
 end
 
 def setup
@@ -44,8 +63,8 @@ end
 #Create a subscription for the customer
 def create_subscription
   data = JSON.parse request.body.read
-  @order = current_user.order_options[0]
-  @order.initialize_stripe_products
+  order = current_user.order_options[0]
+  order.initialize_stripe_products
 
   begin
     Stripe::PaymentMethod.attach(
@@ -71,68 +90,15 @@ def create_subscription
   # Create the subscription
   subscription = Stripe::Subscription.create(
     customer: data['customerId'],
-    items: @order.get_products_hash,
+    items: order.get_products_hash,
     expand: ['latest_invoice.payment_intent']
   )
 
-  @order.subscription_id = subscription.id
-  @order.add_subscription_ids(subscription)
-  @order.save
+  order.subscription_id = subscription.id
+  order.add_subscription_ids(subscription)
+  order.save
 
   render json: subscription
-end
-
-def retry_invoice
-  data = JSON.parse request.body.read
-
-  begin
-    Stripe::PaymentMethod.attach(
-      data['paymentMethodId'],
-      { customer: data['customerId'] }
-    )
-  rescue Stripe::CardError => e
-    halt 200, { 'Content-Type' => 'application/json' }, { 'error': { message: e.error.message } }.to_json
-  end
-
-  # Set the default payment method on the customer
-  Stripe::Customer.update(
-    data['customerId'],
-    invoice_settings: {
-      default_payment_method: data['paymentMethodId']
-    }
-  )
-
-  invoice = Stripe::Invoice.retrieve({
-                                       id: data['invoiceId'],
-                                       expand: ['payment_intent']
-                                     })
-
-  render json: invoice
-end
-
-def retreive_upcoming_invoice
-  data = JSON.parse request.body.read
-
-  subscription = Stripe::Subscription.retrieve(
-    data['subscriptionId']
-  )
-
-  invoice = Stripe::Invoice.upcoming(
-    customer: data['customerId'],
-    subscription: data['subscriptionId'],
-    subscription_items: [
-      {
-        id: subscription.items.data[0].id,
-        deleted: true
-      },
-      {
-        price: ENV[data['newPriceId']],
-        deleted: false
-      }
-    ]
-  )
-
-  render json: invoice
 end
 
 #Payment was successful.  Mark as paid in DB and update the stripe subscription id
@@ -140,6 +106,10 @@ def subscription_complete
   order = current_user.order_options[0]
   order.active = true
   order.save
+
+  current_user.accountCreated = true
+  current_user.save
+  current_user.send_activation_email
 end
 
 def success

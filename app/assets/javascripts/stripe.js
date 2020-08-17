@@ -79,6 +79,9 @@
       } else {
         displayError.textContent = '';
       }
+      button = document.getElementById('submit-button');
+      button.innerHTML = "Submit Order";
+      button.disabled = false;
     }
   
     function createPaymentMethod({ card, customerId, billingName, isPaymentRetry, invoiceId }) {
@@ -276,82 +279,6 @@
             displayError(error);
           })
       );
-    }
-  
-    function retryInvoiceWithNewPaymentMethod({
-      customerId,
-      paymentMethodId,
-      invoiceId,
-    }) {
-      return (
-        fetch('/retry-invoice', {
-          method: 'post',
-          headers: {
-            'Content-type': 'application/json',
-            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-          },
-          body: JSON.stringify({
-            customerId: customerId,
-            paymentMethodId: paymentMethodId,
-            invoiceId: invoiceId,
-          }),
-        })
-          .then((response) => {
-            return response.json();
-          })
-          // If the card is declined, display an error to the user.
-          .then((result) => {
-            if (result.error) {
-              // The card had an error when trying to attach it to a customer
-              throw result;
-            }
-            return result;
-          })
-          // Normalize the result to contain the object returned
-          // by Stripe. Add the addional details we need.
-          .then((result) => {
-            return {
-              // Use the Stripe 'object' property on the
-              // returned result to understand what object is returned.
-              invoice: result,
-              paymentMethodId: paymentMethodId,
-              isRetry: true,
-            };
-          })
-          // Some payment methods require a customer to be on session
-          // to complete the payment process. Check the status of the
-          // payment intent to handle these actions.
-          .then(handleCustomerActionRequired)
-          // No more actions required. Provision your service for the user.
-          .then(onSubscriptionComplete)
-          .catch((error) => {
-            // An error has happened. Display the failure to the user here.
-            // We utilize the HTML element we created.
-            displayError(error);
-          })
-      );
-    }
-
-    function cancelSubscription() {
-      const params = new URLSearchParams(document.location.search.substring(1));
-      const subscriptionId = params.get('subscriptionId');
-  
-      return fetch('/cancel-subscription', {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-          subscriptionId: subscriptionId,
-        }),
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((cancelSubscriptionResponse) => {
-          return subscriptionCancelled(cancelSubscriptionResponse);
-        });
     }
   
     function getConfig() {

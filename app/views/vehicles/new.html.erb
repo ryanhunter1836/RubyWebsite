@@ -1,8 +1,11 @@
 <% provide(:title, "Add Vehicle") %>
 <%= javascript_include_tag "https://js.stripe.com/v3/" %>
 <%= javascript_include_tag "stripe.js" %>
-<%= javascript_pack_tag "update" %>
 <%= javascript_pack_tag "checkouts" %>
+
+<noscript>
+    <meta http-equiv="refresh" content="2;url=/javascript-warning">
+</noscript>
 
 <div class="row">
     <div class="col-12">
@@ -93,7 +96,7 @@
                             }
                         </script>
                     <% end %>
-                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
+                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab" style="height:auto;" role="tabpanel">
                         <div class="col-12">
                             <h1>Checkout</h1>
                             <div class="row col-12">
@@ -110,8 +113,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <%= f.button "Submit Order", class: "btn btn-primary w-100 mb-4", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>
-                                    <span class='sr-only'>Processing...</span>".html_safe } %>
+                                    <%= f.button "Submit Order", id:"submit-button", class: "btn btn-primary w-100 mb-4" %>
                                 </div>
                                 <div class="col-lg-7 col-12">
                                     <h1>Review Order</h1>
@@ -138,7 +140,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>  
+                            </div>
                         </div>
                     </div>
                 </div>

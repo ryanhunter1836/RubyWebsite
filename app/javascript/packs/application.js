@@ -24,7 +24,7 @@ $(document).on('turbolinks:load', function() {
     justified: true,
     enableURLhash: false,
     keyNavigation: false,
-    autoAdjustHeight: true,
+    autoAdjustHeight: false,
     transition: {
       animation: 'none',
       speed: '400',

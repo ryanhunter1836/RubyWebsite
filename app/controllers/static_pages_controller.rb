@@ -17,4 +17,8 @@ class StaticPagesController < ApplicationController
 
   def contact
   end
+
+  def javascript
+    render 'shared/javascript_warning'
+  end
 end
