@@ -13,7 +13,6 @@ class CreateVehicle < ActiveRecord::Migration[6.0]
       t.integer "quality"
       t.datetime "created_at", precision: 6, null: false
       t.datetime "updated_at", precision: 6, null: false
-      t.datetime "next_delivery", precision: 6
       t.belongs_to :user
     end
   end

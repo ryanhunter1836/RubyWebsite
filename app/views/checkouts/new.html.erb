@@ -1,0 +1,151 @@
+<% provide(:title, "Add Vehicle") %>
+<%= javascript_include_tag "https://js.stripe.com/v3/" %>
+<%= javascript_include_tag "stripe.js" %>
+<%= javascript_pack_tag "checkouts" %>
+
+<noscript>
+    <meta http-equiv="refresh" content="2;url=/javascript-warning">
+</noscript>
+
+<div class="row">
+    <div class="col-12">
+        <h1>Add a new vehicle</h1>
+    </div>
+    <div class="container full-width">
+        <div class="col-12">
+            <%= form_for @user, url: checkouts_path, html: { id: 'user-form', 'data-type' => 'json' }, remote: true do |f| %>
+            <div id="smartwizard">
+                <ul class="nav">
+                    <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicles</small></a></li>
+                    <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
+                    <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
+                    <li><a class="nav-link" href="#step-4">Step 4<br /><small>Checkout</small></a></li>
+                </ul>
+                <%= f.fields_for :order_options do |order_fields| %>
+                    <div class="tab-content">
+                        <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                            <div class="col-12">
+                                <h1>Select Vehicles</h1>
+                                <div id="vehicle_container" class="row d-flex justify-content-center mb-3">
+                                    <%= render :partial => 'vehicle', :locals => { order_fields: order_fields } %>
+                                </div>
+                                <div class="btn btn-success col-4 offset-4 mb-2" id="add_vehicle_button"
+                                    onclick="addVehicle()">Add Another Vehicle</div>
+                                <div class="btn btn-danger col-4 offset-4" style="visibility:hidden"
+                                    id="remove_vehicle_button" onclick="removeVehicle()">Remove a Vehicle</div>
+                            </div>
+                        </div>
+                        <div id="step-2" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                            <div class="col-md-6 offset-md-3">
+                                <h1>Select Quality</h1>
+                                <div class="btn-group-toggle row" data-toggle="buttons">
+                                    <label class="btn btn-outline-primary btn-lg col-3">
+                                        <%= order_fields.radio_button :quality, 'good', :id => 'good_button', :name => 'user[order_options_attributes][0][quality]' %>Good
+                                    </label>
+                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1">
+                                        <%= order_fields.radio_button :quality, 'better', :id => 'better_button', :name => 'user[order_options_attributes][0][quality]' %>Better
+                                    </label>
+                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1">
+                                        <%= order_fields.radio_button :quality, 'best', :id => 'best_button', :name => 'user[order_options_attributes][0][quality]' %>Best
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="step-3" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                            <div class="col-md-6 offset-md-3">
+                                <h1>Select Frequency</h1>
+                                <div class="btn-group-toggle row" data-toggle="buttons">
+                                    <label class="btn btn-outline-primary btn-lg col-5">
+                                        <%= order_fields.radio_button :frequency, 'six_months', :id => 'months_button', :name => 'user[order_options_attributes][0][frequency]' %>
+                                        Every 6 Months
+                                    </label>
+                                    <label class="btn btn-outline-primary btn-lg col-5 offset-1">
+                                        <%= order_fields.radio_button :frequency, 'one_year', :id => 'year_button', :name => 'user[order_options_attributes][0][frequency]' %>
+                                        Every 12 Months
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <script type='text/javascript'>
+                            let numVehicles = 1;
+                
+                            function addVehicle() {
+                                numVehicles++;
+                                document.getElementById("remove_vehicle_button").style.visibility = "visible";
+                                htmlToInsert = "<%= j render :partial => 'vehicle', :locals => { :order_fields => order_fields } %>";
+                                htmlToInsert = htmlToInsert.replace("make-selector-1", "make-selector-" + numVehicles)
+                                    .replace("model-selector-1", "model-selector-" + numVehicles)
+                                    .replace("vehicle-id-1", "vehicle-id-" + numVehicles)
+                                    .replace(/name=\"1\"/g, "name=\"" + numVehicles + "\"");
+                                document.getElementById("vehicle_container").insertAdjacentHTML('beforeend', htmlToInsert);
+                                if (numVehicles === 3) {
+                                    document.getElementById("add_vehicle_button").style.visibility = "hidden";
+                                }
+                            }
+                
+                            function removeVehicle() {
+                                numVehicles--;
+                                document.getElementById("add_vehicle_button").style.visibility = "visible";
+                                if (numVehicles == 1) {
+                                    document.getElementById("remove_vehicle_button").style.visibility = "hidden";
+                                }
+                                //Remove the last form from the page
+                                elementList = document.getElementsByClassName("vehicle-form");
+                                element = elementList[elementList.length - 1];
+                                element.parentNode.removeChild(element);
+                            }
+                        </script>
+                    <% end %>
+                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab" style="height:auto;" role="tabpanel">
+                        <div class="col-12">
+                            <h1>Checkout</h1>
+                            <div class="row col-12">
+                                <div class="col-lg-5 col-12">
+                                    <div id="user-details">
+                                        <%= render :partial => 'users/new', :locals => { :f => f } %>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <h1>Billing Information</h1>
+                                            <div class="gray-box-rounded">
+                                                <div id="card-element" class="MyCardElement"></div>
+                                                <div id="card-element-errors" role="alert"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <%= f.button "Submit Order", id:"submit-button", class: "btn btn-primary w-100 mb-4" %>
+                                </div>
+                                <div class="col-lg-7 col-12">
+                                    <h1>Review Order</h1>
+                                    <div class="gray-box-rounded">
+                                        <div class="row">
+                                            <div class="col-6 p-0">
+                                                <div class="row col-12 mb-2">
+                                                    <h5 class="col-12">Vehicles</h5>
+                                                    <div id="vehicle_preview_container">
+                                                        <div id="vehicle_preview_1" class="vehicle-preview col-12"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row col-12 mb-2">
+                                                    <h5 class="col-12">Quality</h5>
+                                                    <div id="quality_preview" class="col-12"></div>
+                                                </div>
+                                                <div class="row col-12">
+                                                    <h5 class="col-6">Frequency</h5>
+                                                    <div id="frequency_preview" class="col-12"></div>
+                                                </div>  
+                                            </div>
+                                            <div class="col-6">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% end %>
+    </div>
+</div>

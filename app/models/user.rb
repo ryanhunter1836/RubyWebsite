@@ -2,9 +2,8 @@ class User < ApplicationRecord
   include ActiveModel::Dirty
 
   attr_accessor :remember_token, :activation_token, :reset_token
-  has_many :shipping_addresses, dependent: :destroy, inverse_of: :user
   has_many :order_options, dependent: :destroy, inverse_of: :user
-  accepts_nested_attributes_for :shipping_addresses, :order_options
+  accepts_nested_attributes_for :order_options
   before_save :downcase_email
   before_save :update_billing_method, if: :will_save_change_to_paymentMethodId?
   before_create :create_activation_digest

@@ -60,24 +60,23 @@ function clearErrors() {
 $(document).on('ajax:error', '#user-form', event => {
     const [response, status, xhr] = event.detail;
     clearErrors();
-
     //Loop through the user elements
     for(i = 0; i < userElements.length; i++) {
-        if(userElements[i] in response) {
-            inlineError(userElementNames[i], userElements[i], response[userElements[i]][0]);
+        if(userElements[i] in response['user']) {
+            inlineError(userElementNames[i], userElements[i], response['user'][userElements[i]][0]);
         }
     }
 
     //Loop through the shipping elements
     for(i = 0; i < shippingElements.length; i++) {
-        key = "shipping_addresses." + shippingElements[i];
-        if(key in response) {       
-            inlineError(shippingElementNames[i], shippingElements[i], response[key][0]);
+        if(shippingElements[i] in response['address']) {       
+            inlineError(shippingElementNames[i], shippingElements[i], response['address'][shippingElements[i]][0]);
         }
     }
 });
 
 $(document).on('ajax:success', '#user-form', event => {
+    clearErrors();
     runStripe();
 });
 
@@ -109,6 +108,7 @@ function updateMake(makeId, index) {
       $("#model-selector-" + index).html("");
       $("#vehicle-id-" + index).html("");
       //Include a blank row
+      $("#model-selector-" + index).append("<option value label=\" \"</option>");
       $.each(data, function(i, value) {
         $("#model-selector-" + index).append("<option value='" + value.id + "'>" + value.model + "</option>");
       });
@@ -218,6 +218,12 @@ function addListeners() {
   $("#year_button").click(function() {
     updateFrequencyPreview("Every 12 Months");
   });
+
+  $("#user-form").submit(function() {
+    button = $("#submit-button");
+    button.prop("disabled",true);
+    button.html('<i class="fa fa-spinner" aria-hidden="true"></i>');
+  })
 }
 
 document.addEventListener('turbolinks:load', () => {

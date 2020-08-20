@@ -4,6 +4,7 @@
 <noscript>
     <meta http-equiv="refresh" content="2;url=/javascript-warning">
 </noscript>
+<meta name="turbolinks-cache-control" content="no-cache">
 
 <div class="row">
     <div class="col-12">
@@ -37,13 +38,13 @@
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Quality</h1>
                                 <div class="btn-group-toggle row" data-toggle="buttons">
-                                    <label class="btn btn-outline-primary btn-lg col-3">
+                                    <label class="btn btn-outline-primary btn-lg col-3 <%= (@order_option.quality == 'good') ? 'active' : '' %>">
                                         <%= f.radio_button :quality, 'good', :id => 'good_button', :name => 'user[order_options_attributes][0][quality]', checked: (@order_option.quality == 'good') %>Good
                                     </label>
-                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1">
+                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1 <%= (@order_option.quality == 'better') ? 'active' : '' %>">
                                         <%= f.radio_button :quality, 'better', :id => 'better_button', :name => 'user[order_options_attributes][0][quality]', checked: (@order_option.quality == 'better') %>Better
                                     </label>
-                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1">
+                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1 <%= (@order_option.quality == 'best') ? 'active' : '' %>">
                                         <%= f.radio_button :quality, 'best', :id => 'best_button', :name => 'user[order_options_attributes][0][quality]', checked: (@order_option.quality == 'best') %>Best
                                     </label>
                                 </div>
@@ -53,11 +54,11 @@
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Frequency</h1>
                                 <div class="btn-group-toggle row" data-toggle="buttons">
-                                    <label class="btn btn-outline-primary btn-lg col-5">
+                                    <label class="btn btn-outline-primary btn-lg col-5 <%= (@order_option.frequency == 'six_months') ? 'active' : '' %>">
                                         <%= f.radio_button :frequency, 'six_months', :id => 'months_button', :name => 'user[order_options_attributes][0][frequency]', checked: (@order_option.frequency == 'six_months') %>
                                         Every 6 Months
                                     </label>
-                                    <label class="btn btn-outline-primary btn-lg col-5 offset-1">
+                                    <label class="btn btn-outline-primary btn-lg col-5 offset-1 <%= (@order_option.frequency == 'one_year') ? 'active' : '' %>">
                                         <%= f.radio_button :frequency, 'one_year', :id => 'year_button', :name => 'user[order_options_attributes][0][frequency]', checked: (@order_option.frequency == 'one_year') %>
                                         Every 12 Months
                                     </label>
@@ -114,7 +115,7 @@
                                         </div>
                                         <div class="row"> 
                                             <h5 class="col-12">Shipping Address</h5>
-                                            <div class="col-12" id="shipping_preview"><%= get_shipping_string(@order_option.shipping_address) %></div>
+                                            <div class="col-12" id="shipping_preview"><%= get_shipping_string(@shipping_address) %></div>
                                         </div>
                                     </div>
                                 </div>

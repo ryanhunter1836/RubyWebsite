@@ -124,7 +124,14 @@
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-        }
+        },
+        body: JSON.stringify({
+          address1: document.getElementById('address1_field').value,
+          address2: document.getElementById('address2_field').value,
+          city: document.getElementById('city_field').value,
+          state: document.getElementById('state_field').value,
+          postal: document.getElementById('postal_field').value
+        })
       })
         .then((response) => {
           return response.json();
@@ -212,7 +219,6 @@
     }
   
     function onSubscriptionComplete(result) {
-      console.log(result);
       // Payment was successful. Provision access to your service.
       // Remove invoice from localstorage because payment is now complete.
       localStorage.clear();

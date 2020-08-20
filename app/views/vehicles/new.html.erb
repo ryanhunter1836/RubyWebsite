@@ -1,7 +1,6 @@
 <% provide(:title, "Add Vehicle") %>
-<%= javascript_include_tag "https://js.stripe.com/v3/" %>
-<%= javascript_include_tag "stripe.js" %>
 <%= javascript_pack_tag "checkouts" %>
+<%= javascript_pack_tag 'edit' %>
 
 <noscript>
     <meta http-equiv="refresh" content="2;url=/javascript-warning">
@@ -13,13 +12,14 @@
     </div>
     <div class="container full-width">
         <div class="col-12">
-            <%= form_for @user, url: checkouts_path, html: { id: 'user-form', 'data-type' => 'json' }, remote: true do |f| %>
+            <%= form_for @user, url: vehicles_path, method: :post, html: { id: 'user-form', 'data-type' => 'json' }, remote: true do |f| %>
             <div id="smartwizard">
                 <ul class="nav">
                     <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicles</small></a></li>
                     <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
                     <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
-                    <li><a class="nav-link" href="#step-4">Step 4<br /><small>Checkout</small></a></li>
+                    <li><a class="nav-link" href="#step-4">Step 4<br /><small>Shipping</small></a></li>
+                    <li><a class="nav-link" href="#step-5">Step 5<br /><small>Review & Confirm</small></a></li>
                 </ul>
                 <%= f.fields_for :order_options do |order_fields| %>
                     <div class="tab-content">
@@ -96,50 +96,63 @@
                             }
                         </script>
                     <% end %>
-                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab" style="height:auto;" role="tabpanel">
+                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
                         <div class="col-12">
-                            <h1>Checkout</h1>
-                            <div class="row col-12">
-                                <div class="col-lg-5 col-12">
-                                    <div id="user-details">
-                                        <%= render :partial => 'users/new', :locals => { :f => f } %>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <h1>Billing Information</h1>
-                                            <div class="gray-box-rounded">
-                                                <div id="card-element" class="MyCardElement"></div>
-                                                <div id="card-element-errors" role="alert"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <%= f.button "Submit Order", id:"submit-button", class: "btn btn-primary w-100 mb-4" %>
-                                </div>
-                                <div class="col-lg-7 col-12">
-                                    <h1>Review Order</h1>
-                                    <div class="gray-box-rounded">
-                                        <div class="row">
-                                            <div class="col-6 p-0">
-                                                <div class="row col-12 mb-2">
-                                                    <h5 class="col-12">Vehicles</h5>
+                            <h1>Shipping Information</h1>
+                            <%= f.fields_for :shipping_addresses do |shipping_fields|%>
+                                <%= shipping_fields.label :address1, "Address Line 1" %>
+                                <%= shipping_fields.text_field :address1, class: 'form-control', id: 'address1_field', placeholder: "Address line 1" %>
+                                <div id = "address1_error" class="help-block"></div>
+
+                                <%= shipping_fields.label :address2, "Address Line 2" %>
+                                <%= shipping_fields.text_field :address2, class: 'form-control', id: 'address2_field', placeholder: "Address line 2" %>
+
+                                <%= shipping_fields.label :city, "City" %>
+                                <%= shipping_fields.text_field :city, class: 'form-control', id: 'city_field', placeholder: "City" %>
+                                <div id = "city_error" class="help-block"></div>
+
+                                <%= shipping_fields.label :state, "State" %>
+                                <%= shipping_fields.text_field :state, class: 'form-control', id: 'state_field', placeholder: "State" %>
+                                <div id = "state_error" class="help-block"></div>
+
+                                <%= shipping_fields.label :postal, "Zip Code" %>
+                                <%= shipping_fields.text_field :postal, class: 'form-control mb-4', id: 'postal_field', placeholder: "Zip code" %>
+                                <div id = "postal_error" class="help-block"></div>
+                            <% end %>
+                        </div>
+                    </div>
+                    <div id="step-5" class="row mt-4 tab-pane smartwizard-tab" style="height:auto;" role="tabpanel">
+                        <div class="col-12">
+                            <div class="col-12 col-lg-8 offset-lg-2">
+                                <h1>Review Details</h1>
+                                <div class="gray-box-rounded">
+                                    <div class="row">
+                                        <div class="col-12 col-lg-6">
+                                            <div class="row mb-2">
+                                                <h5 class="col-12">Vehicles</h5>
+                                                <div id="vehicle_preview_container">
                                                     <div id="vehicle_preview_container">
                                                         <div id="vehicle_preview_1" class="vehicle-preview col-12"></div>
                                                     </div>
                                                 </div>
-                                                <div class="row col-12 mb-2">
-                                                    <h5 class="col-12">Quality</h5>
-                                                    <div id="quality_preview" class="col-12"></div>
-                                                </div>
-                                                <div class="row col-12">
-                                                    <h5 class="col-6">Frequency</h5>
-                                                    <div id="frequency_preview" class="col-12"></div>
-                                                </div>  
                                             </div>
-                                            <div class="col-6">
+                                            <div class="row mb-2">
+                                                <h5 class="col-12">Quality</h5>
+                                                <div id="quality_preview" class="col-12"></div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <h5 class="col-6">Frequency</h5>
+                                                <div id="frequency_preview" class="col-12"></div>
+                                            </div>
+                                            <div class="row"> 
+                                                <h5 class="col-12">Shipping Address</h5>
+                                                <div class="col-12" id="shipping_preview"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <%= f.button "Submit Order", class: "btn btn-success w-100 mt-4 mb-2" %>
+                                <a class="btn btn-danger w-100 mb-4" type="button" href="<%= user_path(id: @user.id) %>">Cancel Changes</a>
                             </div>
                         </div>
                     </div>

@@ -2,10 +2,7 @@ class OrderOption < ApplicationRecord
     include ActiveModel::Dirty
 
     belongs_to :user
-    has_one :shipping_address
-    accepts_nested_attributes_for :shipping_address
-    after_create :update_next_delivery
-    before_save :update_subscription, if: :will_save_change_to_vehicle_id?
+    after_update :update_subscription
 
     enum frequency: [ :six_months, :one_year ]
     enum quality: [ :good, :better, :best ]
@@ -79,197 +76,94 @@ private
         return { driver_front: driver_front, passenger_front: passenger_front, rear: rear }
     end
 
-    def update_next_delivery
-        if (self.six_months?)
-            self.next_delivery = DateTime.now + 6.months
-        else
-            self.next_delivery = DateTime.now + 12.months
-        end
-    end
-
     def update_subscription
-        unless vehicle_id_change_to_be_saved[0].blank?
-            changed_vehicles_list = get_changed_vehicles_list
-            stripe_changes = calculate_stripe_changes(changed_vehicles_list)
+        changes = calculate_stripe_changes
 
-            #Update the subscription
-            products_map = []
-            stripe_changes[:new].each do |stripe_id|
-                products_map.append({ price: stripe_id, quantity: stripe_products[stripe_id]["quantity"] })
-            end
+        #Key is Stripe product ID, value is a hash of quantity and subscription_id
+        products_map = []
+        #Remove the old products from the subscription
+        changes[:deleted].each do |key, value|
+            products_map.append({ id: value['subscription_id'], deleted: true })
+            stripe_products.delete(key)
+        end
 
-            stripe_changes[:deleted].each do |stripe_id|
-                products_map.append({ id: stripe_products[stripe_id]["subscription_id"], deleted: true })
-                stripe_products.delete(stripe_id)
-            end
+        #Add the new products to the subscription
+        changes[:new].each do |key, value|
+            products_map.append({ price: key, quantity: value['quantity'] })
+            stripe_products[key] = value
+        end
 
-            stripe_changes[:updated].each do |stripe_id|
-                products_map.append({ id: stripe_products[stripe_id]["subscription_id"], quantity: stripe_products[stripe_id]["quantity"] })
-            end
+        #Update the quantity of remaining products
+        changes[:updated].each do |key, value|
+            products_map.append({ id: key, quantity: value['quantity']})
+            stripe_products[key]['quantity'] = value['quantity']
+        end
 
-            if !products_map.blank?
-                #Update the quantity of remaining products
-                updated_subscription = Stripe::Subscription.update(
-                    self.subscription_id,
-                    items: products_map,
-                    proration_behavior: 'none',
-                )
+        if !products_map.blank?
+            updated_subscription = Stripe::Subscription.update(
+                self.subscription_id,
+                items: products_map,
+                proration_behavior: 'none',
+                #Set the billing cycle anchor to the previous end date
+                billing_cycle_anchor: self.current_period_end
+            )
 
-                #Update the database with the new subscription
-                add_subscription_ids(updated_subscription)
-            end
+            #Update the database with the new subscription
+            add_subscription_ids(updated_subscription)
+            self.save
         end
     end
 
-    def get_changed_vehicles_list
-        same_vehicles = []
-        new_vehicles = vehicle_id_change_to_be_saved[1].clone
-        removed_vehicles = []
+    #Returns list of hashes for changes
+    def calculate_stripe_changes
+        #Make a copy of the old Stripe products
+        previous_products = stripe_products.clone
 
-        #vehicle_id_change_to_be_saved[0] = old vehicles
-        #vehicle_id_change_to_be_saved[1] = new vehicles
-        #Check which vehicles have been added, removed, or are the same
-        vehicle_id_change_to_be_saved[0].each do |old_vehicle_id|
-            found = false
-            vehicle_id_change_to_be_saved[1].each do |new_vehicle_id|
-                if(old_vehicle_id == new_vehicle_id)
-                    same_vehicles.append(old_vehicle_id)
-                    new_vehicles.delete(new_vehicle_id)
-                    found = true
-                    break
-                end
-            end
-            if(!found)
-                removed_vehicles.append(old_vehicle_id)
-            end
-        end
+        #Get the new Stripe products
+        current_products = Hash.new
+        self.vehicle_id.each do |vehicle_id|
+            products = get_stripe_products_for_vehicle(vehicle_id)
 
-        return { same: same_vehicles, new: new_vehicles, removed: removed_vehicles }
-    end
-
-    #Return a hash of the changes in Stripe products
-    def calculate_stripe_changes(changed_vehicles_list)
-        new_products = []
-        updated_products = []
-        deleted_products = []
-
-        #Add the Stripe products of the new vehicles
-        changed_vehicles_list[:new].each do |id|
-            products = get_stripe_products_for_vehicle(id)
-            driver_front = products[:driver_front].stripe_id
-
-            if stripe_products.key?(driver_front)
-                #The database saves the hash as a JSON type, so have to use strings instead of symbols for keys when accessing object
-                stripe_products[driver_front]["quantity"] += 1
-                updated_products.append(driver_front)
+            if current_products.key?(products[:driver_front].stripe_id)
+                current_products[products[:driver_front].stripe_id]['quantity'] += 1
             else
-                stripe_products[driver_front] = { "quantity" => 1, "subscription_id" => nil }
-                new_products.append(driver_front)
+                current_products[products[:driver_front].stripe_id] = { 'quantity' => 1, 'subscription_id' => nil }
             end
 
-            self.total_price += products[:driver_front].price
-
-            #Some supercars only have 1 wiper blade
             if !products[:passenger_front].nil?
-                passenger_front = products[:passenger_front].stripe_id
-
-                if stripe_products.key?(passenger_front)
-                    stripe_products[passenger_front]["quantity"] += 1
-
-                    if (!updated_products.include?(passenger_front) && !new_products.include?(passenger_front))
-                        updated_products.append(passenger_front)
-                    end
+                if current_products.key?(products[:passenger_front].stripe_id)
+                    current_products[products[:passenger_front].stripe_id]['quantity'] += 1
                 else
-                    stripe_products[passenger_front] = { "quantity" => 1, "subscription_id" => nil }
-                    new_products.append(passenger_front)
+                    current_products[products[:passenger_front].stripe_id] = { 'quantity' => 1, 'subscription_id' => nil }
                 end
-
-                self.total_price += products[:passenger_front].price
             end
 
             if !products[:rear].nil?
-                rear = products[:rear].stripe_id
-
-                if stripe_products.key?(rear)
-                    stripe_products[rear]["quantity"] += 1
-
-                    if (!updated_products.include?(rear) && !new_products.include?(rear))
-                        updated_products.append(rear)
-                    end
+                if current_products.key?(products[:rear].stripe_id)
+                    current_products[products[:rear].stripe_id]['quantity'] += 1
                 else
-                    stripe_products[rear] = { "quantity" => 1, "subscription_id" => nil }
-                    new_products.append(rear)
+                    current_products[products[:rear].stripe_id] = { 'quantity' => 1, 'subscription_id' => nil }
                 end
-
-                self.total_price += products[:rear].price
             end
         end
 
-        #Remove the Stripe products of the removed vehicles
-        changed_vehicles_list[:removed].each do |id|
-            products = get_stripe_products_for_vehicle(id)
-            driver_front = products[:driver_front].stripe_id
-
-            #Update hash of Stripe products
-            if stripe_products[driver_front]["quantity"] == 1
-                deleted_products.append(driver_front)
-
-                if updated_products.include?(driver_front)
-                    updated_products.delete(driver_front)
-                end
-            else
-                stripe_products[driver_front]["quantity"] -= 1
-
-                if !updated_products.include?(driver_front)
-                    updated_products.append(driver_front)
-                end
-            end
-
-            self.total_price -= products[:driver_front].price
-
-            if !products[:passenger_front].nil?
-                passenger_front = products[:passenger_front].stripe_id
-
-                if stripe_products[passenger_front]["quantity"] == 1
-                    deleted_products.append(passenger_front)
-
-                    if updated_products.include?(passenger_front)
-                        updated_products.delete(passenger_front)
-                    end
-                else
-                    stripe_products[passenger_front]["quantity"] -= 1
-
-                    if !updated_products.include?(passenger_front)
-                        updated_products.append(passenger_front)
-                    end
+        updated_products = Hash.new
+        current_products.each do |key, value|
+            if previous_products.key?(key)
+                #If items exists in both lists with a different quantity, then it is changed
+                if(!previous_products[key]['quantity'] == value['quantity'])
+                    updated_products[key] = value
                 end
 
-                self.total_price -= products[:passenger_front].price
-            end
-
-
-            if !products[:rear].nil?
-                rear = products[:rear].stripe_id
-
-                if stripe_products[rear]["quantity"] == 1
-
-                    if updated_products.include?(rear)
-                        updated_products.delete(rear)
-                    end
-
-                    deleted_products.append(rear)
-                else
-                    stripe_products[rear]["quantity"] -= 1
-
-                    if !updated_products.include?(rear)
-                        updated_products.append(rear)
-                    end
-                end
-
-                self.total_price -= products[:rear].price
+                previous_products.delete(key)
+                current_products.delete(key)
             end
         end
 
-        return { new: new_products, updated: updated_products, deleted: deleted_products }
+        #Items left in previous products are deleted
+        #Items left in current products are added
+        #Changed items have been marked
+
+        return { new: current_products, updated: updated_products, deleted: previous_products }
     end
 end

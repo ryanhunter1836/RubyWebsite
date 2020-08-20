@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_16_193730) do
+ActiveRecord::Schema.define(version: 2020_08_19_170824) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,26 +20,14 @@ ActiveRecord::Schema.define(version: 2020_08_16_193730) do
     t.integer "quality"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.datetime "next_delivery", precision: 6
     t.bigint "user_id"
     t.integer "total_price"
     t.boolean "active"
     t.string "subscription_id"
-    t.integer "vehicle_id", default: [], array: true
+    t.string "vehicle_id", default: [], array: true
     t.json "stripe_products", default: {}
+    t.bigint "period_end"
     t.index ["user_id"], name: "index_order_options_on_user_id"
-  end
-
-  create_table "shipping_addresses", force: :cascade do |t|
-    t.string "address1"
-    t.string "address2"
-    t.string "city"
-    t.string "state"
-    t.integer "postal"
-    t.bigint "order_option_id"
-    t.bigint "user_id"
-    t.index ["order_option_id"], name: "index_shipping_addresses_on_order_option_id"
-    t.index ["user_id"], name: "index_shipping_addresses_on_user_id"
   end
 
   create_table "stripe_products", force: :cascade do |t|

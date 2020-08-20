@@ -1,0 +1,27 @@
+<div class="col-4 vehicle-form">
+    <% if defined?(vehicle_id) %>
+        <% vehicle_details = get_vehicle_details(vehicle_id) %>
+        <%= f.label :Make %>
+        <%= select_tag "", 
+            options_from_collection_for_select(@makes, "id", "make", get_dropdown_value_make(vehicle_details[:make])), 
+            id: "make-selector-" + (index + 1).to_s, class: 'form-control make-selector' %>
+        <%= f.label :Model %>
+        <%= select_tag "", 
+            options_for_select(@models[index].map { |obj| [obj['model'], obj['id']]}, get_dropdown_value_model(vehicle_details[:make], vehicle_details[:model])),
+            id: "model-selector-" + (index + 1).to_s, class: 'form-control model-selector' %>
+        <%= f.label :Year %>
+        <%= select_tag 'user[order_options_attributes][0][vehicle_id][]', 
+            options_for_select(@years[index].map { |obj| [obj['year'], obj['id']]}, get_dropdown_value_year(vehicle_details[:make], vehicle_details[:model], vehicle_details[:year])), 
+            id: 'vehicle-id-' + (index + 1).to_s, class: 'form-control year-selector' %>
+        <button id="remove_button_<%= (index + 1).to_s %>", class="btn btn-danger w-100 mt-4", type="button">Remove</button>
+    <% else %>
+        <%= order_fields.label :Make %>
+        <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), 
+            id: "make-selector-1", include_blank: true, class: 'form-control make-selector' %>
+        <%= order_fields.label :Model %>
+        <%= select_tag "", "", id: "model-selector-1", include_blank: true, class: 'form-control model-selector' %>
+        <%= order_fields.label :Year %>
+        <%= order_fields.select :vehicle_id, 'vehicle_id', { include_blank: true }, 
+            { id: 'vehicle-id-1', class: 'form-control year-selector', name: 'user[order_options_attributes][0][vehicle_id][]' } %>
+    <% end %>
+</div>

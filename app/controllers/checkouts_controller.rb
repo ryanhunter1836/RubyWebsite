@@ -1,5 +1,15 @@
 class CheckoutsController < ApplicationController
+include Vehicles
+
 protect_from_forgery except: :stripe_webhook
+
+#Renders the New Customer page.  Not actually bound to a model in this case
+def new
+  @makes = get_makes
+  @user = User.new
+  @user.order_options.build
+  @shipping_address = ShippingAddress.new
+end
 
 #Create the user account             
 def create
@@ -7,35 +17,37 @@ def create
 
   #Update an existing record
   if (!existing_user.nil? && existing_user.accountCreated == false)
+    test = signup_params
     existing_user.assign_attributes(signup_params)
-    if existing_user.valid?
-      existing_user.order_options[0].initialize_stripe_products()
-      existing_user.shipping_addresses[0].order_option_id = existing_user.order_options[0].id
-      existing_user.save
 
+    address = ShippingAddress.new(shipping_params)
+    address.valid?
+
+    if existing_user.valid? && address.valid?
+      existing_user.save
       log_in existing_user
-      render json: existing_user.errors, status: 200
+      render json: '', status: 200
     else
-      render json: existing_user.errors, status: 400
+      msg = { user: new_user.errors, address: address.errors }
+      render json: msg, status: 400
     end
   else
+    test = signup_params
+    
     new_user = User.create(signup_params)
     new_user.accountCreated = false
 
-    if new_user.valid?
-      new_user.order_options[0].initialize_stripe_products()
-      #Tie the shipping addresses to the order option
-      #Use the first entry in the collection since there is only 1 because this
-      # is a new user
-      new_user.shipping_addresses[0].order_option_id = new_user.order_options[0].id
-      new_user.save
-  
-      log_in new_user
-      render json: new_user.errors, status: 200
-    else
-      render json: new_user.errors, status: 400
-    end
+    address = ShippingAddress.new(shipping_params)
+    address.valid?
 
+    if new_user.valid? && address.valid?
+      new_user.save
+      log_in new_user
+      render json: '', status: 200
+    else
+      msg = { user: new_user.errors, address: address.errors }
+      render json: msg, status: 400
+    end
   end  
 end
 
@@ -46,10 +58,24 @@ def setup
   end
 end
 
-#Create a new Stripe customer
 def create_customer
-  # Create a new customer object
-  customer = Stripe::Customer.create(email: current_user.email)
+  data = JSON.parse request.body.read
+
+  customer = Stripe::Customer.create(
+    email: current_user.email,
+    name: current_user.name,
+    shipping: {
+      address:
+      {
+        line1: data['address1'],
+        line2: data['address2'],
+        city: data['city'],
+        state: data['state'],
+        postal_code: data['postal']
+      },
+      name: current_user.name
+    }
+  )
 
   current_user.stripeCustomerId = customer.id
   current_user.save
@@ -91,11 +117,13 @@ def create_subscription
   subscription = Stripe::Subscription.create(
     customer: data['customerId'],
     items: order.get_products_hash,
+    default_tax_rates: [ 'txr_1HDKxXK9cC716JE2NSsbfS5r' ],
     expand: ['latest_invoice.payment_intent']
   )
 
   order.subscription_id = subscription.id
   order.add_subscription_ids(subscription)
+  order.period_end = subscription.current_period_end
   order.save
 
   render json: subscription
@@ -148,13 +176,32 @@ def stripe_webhook
   event_type = event['type']
   data = event['data']
   data_object = data['object']
+  msg = ''
 
   if event_type == 'invoice.payment_succeeded'
+    puts data_object
+
     # Used to provision services after the trial has ended.
     # The status of the invoice will show up as paid. Store the status in your
     # database to reference when a user accesses your service to avoid hitting rate
     # limits.
-    # puts data_object
+    user = User.find_by(stripeCustomerId: data_object.customer)
+
+    if !user.nil?
+      #Find the subscription 
+      order = user.order_options.find_by(subscription_id: data_object.data.subscription)
+      if !order.nil?
+        order.period_end = data_object.period_end
+        order.save
+        msg = { status: 200 }
+      else
+        msg = { status: 400 }
+      end
+      
+    else
+      #Return an error
+      msg = { status: 400 }
+    end
   end
 
   if event_type == 'invoice.payment_failed'
@@ -165,10 +212,8 @@ def stripe_webhook
     # puts data_object
   end
 
-  if event_type == 'invoice.finalized'
-    # If you want to manually send out invoices to your customers
-    # or store them locally to reference to avoid hitting Stripe rate limits.
-    # puts data_object
+  if event_type == 'invoice.upcoming'
+    #Send a notification email to customer and admin
   end
 
   if event_type == 'customer.subscription.deleted'
@@ -183,7 +228,6 @@ def stripe_webhook
   end
 
   respond_to do |format|
-    msg = { :status => 'success' }
     format.json { render :json => msg } 
   end
 end
@@ -191,7 +235,10 @@ end
 private 
   def signup_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation, 
-      shipping_addresses_attributes: [:address1, :address2, :city, :state, :postal],
       order_options_attributes: [:quality, :frequency, vehicle_id: []])
+  end
+
+  def shipping_params
+    params.require(:shipping_address).permit(:address1, :address2, :city, :state, :postal)
   end
 end

@@ -22,7 +22,7 @@
         </div>
         <div class="row col-12 mb-3">
             <h5 class="col-12">Next Shipment</h5>
-            <div class="col-12"><%= order_option.next_delivery.strftime("%m/%d/%Y") %></div>
+            <div class="col-12"><%= Time.at(order_option.period_end).strftime("%m/%d/%Y") %></div>
         </div>
         <%= link_to "Edit Subscription", edit_vehicle_path(:id => order_option.id), class: 'btn btn-success' %>
         <%= link_to "Cancel Subscription", vehicle_path(order_option.id), method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' %>

@@ -1,9 +1,3 @@
-document.addEventListener('turbolinks:before-render', () => {
-  Components.unloadAll(); 
-});
-
-
-
 function updateShippingPreview() {
     result = $("#address1_field").val() + " ";
     result += $("#address2_field").val() + "<br/>";
