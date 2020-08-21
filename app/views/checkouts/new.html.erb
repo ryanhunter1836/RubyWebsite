@@ -21,7 +21,7 @@
                     <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
                     <li><a class="nav-link" href="#step-4">Step 4<br /><small>Checkout</small></a></li>
                 </ul>
-                <%= f.fields_for :order_options do |order_fields| %>
+                <%= f.fields_for :order_options, @order_options do |order_fields| %>
                     <div class="tab-content">
                         <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
                             <div class="col-12">

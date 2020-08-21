@@ -15,9 +15,9 @@ class OrderOption < ApplicationRecord
 
             #Create hash of Stripe products
             if stripe_products.key?(products[:driver_front].stripe_id)
-                stripe_products[products[:driver_front].stripe_id][:quantity] += 1
+                stripe_products[products[:driver_front].stripe_id]["quantity"] += 1
             else
-                stripe_products[products[:driver_front].stripe_id] = { quantity: 1, subscription_id: nil }
+                stripe_products[products[:driver_front].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
             end
 
             #Calculate total price
@@ -25,9 +25,9 @@ class OrderOption < ApplicationRecord
 
             if !products[:passenger_front].nil?
                 if stripe_products.key?(products[:passenger_front].stripe_id)
-                    stripe_products[products[:passenger_front].stripe_id][:quantity] += 1
+                    stripe_products[products[:passenger_front].stripe_id]["quantity"] += 1
                 else
-                    stripe_products[products[:passenger_front].stripe_id] = { quantity: 1, subscription_id: nil }
+                    stripe_products[products[:passenger_front].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
                 end
 
                 self.total_price = products[:passenger_front].price
@@ -35,9 +35,9 @@ class OrderOption < ApplicationRecord
 
             if !products[:rear].nil?
                 if stripe_products.key?(products[:rear].stripe_id)
-                    stripe_products[products[:rear].stripe_id][:quantity] += 1
+                    stripe_products[products[:rear].stripe_id]["quantity"] += 1
                 else
-                    stripe_products[products[:rear].stripe_id] = { quantity: 1, subscription_id: nil }
+                    stripe_products[products[:rear].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
                 end
 
                 self.total_price += products[:rear].price
@@ -95,7 +95,7 @@ private
 
         #Update the quantity of remaining products
         changes[:updated].each do |key, value|
-            products_map.append({ id: key, quantity: value['quantity']})
+            products_map.append({ id: value['subscription_id'], quantity: value['quantity']})
             stripe_products[key]['quantity'] = value['quantity']
         end
 
@@ -104,8 +104,8 @@ private
                 self.subscription_id,
                 items: products_map,
                 proration_behavior: 'none',
-                #Set the billing cycle anchor to the previous end date
-                billing_cycle_anchor: self.current_period_end
+                #Create a trial until the current period ends so the user isn't billed until it's time to renew
+                trial_end: self.period_end
             )
 
             #Update the database with the new subscription
@@ -147,12 +147,16 @@ private
             end
         end
 
+        puts previous_products
+        puts current_products
+
         updated_products = Hash.new
         current_products.each do |key, value|
             if previous_products.key?(key)
                 #If items exists in both lists with a different quantity, then it is changed
-                if(!previous_products[key]['quantity'] == value['quantity'])
+                if !(previous_products[key]['quantity'] == value['quantity'])
                     updated_products[key] = value
+                    updated_products[key]['subscription_id'] = previous_products[key]['subscription_id']
                 end
 
                 previous_products.delete(key)

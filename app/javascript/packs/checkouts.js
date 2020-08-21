@@ -58,6 +58,10 @@ function clearErrors() {
 
 
 $(document).on('ajax:error', '#user-form', event => {
+    button = document.getElementById('submit-button');
+    button.innerHTML = "Submit Order";
+    button.disabled = false;
+
     const [response, status, xhr] = event.detail;
     clearErrors();
     //Loop through the user elements
@@ -218,12 +222,6 @@ function addListeners() {
   $("#year_button").click(function() {
     updateFrequencyPreview("Every 12 Months");
   });
-
-  $("#user-form").submit(function() {
-    button = $("#submit-button");
-    button.prop("disabled",true);
-    button.html('<i class="fa fa-spinner" aria-hidden="true"></i>');
-  })
 }
 
 document.addEventListener('turbolinks:load', () => {

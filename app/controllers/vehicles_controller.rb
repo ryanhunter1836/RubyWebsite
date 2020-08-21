@@ -3,31 +3,57 @@ class VehiclesController < ApplicationController
 
     before_action :logged_in_user, only: [:edit, :update,:destroy]
 
-
     #Add vehicle to existing account
     def new
         @makes = get_makes
         @user = current_user
-        @user.shipping_addresses.build
-        @user.order_options.build
+        @order_options = @user.order_options.build
+
+        shipping = Stripe::Customer.retrieve(current_user.stripeCustomerId).shipping
+        @shipping_address = ShippingAddress.new(
+            address1: shipping.address.line1,
+            address2: shipping.address.line2,
+            city: shipping.address.city,
+            state: shipping.address.state,
+            postal: shipping.address.postal_code
+        )
     end
 
     def create
-        puts "here"
+        order = current_user.order_options.build(order_params['order_options_attributes']['0'])
+        order.initialize_stripe_products
+
+        # Create the subscription
+        subscription = Stripe::Subscription.create(
+            customer: current_user.stripeCustomerId,
+            items: order.get_products_hash,
+            default_tax_rates: [ 'txr_1HDKxXK9cC716JE2NSsbfS5r' ],
+            expand: ['latest_invoice.payment_intent']
+        )
+
+        order.subscription_id = subscription.id
+        order.add_subscription_ids(subscription)
+        order.period_end = subscription.current_period_end
+        order.save
+
+        flash[:success] = "Subscription created!"
+        redirect_to user_path(current_user.id)
     end
 
     def destroy
-        order = current_user.order_option.find_by(id: params[:id])
+        order = current_user.order_options.find_by(id: params[:id])
         return redirect_to user_path(id: current_user.id) if order.nil?
 
         #Cancel the Stripe subscription
         Stripe::Subscription.delete(order.subscription_id)
         
         if order.destroy
-            redirect_to users_path(current_user.id)
+            flash[:success] = "Subscription cancelled"
+            redirect_to user_path(current_user.id)
         else
             #Display an error page
-            redirect_to users_path(current_user.id)
+            flash[:danger] = "Error occured and subscription could not be cancelled"
+            redirect_to user_path(current_user.id)
         end
     end
 
@@ -90,9 +116,5 @@ class VehiclesController < ApplicationController
         def order_params
             params.require(:user).permit(shipping_addresses_attributes: [:id, :address1, :address2, :city, :state, :postal],
             order_options_attributes: [:id, :quality, :frequency, vehicle_id: []])
-        end
-
-        def add_vehicle_params
-            params.require(:order_option).permit(:vehicle_id, :quality, :frequency)
         end
     end

@@ -12,22 +12,20 @@
     </div>
     <div class="container full-width">
         <div class="col-12">
-            <%= form_for @user, url: vehicles_path, method: :post, html: { id: 'user-form', 'data-type' => 'json' }, remote: true do |f| %>
+            <%= form_for @order_options, url: vehicles_path, html: { id: 'user-form', 'data-type' => 'json' }, local: true do |f| %>
             <div id="smartwizard">
                 <ul class="nav">
                     <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicles</small></a></li>
                     <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
                     <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
-                    <li><a class="nav-link" href="#step-4">Step 4<br /><small>Shipping</small></a></li>
-                    <li><a class="nav-link" href="#step-5">Step 5<br /><small>Review & Confirm</small></a></li>
+                    <li><a class="nav-link" href="#step-4">Step 4<br /><small>Review & Confirm</small></a></li>
                 </ul>
-                <%= f.fields_for :order_options do |order_fields| %>
-                    <div class="tab-content">
+                    <div class="tab-content">   
                         <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
                             <div class="col-12">
                                 <h1>Select Vehicles</h1>
                                 <div id="vehicle_container" class="row d-flex justify-content-center mb-3">
-                                    <%= render :partial => 'vehicle', :locals => { order_fields: order_fields } %>
+                                    <%= render :partial => 'vehicle', :locals => { order_fields: f } %>
                                 </div>
                                 <div class="btn btn-success col-4 offset-4 mb-2" id="add_vehicle_button"
                                     onclick="addVehicle()">Add Another Vehicle</div>
@@ -40,13 +38,13 @@
                                 <h1>Select Quality</h1>
                                 <div class="btn-group-toggle row" data-toggle="buttons">
                                     <label class="btn btn-outline-primary btn-lg col-3">
-                                        <%= order_fields.radio_button :quality, 'good', :id => 'good_button', :name => 'user[order_options_attributes][0][quality]' %>Good
+                                        <%= f.radio_button :quality, 'good', :id => 'good_button', :name => 'user[order_options_attributes][0][quality]' %>Good
                                     </label>
                                     <label class="btn btn-outline-primary btn-lg col-3 offset-1">
-                                        <%= order_fields.radio_button :quality, 'better', :id => 'better_button', :name => 'user[order_options_attributes][0][quality]' %>Better
+                                        <%= f.radio_button :quality, 'better', :id => 'better_button', :name => 'user[order_options_attributes][0][quality]' %>Better
                                     </label>
                                     <label class="btn btn-outline-primary btn-lg col-3 offset-1">
-                                        <%= order_fields.radio_button :quality, 'best', :id => 'best_button', :name => 'user[order_options_attributes][0][quality]' %>Best
+                                        <%= f.radio_button :quality, 'best', :id => 'best_button', :name => 'user[order_options_attributes][0][quality]' %>Best
                                     </label>
                                 </div>
                             </div>
@@ -56,11 +54,11 @@
                                 <h1>Select Frequency</h1>
                                 <div class="btn-group-toggle row" data-toggle="buttons">
                                     <label class="btn btn-outline-primary btn-lg col-5">
-                                        <%= order_fields.radio_button :frequency, 'six_months', :id => 'months_button', :name => 'user[order_options_attributes][0][frequency]' %>
+                                        <%= f.radio_button :frequency, 'six_months', :id => 'months_button', :name => 'user[order_options_attributes][0][frequency]' %>
                                         Every 6 Months
                                     </label>
                                     <label class="btn btn-outline-primary btn-lg col-5 offset-1">
-                                        <%= order_fields.radio_button :frequency, 'one_year', :id => 'year_button', :name => 'user[order_options_attributes][0][frequency]' %>
+                                        <%= f.radio_button :frequency, 'one_year', :id => 'year_button', :name => 'user[order_options_attributes][0][frequency]' %>
                                         Every 12 Months
                                     </label>
                                 </div>
@@ -72,7 +70,7 @@
                             function addVehicle() {
                                 numVehicles++;
                                 document.getElementById("remove_vehicle_button").style.visibility = "visible";
-                                htmlToInsert = "<%= j render :partial => 'vehicle', :locals => { :order_fields => order_fields } %>";
+                                htmlToInsert = "<%= j render :partial => 'vehicle', :locals => { :order_fields => f } %>";
                                 htmlToInsert = htmlToInsert.replace("make-selector-1", "make-selector-" + numVehicles)
                                     .replace("model-selector-1", "model-selector-" + numVehicles)
                                     .replace("vehicle-id-1", "vehicle-id-" + numVehicles)
@@ -95,33 +93,7 @@
                                 element.parentNode.removeChild(element);
                             }
                         </script>
-                    <% end %>
-                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
-                        <div class="col-12">
-                            <h1>Shipping Information</h1>
-                            <%= f.fields_for :shipping_addresses do |shipping_fields|%>
-                                <%= shipping_fields.label :address1, "Address Line 1" %>
-                                <%= shipping_fields.text_field :address1, class: 'form-control', id: 'address1_field', placeholder: "Address line 1" %>
-                                <div id = "address1_error" class="help-block"></div>
-
-                                <%= shipping_fields.label :address2, "Address Line 2" %>
-                                <%= shipping_fields.text_field :address2, class: 'form-control', id: 'address2_field', placeholder: "Address line 2" %>
-
-                                <%= shipping_fields.label :city, "City" %>
-                                <%= shipping_fields.text_field :city, class: 'form-control', id: 'city_field', placeholder: "City" %>
-                                <div id = "city_error" class="help-block"></div>
-
-                                <%= shipping_fields.label :state, "State" %>
-                                <%= shipping_fields.text_field :state, class: 'form-control', id: 'state_field', placeholder: "State" %>
-                                <div id = "state_error" class="help-block"></div>
-
-                                <%= shipping_fields.label :postal, "Zip Code" %>
-                                <%= shipping_fields.text_field :postal, class: 'form-control mb-4', id: 'postal_field', placeholder: "Zip code" %>
-                                <div id = "postal_error" class="help-block"></div>
-                            <% end %>
-                        </div>
-                    </div>
-                    <div id="step-5" class="row mt-4 tab-pane smartwizard-tab" style="height:auto;" role="tabpanel">
+                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab" style="height:auto;" role="tabpanel">
                         <div class="col-12">
                             <div class="col-12 col-lg-8 offset-lg-2">
                                 <h1>Review Details</h1>
@@ -146,7 +118,14 @@
                                             </div>
                                             <div class="row"> 
                                                 <h5 class="col-12">Shipping Address</h5>
-                                                <div class="col-12" id="shipping_preview"></div>
+                                                <div class="col-12" id="shipping_preview">
+                                                    <%= @shipping_address.address1 %>
+                                                    <%= @shipping_address.address2 %>
+                                                    <br />
+                                                    <%= @shipping_address.city %>,
+                                                    <%= @shipping_address.state %>
+                                                    <%= @shipping_address.postal %>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

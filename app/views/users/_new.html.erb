@@ -24,24 +24,24 @@
   <div class="col-12">
     <h1>Shipping Information</h1>
     <%= fields_for :shipping_address, @shipping_address do |shipping_fields| %>
-    <%= shipping_fields.label :address1, "Address Line 1" %>
-    <%= shipping_fields.text_field :address1, class: 'form-control', id: 'address1_field', placeholder: "Address line 1" %>
-    <div id = "address1_error" class="help-block"></div>
+      <%= shipping_fields.label :address1, "Address Line 1" %>
+      <%= shipping_fields.text_field :address1, class: 'form-control', id: 'address1_field', placeholder: "Address line 1" %>
+      <div id = "address1_error" class="help-block"></div>
 
-    <%= shipping_fields.label :address2, "Address Line 2" %>
-    <%= shipping_fields.text_field :address2, class: 'form-control', id: 'address2_field', placeholder: "Address line 2" %>
+      <%= shipping_fields.label :address2, "Address Line 2" %>
+      <%= shipping_fields.text_field :address2, class: 'form-control', id: 'address2_field', placeholder: "Address line 2" %>
 
-    <%= shipping_fields.label :city, "City" %>
-    <%= shipping_fields.text_field :city, class: 'form-control', id: 'city_field', placeholder: "City" %>
-    <div id = "city_error" class="help-block"></div>
+      <%= shipping_fields.label :city, "City" %>
+      <%= shipping_fields.text_field :city, class: 'form-control', id: 'city_field', placeholder: "City" %>
+      <div id = "city_error" class="help-block"></div>
 
-    <%= shipping_fields.label :state, "State" %>
-    <%= shipping_fields.text_field :state, class: 'form-control', id: 'state_field', placeholder: "State" %>
-    <div id = "state_error" class="help-block"></div>
+      <%= shipping_fields.label :state, "State" %>
+      <%= shipping_fields.text_field :state, class: 'form-control', id: 'state_field', placeholder: "State" %>
+      <div id = "state_error" class="help-block"></div>
 
-    <%= shipping_fields.label :postal, "Zip Code" %>
-    <%= shipping_fields.text_field :postal, class: 'form-control', id: 'postal_field', placeholder: "Zip code" %>
-    <div id = "postal_error" class="help-block"></div>
+      <%= shipping_fields.label :postal, "Zip Code" %>
+      <%= shipping_fields.text_field :postal, class: 'form-control', id: 'postal_field', placeholder: "Zip code" %>
+      <div id = "postal_error" class="help-block"></div>
     <% end %>
   </div>
 </div>

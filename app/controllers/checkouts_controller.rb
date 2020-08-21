@@ -7,7 +7,7 @@ protect_from_forgery except: :stripe_webhook
 def new
   @makes = get_makes
   @user = User.new
-  @user.order_options.build
+  @order_options = @user.order_options.build
   @shipping_address = ShippingAddress.new
 end
 
@@ -32,8 +32,6 @@ def create
       render json: msg, status: 400
     end
   else
-    test = signup_params
-    
     new_user = User.create(signup_params)
     new_user.accountCreated = false
 

@@ -22,7 +22,7 @@
                     <li><a class="nav-link" href="#step-5">Step 5<br /><small>Review & Confirm</small></a></li>
                 </ul>
                 <div class="tab-content">
-                    <%= f.fields_for :order_options do |order_fields| %>
+                    <%= f.fields_for :order_options, @order_option do |order_fields| %>
                         <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
                             <div class="col-12">
                                 <h1>Edit Vehicles</h1>
