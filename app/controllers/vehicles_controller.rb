@@ -1,7 +1,7 @@
 class VehiclesController < ApplicationController
     include Vehicles
 
-    before_action :logged_in_user, only: [:edit, :update,:destroy]
+    before_action :logged_in_user, only: [:new, :create, :edit, :update, :destroy]
 
     #Add vehicle to existing account
     def new

@@ -19,6 +19,14 @@
         </div>
         <div class="row mb-2">
             <h5 class="col-12">Shipping Address</h5>
+            <div class="col-12">
+                <%= @shipping_address.address1 %>
+                <%= @shipping_address.address2 %>
+                <br />
+                <%= @shipping_address.city %>,
+                <%= @shipping_address.state %>
+                <%= @shipping_address.postal %>
+            </div>
         </div>
         <div class="row mb-3">
             <h5 class="col-12">Next Shipment</h5>

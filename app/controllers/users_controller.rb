@@ -6,6 +6,14 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @order_options = @user.order_options
+    shipping = Stripe::Customer.retrieve(current_user.stripeCustomerId).shipping
+    @shipping_address = ShippingAddress.new(
+        address1: shipping.address.line1,
+        address2: shipping.address.line2,
+        city: shipping.address.city,
+        state: shipping.address.state,
+        postal: shipping.address.postal_code
+    )
   end
 
   def edit

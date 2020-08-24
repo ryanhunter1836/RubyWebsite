@@ -84,7 +84,7 @@ $(document).on('ajax:success', '#user-form', event => {
     runStripe();
 });
 
-$("#user_form").submit(function() { 
+$("#user-form").submit(function() { 
     button = ("#submit-button");
     button.prop("disabled", true);
     button.html("<i class='fa fa-spinner fa-spin'></i><span class='sr-only'>Processing...</span>")
