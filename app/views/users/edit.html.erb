@@ -1,9 +1,7 @@
 <% provide(:title, "Edit user") %>
 
 <%= javascript_include_tag "https://js.stripe.com/v3/" %>
-<script>
-  <%= render :partial => "updatePaymentMethod.js.erb" %>
-</script>
+<%= javascript_pack_tag "update_payment" %>
 
 <noscript>
     <meta http-equiv="refresh" content="1;url=/javascript-warning">
@@ -36,10 +34,10 @@
 
         <div class="row">
           <div class="col-12 mb-2 text-center">
-            <%= f.submit "Save changes", class: "btn btn-success w-50" %>
+            <%= f.submit "Save changes", class: "btn btn-success update-profile-buttons" %>
           </div>
           <div class="col-12 text-center">
-            <%= link_to("Cancel", user_path(:id => @user.id), class: 'btn btn-danger w-50') %>
+            <%= link_to("Cancel", user_path(:id => @user.id), class: 'btn btn-danger update-profile-buttons') %>
           </div>
         </div>
         

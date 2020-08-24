@@ -10,9 +10,8 @@
     <div class="col-12">
         <h1>Update Subscription</h1>
     </div>
-    <div class="container full-width">
-        <div class="col-12">
-            <%= form_for @user, url: vehicle_path, local: true do |f| %>
+    <div class="container full-width p-0 p-md-auto">
+        <%= form_for @user, url: vehicle_path, local: true do |f| %>
             <div id="smartwizard">
                 <ul class="nav">
                     <li><a class="nav-link" href="#step-1">Step 1<br /><small>Edit Vehicles</small></a></li>
@@ -37,28 +36,28 @@
                         <div id="step-2" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
                             <div class="col-md-6 offset-md-3">
                                 <h1>Select Quality</h1>
-                                <div class="btn-group-toggle row" data-toggle="buttons">
-                                    <label class="btn btn-outline-primary btn-lg col-3 <%= (@order_option.quality == 'good') ? 'active' : '' %>">
+                                <div class="btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2 <%= (@order_option.quality == 'good') ? 'active' : '' %>">
                                         <%= f.radio_button :quality, 'good', :id => 'good_button', :name => 'user[order_options_attributes][0][quality]', checked: (@order_option.quality == 'good') %>Good
                                     </label>
-                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1 <%= (@order_option.quality == 'better') ? 'active' : '' %>">
+                                    <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2 <%= (@order_option.quality == 'better') ? 'active' : '' %>">
                                         <%= f.radio_button :quality, 'better', :id => 'better_button', :name => 'user[order_options_attributes][0][quality]', checked: (@order_option.quality == 'better') %>Better
                                     </label>
-                                    <label class="btn btn-outline-primary btn-lg col-3 offset-1 <%= (@order_option.quality == 'best') ? 'active' : '' %>">
+                                    <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2 <%= (@order_option.quality == 'best') ? 'active' : '' %>">
                                         <%= f.radio_button :quality, 'best', :id => 'best_button', :name => 'user[order_options_attributes][0][quality]', checked: (@order_option.quality == 'best') %>Best
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div id="step-3" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                            <div class="col-md-6 offset-md-3">
+                            <div class="col-12 col-md-6 offset-md-3">
                                 <h1>Select Frequency</h1>
-                                <div class="btn-group-toggle row" data-toggle="buttons">
-                                    <label class="btn btn-outline-primary btn-lg col-5 <%= (@order_option.frequency == 'six_months') ? 'active' : '' %>">
+                                <div class="btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2 <%= (@order_option.frequency == 'six_months') ? 'active' : '' %>">
                                         <%= f.radio_button :frequency, 'six_months', :id => 'months_button', :name => 'user[order_options_attributes][0][frequency]', checked: (@order_option.frequency == 'six_months') %>
                                         Every 6 Months
                                     </label>
-                                    <label class="btn btn-outline-primary btn-lg col-5 offset-1 <%= (@order_option.frequency == 'one_year') ? 'active' : '' %>">
+                                    <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2 <%= (@order_option.frequency == 'one_year') ? 'active' : '' %>">
                                         <%= f.radio_button :frequency, 'one_year', :id => 'year_button', :name => 'user[order_options_attributes][0][frequency]', checked: (@order_option.frequency == 'one_year') %>
                                         Every 12 Months
                                     </label>
@@ -126,7 +125,6 @@
                     </div>
                 </div>
             </div>
-            <% end %>
-        </div>      
-    </div>
+        <% end %>
+    </div>      
 </div>

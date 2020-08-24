@@ -29,6 +29,16 @@
       "js.map": [
         "/packs/js/edit-527bb7748bbc1536cd60.js.map"
       ]
+    },
+    "update_payment": {
+      "js": [
+        "/packs/js/update_payment-3f8511b35477d56ff347.js"
+      ],
+      "js.map": [
+        "/packs/js/update_payment-3f8511b35477d56ff347.js.map"
+      ]
     }
-  }
+  },
+  "update_payment.js": "/packs/js/update_payment-3f8511b35477d56ff347.js",
+  "update_payment.js.map": "/packs/js/update_payment-3f8511b35477d56ff347.js.map"
 }

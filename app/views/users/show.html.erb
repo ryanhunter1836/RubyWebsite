@@ -4,19 +4,13 @@
     <meta http-equiv="refresh" content="1;url=/javascript-warning">
 </noscript>
 
-<div class="row">
+<div class="row text-center">
   <div class="col-md-4">
-    <div class="row">
-      <h2><%= @user.name %></h2>
-    </div>
-    <div class="row mb-2">
-      <a class="btn btn-primary w-50" href="<%=new_vehicle_path%>" role="button">Create new subscription</a>
-    </div>
-    <div class="row">
-      <a class="btn btn-primary w-50" href="<%= edit_user_path %>" role="button">Edit Profile</a>
-    </div>
+    <h2><%= @user.name %></h2>
+    <a class="btn btn-primary w-75 mb-2" href="<%=new_vehicle_path%>" role="button">Create new subscription</a>
+    <a class="btn btn-primary w-75 mb-4" href="<%= edit_user_path %>" role="button">Edit Profile</a>
   </div>
-  <div class="col-md-8">
+  <div class="col-12 col-md-8">
     <div class="text-center">
       <h3>Current Subscriptions</h3>
       <% if @user.order_options.any? %>
