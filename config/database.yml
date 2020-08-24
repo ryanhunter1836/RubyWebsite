@@ -27,5 +27,5 @@ production:
    adapter: postgresql
    encoding: unicode
    database: wipers_production
-   username: rubyuser
-   password: CkeyCaldHALf
+   username: deploy
+   password: 2Wd/[]sV@v6k)4_2"f.{@x`Z
