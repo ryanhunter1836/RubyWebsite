@@ -5,3 +5,4 @@ public/packs/
 tmp/
 .vscode/launch.json
 tmp/cache/
+public/assets

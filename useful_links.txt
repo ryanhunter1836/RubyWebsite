@@ -1,3 +1,6 @@
 Seed database with CSV: https://itnext.io/how-to-seed-a-rails-database-with-a-csv-file-105a7ba0e88c
 Integrate Stripe: https://rails.devcamp.com/trails/ruby-gem-walkthroughs/campsites/payment/guides/how-to-implement-subscriptions-in-stripe
 Getting started with SmartWizard: http://techlaboratory.net/jquery-smartwizard
+Deploying Ruby on Rails App: https://gorails.com/deploy/ubuntu/18.04
+Configuring Master Key in Production: https://medium.com/@waiyanyoon/deploying-rails-5-2-applications-with-new-encrypted-credentials-using-capistrano-acfacc2f5619
+Creating Passengerfile: https://www.phusionpassenger.com/library/deploy/standalone/deploy/ruby/
