@@ -1,8 +1,9 @@
 /config/master.key
-node_modules/
 log/
 public/packs/
 tmp/
-.vscode/launch.json
 tmp/cache/
 public/assets
+node_modules
+.bundle
+vendor

@@ -2,41 +2,33 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'rails',                      '6.0.2.2'
-gem 'mini_magick',                '4.9.5'
 gem 'active_storage_validations', '0.8.2'
 gem 'bcrypt',                     '3.1.13'
-gem 'faker',                      '2.1.2'
 gem 'will_paginate',              '3.1.8'
-gem 'bootstrap-will_paginate',    '1.0.0'
 gem 'bootstrap',                  '4.3.1'
-gem 'popper_js'
-gem 'jquery'
-gem 'ruby-debug-ide',             '0.7.2'
-gem 'debase'
+gem 'pg',                         '1.2.3'
+gem 'popper_js',                  '1.16.0'
 gem 'sprockets-rails',            '2.3.3'
-gem 'puma',                       '4.3.3'
-gem 'sass-rails',                 '5.1.0'
-gem 'webpacker',                  '4.0.7'
-gem 'turbolinks',                 '5.2.0'
-gem 'jbuilder',                   '2.9.1'
-gem 'bootsnap',                   '1.4.5', require: false
+gem 'puma',                       '4.3.5'
+gem 'sass-rails',                 '6.0.0'
+gem 'webpacker',                  '4.2.2'
+gem 'turbolinks',                 '5.2.1'
+gem 'jbuilder',                   '2.10.0'
+gem 'bootsnap',                   '1.4.6', require: false
 gem 'font-awesome-sass',          '~> 5.13.0'
-gem 'stripe'
-gem 'capistrano', '~> 3.11'
-gem 'capistrano-rails', '~> 1.4'
-gem 'capistrano-passenger', '~> 0.2.0'
-gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
-
-group :development, :test do
-  gem 'pg'
-  gem 'byebug',  '11.0.1', platforms: [:mri, :mingw, :x64_mingw]
-end
+gem 'stripe',                     '5.23.1'
+gem 'capistrano',                 '~> 3.11'
+gem 'capistrano-rails',           '~> 1.4'
+gem 'capistrano-passenger',       '~> 0.2.0'
+gem 'capistrano-rbenv',           '~> 2.1', '>= 2.1.4'
+gem 'listen',                     '3.1.5'
 
 group :development do
   gem 'web-console',           '4.0.1'
-  gem 'listen',                '3.1.5'
   gem 'spring',                '2.1.0'
   gem 'spring-watcher-listen', '2.0.1'
+  gem 'ruby-debug-ide',        '0.7.2'
+  gem 'debase',                '0.2.4.1'
 end
 
 group :test do
@@ -50,10 +42,11 @@ group :test do
   gem 'guard-minitest',           '2.4.6'
 end
 
+group :development, :test do
+  gem 'byebug',  '11.0.1', platforms: [:mri, :mingw, :x64_mingw]
+end
+
 group :production do
-  gem 'pg'
-  gem 'listen',                '3.1.5'
-  gem 'aws-sdk-s3', '1.46.0', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
