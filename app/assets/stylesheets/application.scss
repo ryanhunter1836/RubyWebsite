@@ -10,12 +10,11 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require_tree
  */
 
  @import "bootstrap";
- @import "smartwizard/dist/css/smart_wizard.min.css";
- @import "smartwizard/dist/css/smart_wizard_arrows.min.css";
+ @import "smartwizard/dist/css/smart_wizard.min";
+ @import "smartwizard/dist/css/smart_wizard_arrows.min";
  @import "custom";
  @import "font-awesome-sprockets";
  @import "font-awesome";
