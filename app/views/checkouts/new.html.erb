@@ -1,12 +1,16 @@
 <% provide(:title, "Add Vehicle") %>
 <%= javascript_include_tag "https://js.stripe.com/v3/" %>
-<%= javascript_pack_tag "stripe" %>
 <%= javascript_pack_tag "checkouts" %>
+
+<% content_for :head do %>
+    <meta name="turbolinks-visit-control" content="reload">
+    <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
 
 <noscript>
     <meta http-equiv="refresh" content="2;url=/javascript-warning">
 </noscript>
-
+    
 <div class="row">
     <div class="col-12">
         <h1>Add a new vehicle</h1>
@@ -66,7 +70,7 @@
                             </div>
                         </div>
                         <script type='text/javascript'>
-                            let numVehicles = 1;
+                            numVehicles = 1;
                 
                             function addVehicle() {
                                 numVehicles++;

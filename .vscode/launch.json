@@ -7,11 +7,12 @@
             "request": "launch",
             "cwd": "${workspaceRoot}",
             "program": "${workspaceRoot}/bin/rails",
-            "pathToRDebugIDE": "/usr/local/bin/rdebug-ide",
+            "pathToBundler": "/home/ryan/.rvm/gems/ruby-2.6.3/bin/bundle",
+            "pathToRDebugIDE": "/home/ryan/.rvm/gems/ruby-2.6.3/gems/ruby-debug-ide-0.7.2",
             "showDebuggerOutput": true,
             "args": [
-            "server",
-            "webrick"
+                "server",
+                "webrick"
             ]
         },
         {
@@ -22,6 +23,16 @@
             "remoteHost": "127.0.0.1",
             "remotePort": "1234",
             "remoteWorkspaceRoot": "${workspaceRoot}"
+        },
+        {
+            "name": "Debug server",
+            "type": "Ruby",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/main.rb",
+            "args": [
+                "server"
+            ]
         }
     ]
 }   

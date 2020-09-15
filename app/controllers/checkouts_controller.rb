@@ -17,7 +17,7 @@ def create
 
   #Update an existing record
   if (!existing_user.nil? && existing_user.accountCreated == false)
-    test = signup_params
+    msg = nil
     existing_user.assign_attributes(signup_params)
 
     address = ShippingAddress.new(shipping_params)
@@ -25,13 +25,15 @@ def create
 
     if existing_user.valid? && address.valid?
       existing_user.save
-      log_in existing_user
-      render json: '', status: 200
+      msg = { success: true, user_id: existing_user.id }
     else
-      msg = { user: new_user.errors, address: address.errors }
-      render json: msg, status: 400
+      msg = { success: false, user: new_user.errors, address: address.errors }
     end
+
+    render json: msg, status: 200
+  #Create a new record
   else
+    msg = nil
     new_user = User.create(signup_params)
     new_user.accountCreated = false
 
@@ -40,12 +42,12 @@ def create
 
     if new_user.valid? && address.valid?
       new_user.save
-      log_in new_user
-      render json: '', status: 200
+      msg = { success: true, user_id: new_user.id }
     else
-      msg = { user: new_user.errors, address: address.errors }
-      render json: msg, status: 400
+      msg = { success: false, user: new_user.errors, address: address.errors }
     end
+
+    render json: msg, status: 200
   end  
 end
 
@@ -58,88 +60,109 @@ end
 
 def create_customer
   data = JSON.parse request.body.read
+  user = User.find(data['user_id'])
 
-  customer = Stripe::Customer.create(
-    email: current_user.email,
-    name: current_user.name,
-    shipping: {
-      address:
-      {
-        line1: data['address1'],
-        line2: data['address2'],
-        city: data['city'],
-        state: data['state'],
-        postal_code: data['postal']
-      },
-      name: current_user.name
-    }
-  )
-
-  current_user.stripeCustomerId = customer.id
-  current_user.save
-
-  respond_to do |format|
-    msg = { :customer => customer, :name => current_user.name }
-    format.json { render :json => msg } 
+  if !user.nil?
+    customer = Stripe::Customer.create(
+      email: user.email,
+      name: user.name,
+      shipping: {
+        address:
+        {
+          line1: data['address1'],
+          line2: data['address2'],
+          city: data['city'],
+          state: data['state'],
+          postal_code: data['postal']
+        },
+        name: user.name
+      }
+    )
+  
+    user.stripeCustomerId = customer.id
+    user.save
+  
+    respond_to do |format|
+      msg = { :customer => customer, :name => user.name }
+      format.json { render :json => msg } 
+    end
+  else
   end
 end
 
 #Create a subscription for the customer
 def create_subscription
   data = JSON.parse request.body.read
-  order = current_user.order_options[0]
-  order.initialize_stripe_products
+  user = User.find(data['user_id'])
 
-  begin
-    Stripe::PaymentMethod.attach(
-      data['paymentMethodId'],
-      { customer: data['customerId'] }
+  if !user.nil?
+    order = user.order_options[0]
+    order.initialize_stripe_products
+
+    begin
+      Stripe::PaymentMethod.attach(
+        data['paymentMethodId'],
+        { customer: data['customerId'] }
+      )
+    rescue Stripe::CardError => e
+      halt 200, { 'Content-Type' => 'application/json' }, { 'error': { message: e.error.message } }.to_json
+    end
+
+    #Save the payment id to the user
+    user.paymentMethodId = data['paymentMethodId']
+    user.save
+
+    # Set the default payment method on the customer
+    Stripe::Customer.update(
+      data['customerId'],
+      invoice_settings: {
+        default_payment_method: data['paymentMethodId']
+      }
     )
-  rescue Stripe::CardError => e
-    halt 200, { 'Content-Type' => 'application/json' }, { 'error': { message: e.error.message } }.to_json
+
+    # Create the subscription
+    subscription = Stripe::Subscription.create(
+      customer: data['customerId'],
+      items: order.get_products_hash,
+      default_tax_rates: [ 'txr_1HDKxXK9cC716JE2NSsbfS5r' ],
+      expand: ['latest_invoice.payment_intent']
+    )
+
+    order.subscription_id = subscription.id
+    order.add_subscription_ids(subscription)
+    order.period_end = subscription.current_period_end
+    order.save
+
+    render json: subscription
   end
-
-  #Save the payment id to the user
-  current_user.paymentMethodId = data['paymentMethodId']
-  current_user.save
-
-  # Set the default payment method on the customer
-  Stripe::Customer.update(
-    data['customerId'],
-    invoice_settings: {
-      default_payment_method: data['paymentMethodId']
-    }
-  )
-
-  # Create the subscription
-  subscription = Stripe::Subscription.create(
-    customer: data['customerId'],
-    items: order.get_products_hash,
-    default_tax_rates: [ 'txr_1HDKxXK9cC716JE2NSsbfS5r' ],
-    expand: ['latest_invoice.payment_intent']
-  )
-
-  order.subscription_id = subscription.id
-  order.add_subscription_ids(subscription)
-  order.period_end = subscription.current_period_end
-  order.save
-
-  render json: subscription
 end
 
 #Payment was successful.  Mark as paid in DB and update the stripe subscription id
 def subscription_complete
-  order = current_user.order_options[0]
-  order.active = true
-  order.save
+  user = User.find(params[:id])
 
-  current_user.accountCreated = true
-  current_user.save
-  current_user.send_activation_email
+  if !user.nil?
+    test = user.order_options
+    order = user.order_options[0]
+    order.active = true
+    order.save
+  
+    user.accountCreated = true
+    user.save
+    #user.send_activation_email
+
+    log_in user
+    @userId = user.id
+    head 200
+  else
+    head 500
+  end
 end
 
 def success
-  @userId = current_user.id
+  user = User.find(params[:id])
+  log_in user
+  @userId = user.id
 end
 
 def stripe_webhook

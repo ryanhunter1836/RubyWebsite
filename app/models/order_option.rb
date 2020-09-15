@@ -2,7 +2,7 @@ class OrderOption < ApplicationRecord
     include ActiveModel::Dirty
 
     belongs_to :user
-    after_update :update_subscription
+    before_save :update_subscription
 
     enum frequency: [ :six_months, :one_year ]
     enum quality: [ :good, :better, :best ]
@@ -77,40 +77,43 @@ private
     end
 
     def update_subscription
-        changes = calculate_stripe_changes
+        test = self.active_before_last_save
+        if (self.active_before_last_save == true)
+            changes = calculate_stripe_changes
 
-        #Key is Stripe product ID, value is a hash of quantity and subscription_id
-        products_map = []
-        #Remove the old products from the subscription
-        changes[:deleted].each do |key, value|
-            products_map.append({ id: value['subscription_id'], deleted: true })
-            stripe_products.delete(key)
-        end
-
-        #Add the new products to the subscription
-        changes[:new].each do |key, value|
-            products_map.append({ price: key, quantity: value['quantity'] })
-            stripe_products[key] = value
-        end
-
-        #Update the quantity of remaining products
-        changes[:updated].each do |key, value|
-            products_map.append({ id: value['subscription_id'], quantity: value['quantity']})
-            stripe_products[key]['quantity'] = value['quantity']
-        end
-
-        if !products_map.blank?
-            updated_subscription = Stripe::Subscription.update(
-                self.subscription_id,
-                items: products_map,
-                proration_behavior: 'none',
-                #Create a trial until the current period ends so the user isn't billed until it's time to renew
-                trial_end: self.period_end
-            )
-
-            #Update the database with the new subscription
-            add_subscription_ids(updated_subscription)
-            self.save
+            #Key is Stripe product ID, value is a hash of quantity and subscription_id
+            products_map = []
+            #Remove the old products from the subscription
+            changes[:deleted].each do |key, value|
+                products_map.append({ id: value['subscription_id'], deleted: true })
+                stripe_products.delete(key)
+            end
+    
+            #Add the new products to the subscription
+            changes[:new].each do |key, value|
+                products_map.append({ price: key, quantity: value['quantity'] })
+                stripe_products[key] = value
+            end
+    
+            #Update the quantity of remaining products
+            changes[:updated].each do |key, value|
+                products_map.append({ id: value['subscription_id'], quantity: value['quantity']})
+                stripe_products[key]['quantity'] = value['quantity']
+            end
+    
+            if !products_map.blank?
+                updated_subscription = Stripe::Subscription.update(
+                    self.subscription_id,
+                    items: products_map,
+                    proration_behavior: 'none',
+                    #Create a trial until the current period ends so the user isn't billed until it's time to renew
+                    trial_end: self.period_end
+                )
+    
+                #Update the database with the new subscription
+                add_subscription_ids(updated_subscription)
+                self.save
+            end
         end
     end
 
@@ -146,9 +149,6 @@ private
                 end
             end
         end
-
-        puts previous_products
-        puts current_products
 
         updated_products = Hash.new
         current_products.each do |key, value|

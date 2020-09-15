@@ -12,10 +12,13 @@ class StaticPagesController < ApplicationController
   def help
   end
 
-  def about
+  def overview
   end
 
-  def contact
+  def faq
+  end
+
+  def about
   end
 
   def javascript
