@@ -97,6 +97,7 @@ def create_subscription
 
   if !user.nil?
     order = user.order_options[0]
+
     order.initialize_stripe_products
 
     begin
@@ -131,6 +132,7 @@ def create_subscription
     order.subscription_id = subscription.id
     order.add_subscription_ids(subscription)
     order.period_end = subscription.current_period_end
+    order.active = true
     order.save
 
     render json: subscription
@@ -142,11 +144,6 @@ def subscription_complete
   user = User.find(params[:id])
 
   if !user.nil?
-    test = user.order_options
-    order = user.order_options[0]
-    order.active = true
-    order.save
-  
     user.accountCreated = true
     user.save
     #user.send_activation_email

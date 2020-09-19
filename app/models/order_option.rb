@@ -77,8 +77,10 @@ private
     end
 
     def update_subscription
-        test = self.active_before_last_save
-        if (self.active_before_last_save == true)
+        test = active_changed?
+        test2 = vehicle_id_changed?
+        #Only update if this subscription is already active
+        if (self.active && !active_changed?)
             changes = calculate_stripe_changes
 
             #Key is Stripe product ID, value is a hash of quantity and subscription_id

@@ -34,6 +34,7 @@ class VehiclesController < ApplicationController
         order.subscription_id = subscription.id
         order.add_subscription_ids(subscription)
         order.period_end = subscription.current_period_end
+        order.active = true
         order.save
 
         flash[:success] = "Subscription created!"
