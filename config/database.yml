@@ -15,18 +15,18 @@ development:
    encoding: unicode
    database: wipers_development
    username: rubyuser
-   password: CkeyCaldHALf
+   password: <%= Rails.application.credentials.database_key[:development] %>
 
 test:
    adapter: postgresql
    encoding: unicode
    database: wipers_test
    username: rubyuser
-   password: CkeyCaldHALf
+   password: <%= Rails.application.credentials.database_key[:test] %>
  
 production:
    adapter: postgresql
    encoding: unicode
    database: wipers_production
    username: deploy
-   password: 2Wd/[]sV@v6k)4_2"f.{@x`Z
+   password: <%= Rails.application.credentials.database_key[:production] %>

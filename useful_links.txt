@@ -4,3 +4,4 @@ Getting started with SmartWizard: http://techlaboratory.net/jquery-smartwizard
 Deploying Ruby on Rails App: https://gorails.com/deploy/ubuntu/18.04
 Configuring Master Key in Production: https://medium.com/@waiyanyoon/deploying-rails-5-2-applications-with-new-encrypted-credentials-using-capistrano-acfacc2f5619
 Creating Passengerfile: https://www.phusionpassenger.com/library/deploy/standalone/deploy/ruby/
+Storing password in secrets: https://medium.com/@kirill_shevch/encrypted-secrets-credentials-in-rails-6-rails-5-1-5-2-f470accd62fc
