@@ -24,7 +24,7 @@ def getFrequency(interval, count)
 end
 
 #Seed method for vehicles
-CSV.foreach(Rails.root.join('lib', 'seeds', 'sample_wipersizes.csv'), headers: false) do |row|
+CSV.foreach(Rails.root.join('lib', 'seeds', 'wipersizes.csv'), headers: false) do |row|
   Vehicle.create(make: row[0],
                  model: row[1],
                  year: row[2],

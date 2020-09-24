@@ -35,8 +35,9 @@ $(document).on('turbolinks:load', function() {
       toolbarButtonPosition: 'left'
     },
     anchorSettings: {
-      removeDoneStepOnNavigateBack: true,
-      anchorClickable: false
+      removeDoneStepOnNavigateBack: false,
+      anchorClickable: true,
+      enableAnchorOnDoneStep: true
     }
   });
 });
