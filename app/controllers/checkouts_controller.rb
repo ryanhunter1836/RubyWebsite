@@ -27,7 +27,7 @@ def create
       existing_user.save
       msg = { success: true, user_id: existing_user.id }
     else
-      msg = { success: false, user: new_user.errors, address: address.errors }
+      msg = { success: false, user: existing_user.errors, address: address.errors }
     end
 
     render json: msg, status: 200

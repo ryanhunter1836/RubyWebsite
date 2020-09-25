@@ -16,28 +16,3 @@ require("channels")
 // const imagePath = (name) => images(name, true)
 
 import 'bootstrap'
-import 'smartwizard/dist/js/jquery.smartWizard.min.js'
-
-$(document).on('turbolinks:load', function() {
-  $('#smartwizard').smartWizard({
-    theme: 'arrows',
-    justified: true,
-    enableURLhash: false,
-    keyNavigation: false,
-    autoAdjustHeight: false,
-    transition: {
-      animation: 'none',
-      speed: '400',
-      easing:''
-    },
-    toolbarSettings: {
-      toolbarPosition: 'bottom',
-      toolbarButtonPosition: 'left'
-    },
-    anchorSettings: {
-      removeDoneStepOnNavigateBack: false,
-      anchorClickable: true,
-      enableAnchorOnDoneStep: true
-    }
-  });
-});

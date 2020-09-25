@@ -1,3 +1,5 @@
+import 'smartwizard/dist/js/jquery.smartWizard.min.js'
+
 const userElements = [
 "name", 
 "email", 
@@ -121,7 +123,7 @@ function createPaymentMethod({ card, customerId, billingName, userId, isPaymentR
     },
   }).then((result) => {
     if (result.error) {
-      displayError(error);
+      displayError(result);
     } 
     else {
       if (isPaymentRetry) {
@@ -162,7 +164,6 @@ function createCustomer(userId) {
   }).then((response) => {
       return response.json();
     }).then((result) => {
-      console.log(result);
       return result;
     });
 }
@@ -234,7 +235,6 @@ function onSubscriptionComplete(userId) {
     }
   }).then((response) => {
     url = "/checkouts/success/" + userId;
-    console.log(url);
     window.location = url;
   })
 }
@@ -333,7 +333,7 @@ function clearErrors() {
     }
 }
 
-$(document).on('ajax:success', '#user-form', event => {
+$(document).on('ajax:success', '#user-form', event => { 
     const [response, status, xhr] = event.detail;
     clearErrors();
 
@@ -366,9 +366,9 @@ $(document).on('ajax:success', '#user-form', event => {
 
 //Functions to update the preview container
 function updateVehiclePreview(index) {
-  make = $("#make-selector-" + index + " option:selected").text();
-  model = $("#model-selector-" + index + " option:selected").text();
-  year = $("#vehicle-id-" + index + " option:selected").text();
+  let make = $("#make-selector-" + index + " option:selected").text();
+  let model = $("#model-selector-" + index + " option:selected").text();
+  let year = $("#vehicle-id-" + index + " option:selected").text();
 
   $("#vehicle_preview_" + index).text(year + " " + make + " " + model);
 }
@@ -403,6 +403,67 @@ function updateModel(modelId, index) {
     });
   });
 };
+
+function validatePage(stepIndex, stepDirection) {
+  if(stepIndex === 1 && stepDirection == "forward") {
+    //Verify all vehicles selectors have been filled out
+    if($("#vehicle-id-1").length) {
+      if($("#vehicle-id-1").val() === "") {
+        $('#smartwizard').smartWizard({
+          errorSteps: [1]
+        });
+        $("#smartwizard").smartWizard("goToStep", 1)
+        return;
+      }
+    }
+    if($("#vehicle-id-2").length) {
+      if($("#vehicle-id-2").val() === "") {
+        $('#smartwizard').smartWizard({
+          errorSteps: [1]
+        });
+        $("#smartwizard").smartWizard("goToStep", 1)
+        return;
+      }
+    }
+    if($("#vehicle-id-3").length) {
+      if($("#vehicle-id-3").val() === "") {
+        $('#smartwizard').smartWizard({
+          errorSteps: [1]
+        });
+        $("#smartwizard").smartWizard("goToStep", 1)
+        return;
+      }
+    }
+  }
+  else if (stepIndex === 2 && stepDirection == "forward") {
+    //Verify a quality has been selected
+    if ($("input[name='user[order_options_attributes][0][quality]']:checked").val()) {
+      $('#smartwizard').smartWizard({
+        errorSteps: []
+      });
+    }
+    else {
+      $('#smartwizard').smartWizard({
+        errorSteps: [2]
+      });
+      $("#smartwizard").smartWizard("goToStep", 2)
+    }
+  }
+  else if (stepIndex === 3 && stepDirection == "forward") {
+    //Verify a frequency has been selected
+    if ($("input[name='user[order_options_attributes][0][frequency]']:checked").val()) {
+      $('#smartwizard').smartWizard({
+        errorSteps: []
+      });
+    }
+    else {
+      $('#smartwizard').smartWizard({
+        errorSteps: [3]
+      });
+      $("#smartwizard").smartWizard("goToStep", 3)
+    }
+  }
+}
 
 function addListeners() {
   let currentIndex = 2;
@@ -501,6 +562,32 @@ function addListeners() {
     button = $("#submit-button");
     button.prop("disabled", true);
     button.html("<i class='fa fa-spinner fa-spin'></i><span class='sr-only'>Processing...</span>")
+  });
+
+  $("#smartwizard").on("stepContent", function(e, anchorObject, stepIndex, stepDirection) {
+    validatePage(stepIndex, stepDirection);
+  });
+
+  $('#smartwizard').smartWizard({
+    theme: 'arrows',
+    justified: true,
+    enableURLhash: false,
+    keyNavigation: false,
+    autoAdjustHeight: false,
+    transition: {
+      animation: 'none',
+      speed: '400',
+      easing:''
+    },
+    toolbarSettings: {
+      toolbarPosition: 'bottom',
+      toolbarButtonPosition: 'left'
+    },
+    anchorSettings: {
+      removeDoneStepOnNavigateBack: false,
+      anchorClickable: true,
+      enableAnchorOnDoneStep: true
+    }
   });
 }
 
