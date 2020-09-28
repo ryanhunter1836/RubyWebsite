@@ -73,9 +73,9 @@ function stripeElements(publishableKey) {
 function runStripe(userId) {
   // Create customer
   createCustomer(userId).then((result) => {
-    customer = result.customer;
-    customerId = customer.id;
-    customerName = result.name;
+    var customer = result.customer;
+    var customerId = customer.id;
+    var customerName = result.name;
 
     // If a previous payment was attempted, get the lastest invoice
     const latestInvoicePaymentIntentStatus = localStorage.getItem('latestInvoicePaymentIntentStatus');
@@ -101,25 +101,55 @@ function runStripe(userId) {
 }
 
 function displayError(event) {
-  let displayError = document.getElementById('card-element-errors');
+  var displayError = document.getElementById('card-element-errors');
   if (event.error) {
     displayError.textContent = event.error.message;
   } 
   else {
     displayError.textContent = '';
   }
-  button = document.getElementById('submit-button');
+  var button = document.getElementById('submit-button');
   button.innerHTML = "Submit Order";
   button.disabled = false;
 }
 
 function createPaymentMethod({ card, customerId, billingName, userId, isPaymentRetry, invoiceId }) {
+  var address1 = "";
+  var address2 = "";
+  var city = "";
+  var state = "";
+  var postal = "";
+
+  if ($("#same_as_shipping").is(':checked')) {
+    address1 = document.getElementById("address1_field").value;
+    address2 = document.getElementById("address2_field").value;
+    city = document.getElementById("city_field").value;
+    state = document.getElementById("state_field").value;
+    postal = document.getElementById("postal_field").value;
+  }
+  else {
+    address1 = document.getElementById("billing_address1_field").value;
+    address2 = document.getElementById("billing_address2_field").value;
+    city = document.getElementById("billing_city_field").value;
+    state = document.getElementById("billing_state_field").value;
+    postal = document.getElementById("billing_postal_field").value;
+  }
+
   // Set up payment method for recurring usage
   stripe.createPaymentMethod({
     type: 'card',
     card: card,
     billing_details: {
       name: billingName,
+      email: document.getElementById('email_field').value,
+      address: {
+        city: city,
+        country: "US",
+        line1: address1,
+        line2: address2,
+        postal_code: postal,
+        state: state
+      }
     },
   }).then((result) => {
     if (result.error) {
@@ -159,7 +189,8 @@ function createCustomer(userId) {
       address2: document.getElementById('address2_field').value,
       city: document.getElementById('city_field').value,
       state: document.getElementById('state_field').value,
-      postal: document.getElementById('postal_field').value
+      postal: document.getElementById('postal_field').value,
+      phone: document.getElementById('phone_field').value
     })
   }).then((response) => {
       return response.json();
@@ -176,7 +207,7 @@ function handleCustomerActionRequired({subscription, invoice, paymentMethodId, i
 
   // If it's a first payment attempt, the payment intent is on the subscription latest invoice.
   // If it's a retry, the payment intent will be on the invoice itself.
-  let paymentIntent = invoice ? invoice.payment_intent : subscription.latest_invoice.payment_intent;
+  var paymentIntent = invoice ? invoice.payment_intent : subscription.latest_invoice.payment_intent;
 
   if (paymentIntent.status === 'requires_action' || (isRetry === true && paymentIntent.status === 'requires_payment_method')) {
     return stripe.confirmCardPayment(paymentIntent.client_secret, { payment_method: paymentMethodId }).then((result) => {
@@ -226,7 +257,7 @@ function onSubscriptionComplete(userId) {
   // Remove invoice from localstorage because payment is now complete.
   localStorage.clear();
 
-  url = "/subscription-complete/" + userId
+  var url = "/subscription-complete/" + userId
   fetch(url, {
     method: 'get',
     headers: {
@@ -305,28 +336,28 @@ function getConfig() {
 }
 
 function inlineError(name, elementName, message) {
-    messageElementName = elementName + "_error";
-    fieldElementName = elementName + "_field";
-    message = name + " " + message;
-    messageElement = document.getElementById(messageElementName);
+    var messageElementName = elementName + "_error";
+    var fieldElementName = elementName + "_field";
+    var message = name + " " + message;
+    var messageElement = document.getElementById(messageElementName);
     messageElement.innerHTML = message;
     messageElement.classList.add("invalid-feedback");
     document.getElementById(fieldElementName).classList.add("is-invalid");
 }
 
 function clearErrors() {
-    for(i = 0; i < userElements.length; i++) {
-        messageElementName = userElements[i] + "_error";
-        fieldElementName = userElements[i] + "_field";
-        messageElement = document.getElementById(messageElementName);
+    for(var i = 0; i < userElements.length; i++) {
+        var messageElementName = userElements[i] + "_error";
+        var fieldElementName = userElements[i] + "_field";
+        var messageElement = document.getElementById(messageElementName);
         messageElement.innerHTML = "";
         messageElement.classList.remove("invalid-feedback");
         document.getElementById(fieldElementName).classList.remove("is-invalid");
     }
-    for(i = 0; i < shippingElements.length; i++) {
-        messageElementName = shippingElements[i] + "_error";
-        fieldElementName = shippingElements[i] + "_field";
-        messageElement = document.getElementById(messageElementName);
+    for(var i = 0; i < shippingElements.length; i++) {
+        var messageElementName = shippingElements[i] + "_error";
+        var fieldElementName = shippingElements[i] + "_field";
+        var messageElement = document.getElementById(messageElementName);
         messageElement.innerHTML = "";
         messageElement.classList.remove("invalid-feedback");
         document.getElementById(fieldElementName).classList.remove("is-invalid");
@@ -344,21 +375,21 @@ $(document).on('ajax:success', '#user-form', event => {
     //Otherwise, display the errors on the form
     else {
       //Loop through the user elements
-      for(i = 0; i < userElements.length; i++) {
+      for(var i = 0; i < userElements.length; i++) {
         if(userElements[i] in response['user']) {
             inlineError(userElementNames[i], userElements[i], response['user'][userElements[i]][0]);
         }
       }
 
       //Loop through the shipping elements
-      for(i = 0; i < shippingElements.length; i++) {
+      for(var i = 0; i < shippingElements.length; i++) {
         if(shippingElements[i] in response['address']) {       
             inlineError(shippingElementNames[i], shippingElements[i], response['address'][shippingElements[i]][0]);
         }
       }
 
       //Re-enable the submit button
-      button = document.getElementById('submit-button');
+      var button = document.getElementById('submit-button');
       button.innerHTML = "Submit Order";
       button.disabled = false;
     }
@@ -366,9 +397,9 @@ $(document).on('ajax:success', '#user-form', event => {
 
 //Functions to update the preview container
 function updateVehiclePreview(index) {
-  let make = $("#make-selector-" + index + " option:selected").text();
-  let model = $("#model-selector-" + index + " option:selected").text();
-  let year = $("#vehicle-id-" + index + " option:selected").text();
+  var make = $("#make-selector-" + index + " option:selected").text();
+  var model = $("#model-selector-" + index + " option:selected").text();
+  var year = $("#vehicle-id-" + index + " option:selected").text();
 
   $("#vehicle_preview_" + index).text(year + " " + make + " " + model);
 }
@@ -466,7 +497,7 @@ function validatePage(stepIndex, stepDirection) {
 }
 
 function addListeners() {
-  let currentIndex = 2;
+  var currentIndex = 2;
   //Add a new listener each time the button is clicked
   $("#add_vehicle_button").click(function () {
       if(currentIndex == 2) {
@@ -499,7 +530,7 @@ function addListeners() {
       }
 
       //Add another vehicle preview entry
-      let htmlToInsert = "<div id=\"vehicle_preview_" + currentIndex + "\" class=\"vehicle-preview col-12\"></div>";
+      var htmlToInsert = "<div id=\"vehicle_preview_" + currentIndex + "\" class=\"vehicle-preview col-12\"></div>";
       document.getElementById("vehicle_preview_container").insertAdjacentHTML('beforeend', htmlToInsert);
 
       currentIndex++;
@@ -516,8 +547,8 @@ function addListeners() {
       }
 
       //Remove an entry in the vehicle preview container
-      elementList = $(".vehicle-preview");
-      element = elementList[elementList.length - 1];
+      var elementList = $(".vehicle-preview");
+      var element = elementList[elementList.length - 1];
       element.parentNode.removeChild(element);
 
       currentIndex--;
@@ -559,10 +590,22 @@ function addListeners() {
   });
 
   $("#user-form").submit(function() { 
-    button = $("#submit-button");
+    var button = $("#submit-button");
     button.prop("disabled", true);
     button.html("<i class='fa fa-spinner fa-spin'></i><span class='sr-only'>Processing...</span>")
   });
+
+  $("#same_as_shipping").change(
+    function(){
+        if ($(this).is(':checked')) {
+          //document.getElementById("billing_address_fields").style.display = 'none';
+          $("#billing_address_fields").hide();
+        }
+        else {
+          //document.getElementById("billing_address_fields").style.display = 'block';
+          $("#billing_address_fields").show();
+        }
+    });
 
   $("#smartwizard").on("stepContent", function(e, anchorObject, stepIndex, stepDirection) {
     validatePage(stepIndex, stepDirection);

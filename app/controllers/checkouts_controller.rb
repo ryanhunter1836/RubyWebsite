@@ -66,6 +66,7 @@ def create_customer
     customer = Stripe::Customer.create(
       email: user.email,
       name: user.name,
+      phone: data['phone'],
       shipping: {
         address:
         {
@@ -257,6 +258,6 @@ private
   end
 
   def shipping_params
-    params.require(:shipping_address).permit(:address1, :address2, :city, :state, :postal)
+    params.require(:shipping_address).permit(:address1, :address2, :city, :state, :postal, :phone)
   end
 end

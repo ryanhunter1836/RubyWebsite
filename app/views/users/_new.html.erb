@@ -1,5 +1,3 @@
-<% provide(:title, 'Checkout') %>
-
 <div class="row mb-5">
   <div class="col-12">
     <h1>Account Information</h1>
@@ -42,6 +40,10 @@
       <%= shipping_fields.label :postal, "Zip Code" %>
       <%= shipping_fields.text_field :postal, class: 'form-control', id: 'postal_field', placeholder: "Zip code" %>
       <div id = "postal_error" class="help-block"></div>
+
+      <%= shipping_fields.label :phone, "Phone Number" %>
+      <%= shipping_fields.telephone_field :phone, class: 'form-control', id: 'phone_field', placeholder: "Phone Number" %>
+      <div id = "phone_error" class="help-block"></div>
     <% end %>
   </div>
 </div>

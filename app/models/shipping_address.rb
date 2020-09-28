@@ -3,7 +3,7 @@ class ShippingAddress
     include ActiveModel::Validations::Callbacks
     before_validation :downcase_state
 
-    attr_accessor :address1, :address2, :city, :state, :postal
+    attr_accessor :address1, :address2, :city, :state, :postal, :phone
 
     STATE_LIST = %w(ALABAMA
         ALASKA

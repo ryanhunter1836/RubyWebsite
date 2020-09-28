@@ -1,4 +1,12 @@
 Price ID,Product Name,Amount,Interval,Interval Count
+price_1HWUAmK9cC716JE2ceYncAbP,"Good - 15""",2000,year,1
+price_1HWUAmK9cC716JE2pJfWuMQ8,"Good - 15""",2000,month,6
+price_1HWUANK9cC716JE2OFYIeyZF,"Good - 27""",2000,year,1
+price_1HWUANK9cC716JE2KLy37gap,"Good - 27""",2000,month,6
+price_1HWU9hK9cC716JE24R2gNcGv,"Better - 15""",3000,year,1
+price_1HWU9hK9cC716JE268YJHg1Z,"Better - 15""",3000,month,6
+price_1HWU96K9cC716JE2ywJEm5bn,"Better - 27""",3000,year,1
+price_1HWU96K9cC716JE2Rq2VLgEj,"Better - 27""",3000,month,6
 price_1GvxieK9cC716JE2ULC5qeLE,"Best - 28""",4000,year,1
 price_1GvxidK9cC716JE2P9aK5dqg,"Best - 28""",4000,month,6
 price_1GvxiIK9cC716JE2kGfSjnZE,"Better - 28""",3500,year,1

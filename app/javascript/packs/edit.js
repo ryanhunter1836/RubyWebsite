@@ -1,3 +1,5 @@
+import 'smartwizard/dist/js/jquery.smartWizard.min.js'
+
 function updateShippingPreview() {
     result = $("#address1_field").val() + " ";
     result += $("#address2_field").val() + "<br/>";
@@ -61,6 +63,67 @@ function updateQualityPreview(qualityString) {
 
 function updateFrequencyPreview(frequencyString) {
   $("#frequency_preview").text(frequencyString);
+}
+
+function validatePage(stepIndex, stepDirection) {
+  if(stepIndex === 1 && stepDirection == "forward") {
+    //Verify all vehicles selectors have been filled out
+    if($("#vehicle-id-1").length) {
+      if($("#vehicle-id-1").val() === "") {
+        $('#smartwizard').smartWizard({
+          errorSteps: [1]
+        });
+        $("#smartwizard").smartWizard("goToStep", 1)
+        return;
+      }
+    }
+    if($("#vehicle-id-2").length) {
+      if($("#vehicle-id-2").val() === "") {
+        $('#smartwizard').smartWizard({
+          errorSteps: [1]
+        });
+        $("#smartwizard").smartWizard("goToStep", 1)
+        return;
+      }
+    }
+    if($("#vehicle-id-3").length) {
+      if($("#vehicle-id-3").val() === "") {
+        $('#smartwizard').smartWizard({
+          errorSteps: [1]
+        });
+        $("#smartwizard").smartWizard("goToStep", 1)
+        return;
+      }
+    }
+  }
+  else if (stepIndex === 2 && stepDirection == "forward") {
+    //Verify a quality has been selected
+    if ($("input[name='user[order_options_attributes][0][quality]']:checked").val()) {
+      $('#smartwizard').smartWizard({
+        errorSteps: []
+      });
+    }
+    else {
+      $('#smartwizard').smartWizard({
+        errorSteps: [2]
+      });
+      $("#smartwizard").smartWizard("goToStep", 2)
+    }
+  }
+  else if (stepIndex === 3 && stepDirection == "forward") {
+    //Verify a frequency has been selected
+    if ($("input[name='user[order_options_attributes][0][frequency]']:checked").val()) {
+      $('#smartwizard').smartWizard({
+        errorSteps: []
+      });
+    }
+    else {
+      $('#smartwizard').smartWizard({
+        errorSteps: [3]
+      });
+      $("#smartwizard").smartWizard("goToStep", 3)
+    }
+  }
 }
 
 function addListeners() {
@@ -180,6 +243,32 @@ function addListeners() {
       $(this).click(function() {
           toggleVehicle(index);
       });
+  });
+
+  $("#smartwizard").on("stepContent", function(e, anchorObject, stepIndex, stepDirection) {
+    validatePage(stepIndex, stepDirection);
+  });
+
+  $('#smartwizard').smartWizard({
+    theme: 'arrows',
+    justified: true,
+    enableURLhash: false,
+    keyNavigation: false,
+    autoAdjustHeight: false,
+    transition: {
+      animation: 'none',
+      speed: '400',
+      easing:''
+    },
+    toolbarSettings: {
+      toolbarPosition: 'bottom',
+      toolbarButtonPosition: 'left'
+    },
+    anchorSettings: {
+      removeDoneStepOnNavigateBack: false,
+      anchorClickable: true,
+      enableAnchorOnDoneStep: true
+    }
   });
 }
 
