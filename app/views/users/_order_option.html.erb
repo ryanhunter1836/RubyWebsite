@@ -5,9 +5,7 @@
     <div class="card-body">
         <div class="row mb-2">
             <h5 class="col-12">Vehicles</h5>
-            <% order_option.vehicle_id.each do |i| %>
-            <div class="col-12"><%= get_vehicle_name(i) %></div>
-            <% end %>
+            <div class="col-12"><%= get_vehicle_name(order_option.vehicle_id) %></div>
         </div>
         <div class="row mb-2">
             <h5 class="col-12">Quality</h5>

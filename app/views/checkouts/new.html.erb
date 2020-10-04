@@ -1,5 +1,4 @@
 <% provide(:title, "Create New Subscription") %>
-<%= javascript_include_tag "https://js.stripe.com/v3/" %>
 <%= javascript_pack_tag "checkouts" %>
 
 <% content_for :head do %>
@@ -16,26 +15,25 @@
         <h1>Add a new vehicle</h1>
     </div>
     <div class="container full-width p-0 p-md-auto">
-        <%= form_for @user, url: checkouts_path, html: { id: 'user-form', 'data-type' => 'json' }, remote: true do |f| %>
             <div id="smartwizard">
                 <ul class="nav">
-                    <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicles</small></a></li>
+                    <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
                     <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
                     <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
-                    <li><a class="nav-link" href="#step-4">Step 4<br /><small>Checkout</small></a></li>
+                    <li><a class="nav-link" href="#step-4">Step 4<br /><small>Review</small></a></li>
                 </ul>
-                <%= f.fields_for :order_options, @order_options do |order_fields| %>
+                <%= form_for @order_options, url: checkouts_path, html: { id: 'vehicle-form' }, local: true do |f| %>
                     <div class="tab-content">
                         <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                            <div class="col-12">
-                                <h1>Select Vehicles</h1>
-                                <div id="vehicle_container" class="row d-flex justify-content-center mb-3">
-                                    <%= render :partial => 'vehicle', :locals => { order_fields: order_fields } %>
-                                </div>
-                                <div class="btn btn-success col-12 col-lg-4 offset-lg-4 mb-2" id="add_vehicle_button"
-                                    onclick="addVehicle()">Add Another Vehicle</div>
-                                <div class="btn btn-danger col-4 offset-4" style="visibility:hidden"
-                                    id="remove_vehicle_button" onclick="removeVehicle()">Remove a Vehicle</div>
+                            <div class="col-12 col-md-8 col-lg-6 ml-auto mr-auto">
+                                <h1>Select Vehicle</h1>
+                                <%= f.label :Make %>
+                                <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), 
+                                    id: "make-selector", include_blank: true, class: 'form-control make-selector' %>
+                                <%= f.label :Model %>
+                                <%= select_tag "", "", id: "model-selector", include_blank: true, class: 'form-control model-selector' %>
+                                <%= f.label :Year %>
+                                <%= f.select :vehicle_id, 'vehicle_id', { include_blank: true }, { id: 'vehicle-id', class: 'form-control year-selector' } %> 
                             </div>
                         </div>
                         <div id="step-2" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
@@ -43,13 +41,13 @@
                                 <h1>Select Quality</h1>
                                 <div class="btn-group-toggle" data-toggle="buttons">
                                     <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2">
-                                        <%= order_fields.radio_button :quality, 'good', :id => 'good_button', :name => 'user[order_options_attributes][0][quality]' %>Good
+                                        <%= f.radio_button :quality, 'good', :id => 'good-button' %>Good
                                     </label>
                                     <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                        <%= order_fields.radio_button :quality, 'better', :id => 'better_button', :name => 'user[order_options_attributes][0][quality]' %>Better
+                                        <%= f.radio_button :quality, 'better', :id => 'better-button' %>Better
                                     </label>
                                     <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                        <%= order_fields.radio_button :quality, 'best', :id => 'best_button', :name => 'user[order_options_attributes][0][quality]', :disabled => true %>Best
+                                        <%= f.radio_button :quality, 'best', :id => 'best-button', :disabled => true %>Best
                                     </label>
                                 </div>
                             </div>
@@ -59,116 +57,39 @@
                                 <h1>Select Frequency</h1>
                                 <div class="btn-group-toggle" data-toggle="buttons">
                                     <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2">
-                                        <%= order_fields.radio_button :frequency, 'six_months', :id => 'months_button', :name => 'user[order_options_attributes][0][frequency]' %>
+                                        <%= f.radio_button :frequency, 'six_months', :id => 'months-button' %>
                                         Every 6 Months
                                     </label>
                                     <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2">
-                                        <%= order_fields.radio_button :frequency, 'one_year', :id => 'year_button', :name => 'user[order_options_attributes][0][frequency]' %>
+                                        <%= f.radio_button :frequency, 'one_year', :id => 'year-button' %>
                                         Every 12 Months
                                     </label>
                                 </div>
                             </div>
                         </div>
-                        <script type='text/javascript'>
-                            numVehicles = 1;
-                
-                            function addVehicle() {
-                                numVehicles++;
-                                document.getElementById("remove_vehicle_button").style.visibility = "visible";
-                                htmlToInsert = "<%= j render :partial => 'vehicle', :locals => { :order_fields => order_fields } %>";
-                                htmlToInsert = htmlToInsert.replace("make-selector-1", "make-selector-" + numVehicles)
-                                    .replace("model-selector-1", "model-selector-" + numVehicles)
-                                    .replace("vehicle-id-1", "vehicle-id-" + numVehicles)
-                                    .replace(/name=\"1\"/g, "name=\"" + numVehicles + "\"");
-                                document.getElementById("vehicle_container").insertAdjacentHTML('beforeend', htmlToInsert);
-                                if (numVehicles === 3) {
-                                    document.getElementById("add_vehicle_button").style.visibility = "hidden";
-                                }
-                            }
-                
-                            function removeVehicle() {
-                                numVehicles--;
-                                document.getElementById("add_vehicle_button").style.visibility = "visible";
-                                if (numVehicles == 1) {
-                                    document.getElementById("remove_vehicle_button").style.visibility = "hidden";
-                                }
-                                //Remove the last form from the page
-                                elementList = document.getElementsByClassName("vehicle-form");
-                                element = elementList[elementList.length - 1];
-                                element.parentNode.removeChild(element);
-                            }
-                        </script>
-                    <% end %>
-                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
-                        <h1>Checkout</h1>
-                        <div class="d-flex flex-wrap-reverse">
-                            <div class="col-12 col-md-5">
-                                <div id="user-details">
-                                    <%= render :partial => 'users/new', :locals => { :f => f } %>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-12">
-                                        <h1>Billing Information</h1>
-                                        <label for="same-as-shipping">Same as shipping address?</label>
-                                        <input type="checkbox" name="same-as-shipping" id="same_as_shipping"></label>
-                                        <br/>
-
-                                        <div id="billing_address_fields">
-                                            <label for="address1">Address Line 1</label>
-                                            <input type="text" name="address1" id="billing_address1_field" placeholder="Address Line 1" class="form-control"></input>
-                                            <div id = "billing_address1_error" class="help-block"></div>
-
-                                            <label for="address2">Address Line 2</label>
-                                            <input type="text" name="address2" id="billing_addres2_field" placeholder="Address Line 2" class="form-control"></input>
-                                            <div id = "billing_address2_error" class="help-block"></div>
-
-                                            <label for="city">City</label>
-                                            <input type="text" name="city" id="billing_city_field" placeholder="City" class="form-control"></input>
-                                            <div id = "billing_city_error" class="help-block"></div>
-
-                                            <label for="state">State</label>
-                                            <input type="text" name="state" id="billing_state_field" placeholder="State" class="form-control"></input>
-                                            <div id = "billing_state_error" class="help-block"></div>
-
-                                            <label for="postal">Postal Code</label>
-                                            <input type="text" name="postal" id="billing_postal_field" placeholder="Postal Code" class="form-control"></input>
-                                            <div id = "billing_postal_error" class="help-block"></div>
-
-                                            <br/>
+                        <div id="step-4" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                            <div class="col-12 mb-4">
+                                <div class="row justify-content-center">
+                                    <% if !@existing_vehicles.nil? %>
+                                        <%= render partial: "order_option", collection: @existing_vehicles %>
+                                    <% end %>
+                                    <div class="col-12 col-md-4 text-center">
+                                        <div class="border border-secondary rounded p-2  ml-2 mr-2 ">
+                                            <h4>Vehicle</h4>
+                                            <p id="vehicle-preview"></p>
+                                            <h4>Quality</h4>
+                                            <p id="quality-preview"></p>
+                                            <h4>Frequency</h4>
+                                            <p id="frequency-preview"></p>
                                         </div>
-                                        
-                                        <div class="gray-box-rounded">
-                                            <div id="card-element" class="MyCardElement"></div>
-                                            <div id="card-element-errors" role="alert"></div>
-                                        </div>
-                                    </div>
+                                    </div>                                    
                                 </div>
-                                <%= f.button "Submit Order", id:"submit-button", class: "btn btn-primary w-100 mb-4" %>
                             </div>
-                            <div class="col-12 col-md-7">
-                                <h1>Review Order</h1>
-                                <div class="gray-box-rounded">
-                                    <div class="row">
-                                        <div class="col-6 p-0">
-                                            <div class="row col-12 mb-2">
-                                                <h5 class="col-12">Vehicles</h5>
-                                                <div id="vehicle_preview_container">
-                                                    <div id="vehicle_preview_1" class="vehicle-preview col-12"></div>
-                                                </div>
-                                            </div>
-                                            <div class="row col-12 mb-2">
-                                                <h5 class="col-12">Quality</h5>
-                                                <div id="quality_preview" class="col-12"></div>
-                                            </div>
-                                            <div class="row col-12">
-                                                <h5 class="col-6">Frequency</h5>
-                                                <div id="frequency_preview" class="col-12"></div>
-                                            </div>  
-                                        </div>
-                                        <div class="col-6">
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-12 col-md-8 col-lg-6 ml-auto mr-auto">
+                                <% if @existing_vehicles.nil? || @existing_vehicles.count < 2 %>
+                                    <%= f.submit "Add Another Vehicle", class: "btn btn-primary mb-4 w-100" %>
+                                <% end %>
+                                <%= f.submit "Continue to Checkout", :name => 'continue', class: "btn btn-success mb-4 w-100" %>
                             </div>
                         </div>
                     </div>

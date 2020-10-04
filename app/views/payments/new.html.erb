@@ -1,0 +1,69 @@
+<%= javascript_include_tag "https://js.stripe.com/v3/" %>
+<%= javascript_pack_tag "payment" %>
+
+<% content_for :head do %>
+    <meta name="turbolinks-visit-control" content="reload">
+    <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
+<h1>Checkout</h1>
+<%= form_for @user, url: payments_path, html: { id: 'user-form', 'data-type' => 'json' }, remote: true do |f| %>
+    <div class="d-flex flex-wrap-reverse">
+        <div class="col-12 col-md-5">
+            <div id="user-details">
+                <%= render :partial => 'users/new', :locals => { :f => f } %>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h1>Billing Information</h1>
+                    <label for="same-as-shipping">Same as shipping address?</label>
+                    <input type="checkbox" name="same-as-shipping" id="same_as_shipping"></label>
+                    <br/>
+
+                    <div id="billing_address_fields">
+                        <label for="address1">Address Line 1</label>
+                        <input type="text" name="address1" id="billing_address1_field" placeholder="Address Line 1" class="form-control"></input>
+                        <div id = "billing_address1_error" class="help-block"></div>
+
+                        <label for="address2">Address Line 2</label>
+                        <input type="text" name="address2" id="billing_addres2_field" placeholder="Address Line 2" class="form-control"></input>
+                        <div id = "billing_address2_error" class="help-block"></div>
+
+                        <label for="city">City</label>
+                        <input type="text" name="city" id="billing_city_field" placeholder="City" class="form-control"></input>
+                        <div id = "billing_city_error" class="help-block"></div>
+
+                        <label for="state">State</label>
+                        <input type="text" name="state" id="billing_state_field" placeholder="State" class="form-control"></input>
+                        <div id = "billing_state_error" class="help-block"></div>
+
+                        <label for="postal">Postal Code</label>
+                        <input type="text" name="postal" id="billing_postal_field" placeholder="Postal Code" class="form-control"></input>
+                        <div id = "billing_postal_error" class="help-block"></div>
+
+                        <br/>
+                    </div>
+                    
+                    <div class="gray-box-rounded mb-4">
+                        <div id="card-element" class="MyCardElement"></div>
+                        <div id="card-element-errors" role="alert"></div>
+                    </div>
+
+                    <%= f.button "Submit Order", id:"submit-button", class: "btn btn-primary w-100 mb-4" %>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-7">
+            <div class="sticky-top">
+                <h1>Review Order</h1>
+                <div class="row">
+                    <%= render partial: "order_option", collection: @selected_vehicles %>
+                </div>
+                <div class="row">
+                    <h4>Total Price: </h4>
+                    <p>&nbsp&nbsp <%= @total_price %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+<% end %>

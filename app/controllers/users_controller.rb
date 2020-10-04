@@ -16,6 +16,9 @@ class UsersController < ApplicationController
     )
   end
 
+  def create
+  end
+
   def edit
     @user = User.find(params[:id])
     @paymentMethod = getCardString(Stripe::PaymentMethod.retrieve(@user.paymentMethodId))

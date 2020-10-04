@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_19_170824) do
+ActiveRecord::Schema.define(version: 2020_10_01_021408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,10 +24,16 @@ ActiveRecord::Schema.define(version: 2020_08_19_170824) do
     t.integer "total_price"
     t.boolean "active"
     t.string "subscription_id"
-    t.string "vehicle_id", default: [], array: true
+    t.integer "vehicle_id"
     t.json "stripe_products", default: {}
     t.bigint "period_end"
     t.index ["user_id"], name: "index_order_options_on_user_id"
+  end
+
+  create_table "shopping_carts", force: :cascade do |t|
+    t.integer "order_options_ids", default: [], array: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "stripe_products", force: :cascade do |t|

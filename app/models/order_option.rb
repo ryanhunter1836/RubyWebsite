@@ -1,8 +1,9 @@
 class OrderOption < ApplicationRecord
     include ActiveModel::Dirty
 
-    belongs_to :user
+    belongs_to :user, optional: true
     before_save :update_subscription
+    before_save :initialize_stripe_products
 
     enum frequency: [ :six_months, :one_year ]
     enum quality: [ :good, :better, :best ]
@@ -10,38 +11,36 @@ class OrderOption < ApplicationRecord
     #Generates hash of Stripe products and their quantities
     def initialize_stripe_products
         self.stripe_products = Hash.new
-        self.vehicle_id.each do |id|
-            products = get_stripe_products_for_vehicle(id)
+        products = get_stripe_products_for_vehicle(self.vehicle_id)
 
-            #Create hash of Stripe products
-            if stripe_products.key?(products[:driver_front].stripe_id)
-                stripe_products[products[:driver_front].stripe_id]["quantity"] += 1
+        #Create hash of Stripe products
+        if stripe_products.key?(products[:driver_front].stripe_id)
+            stripe_products[products[:driver_front].stripe_id]["quantity"] += 1
+        else
+            stripe_products[products[:driver_front].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
+        end
+
+        #Calculate total price
+        self.total_price = products[:driver_front].price
+
+        if !products[:passenger_front].nil?
+            if stripe_products.key?(products[:passenger_front].stripe_id)
+                stripe_products[products[:passenger_front].stripe_id]["quantity"] += 1
             else
-                stripe_products[products[:driver_front].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
+                stripe_products[products[:passenger_front].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
             end
 
-            #Calculate total price
-            self.total_price = products[:driver_front].price
+            self.total_price += products[:passenger_front].price
+        end
 
-            if !products[:passenger_front].nil?
-                if stripe_products.key?(products[:passenger_front].stripe_id)
-                    stripe_products[products[:passenger_front].stripe_id]["quantity"] += 1
-                else
-                    stripe_products[products[:passenger_front].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
-                end
-
-                self.total_price = products[:passenger_front].price
+        if !products[:rear].nil?
+            if stripe_products.key?(products[:rear].stripe_id)
+                stripe_products[products[:rear].stripe_id]["quantity"] += 1
+            else
+                stripe_products[products[:rear].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
             end
 
-            if !products[:rear].nil?
-                if stripe_products.key?(products[:rear].stripe_id)
-                    stripe_products[products[:rear].stripe_id]["quantity"] += 1
-                else
-                    stripe_products[products[:rear].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
-                end
-
-                self.total_price += products[:rear].price
-            end
+            self.total_price += products[:rear].price
         end
     end
 
@@ -77,8 +76,6 @@ private
     end
 
     def update_subscription
-        test = active_changed?
-        test2 = vehicle_id_changed?
         #Only update if this subscription is already active
         if (self.active && !active_changed?)
             changes = calculate_stripe_changes

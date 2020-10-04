@@ -17,13 +17,14 @@ Rails.application.routes.draw do
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
   resources :checkouts,           only: [:new, :create]
+  resources :payments,            only: [:new, :create]
   get '/get_models_by_make',          to: 'vehicles#get_models_by_make'
   get '/get_years_by_model',          to: 'vehicles#get_years_by_model'
-  get '/checkouts/success(/:id)',     to: 'checkouts#success'
-  get '/setup',                       to: 'checkouts#setup'
-  post '/create-customer',            to: 'checkouts#create_customer'
-  post '/create-subscription',        to: 'checkouts#create_subscription'
-  post '/retrieve-customer-payment-method', to: 'checkouts#retrieve_customer_payment_method'
-  get  '/subscription-complete(/:id)', to: 'checkouts#subscription_complete'
-  post '/stripe-webhook',             to: 'checkouts#stripe_webhook'
+  get '/checkouts/success(/:id)',     to: 'payments#success'
+  get '/setup',                       to: 'payments#setup'
+  post '/create-customer',            to: 'payments#create_customer'
+  post '/create-subscription',        to: 'payments#create_subscription'
+  post '/retrieve-customer-payment-method', to: 'payments#retrieve_customer_payment_method'
+  get  '/subscription-complete(/:id)', to: 'payments#subscription_complete'
+  post '/stripe-webhook',             to: 'payments#stripe_webhook'
 end
