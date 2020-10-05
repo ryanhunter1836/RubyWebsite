@@ -134,14 +134,13 @@ class PaymentsController < ApplicationController
             }
             )
 
-            invoices = []
             user.order_options.each do |order|
                 # Create the subscription
                 subscription = Stripe::Subscription.create(
-                customer: data['customerId'],
-                items: order.get_products_hash,
-                default_tax_rates: [ 'txr_1HDKxXK9cC716JE2NSsbfS5r' ],
-                expand: ['latest_invoice.payment_intent']
+                    customer: data['customerId'],
+                    items: order.get_products_hash,
+                    default_tax_rates: [ 'txr_1HDKxXK9cC716JE2NSsbfS5r' ],
+                    expand: ['latest_invoice.payment_intent']
                 )
             
                 order.subscription_id = subscription.id
@@ -151,7 +150,7 @@ class PaymentsController < ApplicationController
                 order.save
             end
         
-            render json: subscription
+            head 200
         end
     end
     

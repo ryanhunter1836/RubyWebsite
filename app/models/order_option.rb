@@ -8,42 +8,6 @@ class OrderOption < ApplicationRecord
     enum frequency: [ :six_months, :one_year ]
     enum quality: [ :good, :better, :best ]
 
-    #Generates hash of Stripe products and their quantities
-    def initialize_stripe_products
-        self.stripe_products = Hash.new
-        products = get_stripe_products_for_vehicle(self.vehicle_id)
-
-        #Create hash of Stripe products
-        if stripe_products.key?(products[:driver_front].stripe_id)
-            stripe_products[products[:driver_front].stripe_id]["quantity"] += 1
-        else
-            stripe_products[products[:driver_front].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
-        end
-
-        #Calculate total price
-        self.total_price = products[:driver_front].price
-
-        if !products[:passenger_front].nil?
-            if stripe_products.key?(products[:passenger_front].stripe_id)
-                stripe_products[products[:passenger_front].stripe_id]["quantity"] += 1
-            else
-                stripe_products[products[:passenger_front].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
-            end
-
-            self.total_price += products[:passenger_front].price
-        end
-
-        if !products[:rear].nil?
-            if stripe_products.key?(products[:rear].stripe_id)
-                stripe_products[products[:rear].stripe_id]["quantity"] += 1
-            else
-                stripe_products[products[:rear].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
-            end
-
-            self.total_price += products[:rear].price
-        end
-    end
-
     #Tie the Stripe products to their subscription IDs
     def add_subscription_ids(subscription)
         self.stripe_products.each do |key, value|
@@ -65,6 +29,44 @@ class OrderOption < ApplicationRecord
     end
 
 private
+
+    #Generates hash of Stripe products and their quantities
+    def initialize_stripe_products
+        if self.stripe_products.empty?
+            self.stripe_products = Hash.new
+            products = get_stripe_products_for_vehicle(self.vehicle_id)
+
+            #Create hash of Stripe products
+            if stripe_products.key?(products[:driver_front].stripe_id)
+                stripe_products[products[:driver_front].stripe_id]["quantity"] += 1
+            else
+                stripe_products[products[:driver_front].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
+            end
+
+            #Calculate total price
+            self.total_price = products[:driver_front].price
+
+            if !products[:passenger_front].nil?
+                if stripe_products.key?(products[:passenger_front].stripe_id)
+                    stripe_products[products[:passenger_front].stripe_id]["quantity"] += 1
+                else
+                    stripe_products[products[:passenger_front].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
+                end
+
+                self.total_price += products[:passenger_front].price
+            end
+
+            if !products[:rear].nil?
+                if stripe_products.key?(products[:rear].stripe_id)
+                    stripe_products[products[:rear].stripe_id]["quantity"] += 1
+                else
+                    stripe_products[products[:rear].stripe_id] = { "quantity" => 1, "subscription_id" => nil }
+                end
+
+                self.total_price += products[:rear].price
+            end
+        end
+    end
 
     def get_stripe_products_for_vehicle(vehicle_id)
         #Get the associated stripe product for the vehicle and parameters
@@ -120,32 +122,29 @@ private
     def calculate_stripe_changes
         #Make a copy of the old Stripe products
         previous_products = stripe_products.clone
-
-        #Get the new Stripe products
         current_products = Hash.new
-        self.vehicle_id.each do |vehicle_id|
-            products = get_stripe_products_for_vehicle(vehicle_id)
 
-            if current_products.key?(products[:driver_front].stripe_id)
-                current_products[products[:driver_front].stripe_id]['quantity'] += 1
+        products = get_stripe_products_for_vehicle(self.vehicle_id)
+
+        if current_products.key?(products[:driver_front].stripe_id)
+            current_products[products[:driver_front].stripe_id]['quantity'] += 1
+        else
+            current_products[products[:driver_front].stripe_id] = { 'quantity' => 1, 'subscription_id' => nil }
+        end
+
+        if !products[:passenger_front].nil?
+            if current_products.key?(products[:passenger_front].stripe_id)
+                current_products[products[:passenger_front].stripe_id]['quantity'] += 1
             else
-                current_products[products[:driver_front].stripe_id] = { 'quantity' => 1, 'subscription_id' => nil }
+                current_products[products[:passenger_front].stripe_id] = { 'quantity' => 1, 'subscription_id' => nil }
             end
+        end
 
-            if !products[:passenger_front].nil?
-                if current_products.key?(products[:passenger_front].stripe_id)
-                    current_products[products[:passenger_front].stripe_id]['quantity'] += 1
-                else
-                    current_products[products[:passenger_front].stripe_id] = { 'quantity' => 1, 'subscription_id' => nil }
-                end
-            end
-
-            if !products[:rear].nil?
-                if current_products.key?(products[:rear].stripe_id)
-                    current_products[products[:rear].stripe_id]['quantity'] += 1
-                else
-                    current_products[products[:rear].stripe_id] = { 'quantity' => 1, 'subscription_id' => nil }
-                end
+        if !products[:rear].nil?
+            if current_products.key?(products[:rear].stripe_id)
+                current_products[products[:rear].stripe_id]['quantity'] += 1
+            else
+                current_products[products[:rear].stripe_id] = { 'quantity' => 1, 'subscription_id' => nil }
             end
         end
 

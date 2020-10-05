@@ -61,18 +61,14 @@ class VehiclesController < ApplicationController
     def edit
         #Find the order through the user to verify the correct user is editing
         @user = current_user
-        @order_option = @user.order_options.find_by(id: params[:id])
-        return redirect_to user_path(id: current_user.id) if @order_option.nil?
+        @order_options = @user.order_options.find_by(id: params[:id])
+        return redirect_to user_path(id: current_user.id) if @order_options.nil?
 
         @makes = get_makes
-        @models = Hash.new
-        @years = Hash.new
 
-        @order_option.vehicle_id.each_with_index do |vehicle_id, index|
-            vehicle_details = get_vehicle_details(vehicle_id)
-            @models[index] = get_models(vehicle_details[:make]).as_json
-            @years[index] = get_years(vehicle_details[:make], vehicle_details[:model]).as_json
-        end
+        vehicle_details = get_vehicle_details(@order_options.vehicle_id)
+        @models = get_models(vehicle_details[:make]).as_json
+        @years = get_years(vehicle_details[:make], vehicle_details[:model]).as_json
 
         shipping = Stripe::Customer.retrieve(current_user.stripeCustomerId).shipping
         @shipping_address = ShippingAddress.new(
@@ -85,7 +81,8 @@ class VehiclesController < ApplicationController
     end
 
     def update
-        if current_user.update(order_params)
+        order_options = current_user.order_options.find_by(id: params[:id])
+        if order_options.update(order_params)
             flash[:success] = "Subscription updated successfully"
             redirect_to user_path(id: current_user.id)
         else
@@ -112,10 +109,13 @@ class VehiclesController < ApplicationController
         end
     end
 
-    private 
-
-        def order_params
-            params.require(:user).permit(shipping_addresses_attributes: [:id, :address1, :address2, :city, :state, :postal],
-            order_options_attributes: [:id, :quality, :frequency, vehicle_id: []])
-        end
+    private
+     
+    def order_params
+        params.require(:order_option).permit(:vehicle_id, :quality, :frequency)
     end
+
+    def shipping_params
+        params.require(:shipping_address).permit(:address1, :address2, :city, :state, :postal)
+    end
+end

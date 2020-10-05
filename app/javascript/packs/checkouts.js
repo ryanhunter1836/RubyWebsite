@@ -82,7 +82,7 @@ function addListeners() {
     var model = $("#model-selector").find(":selected").text();
     var year = $("#vehicle-id").find(":selected").text();
 
-    $("#vehicle-preview").text(`${make} ${model} ${year}`);
+    $("#vehicle-preview").text(`${year} ${make} ${model}`);
   });
 
   $("#months-button").click(function() {
