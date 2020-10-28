@@ -4,7 +4,7 @@ class User < ApplicationRecord
   attr_accessor :remember_token, :activation_token, :reset_token
   has_many :order_options, dependent: :destroy, inverse_of: :user
   before_save :downcase_email
-  before_save :update_billing_method, if: :will_save_change_to_paymentMethodId?
+  before_save :update_billing_method, if: :will_save_change_to_payment_method_id?
   before_create :create_activation_digest
   validates :name,  presence: true, length: { maximum: 50 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -74,12 +74,12 @@ class User < ApplicationRecord
 
   private
     def update_billing_method
-      unless paymentMethodId_change_to_be_saved[0].nil?
+      unless payment_method_id_change_to_be_saved[0].nil?
         #Attach new payment method to customer
         puts "Updating billing method"
         begin
-          Stripe::PaymentMethod.attach(paymentMethodId_change_to_be_saved[1],
-            { customer: self.stripeCustomerId })
+          Stripe::PaymentMethod.attach(payment_method_id_change_to_be_saved[1],
+            { customer: self.stripe_customer_id })
 
           #Display an error screen if something goes wrong
           rescue Stripe::CardError => e
@@ -91,15 +91,15 @@ class User < ApplicationRecord
 
         #Set the new payment method as default
         Stripe::Customer.update(
-          self.stripeCustomerId,
+          self.stripe_customer_id,
           invoice_settings: {
-            default_payment_method: paymentMethodId_change_to_be_saved[1]
+            default_payment_method: payment_method_id_change_to_be_saved[1]
           }
         )
 
         #Remove the old payment method
         Stripe::PaymentMethod.detach(
-          paymentMethodId_change_to_be_saved[0]
+          payment_method_id_change_to_be_saved[0]
         )
       end
     end

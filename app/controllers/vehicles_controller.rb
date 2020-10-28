@@ -6,10 +6,9 @@ class VehiclesController < ApplicationController
     #Add vehicle to existing account
     def new
         @makes = get_makes
-        @user = current_user
-        @order_options = @user.order_options.build
+        @order_options = OrderOption.new
 
-        shipping = Stripe::Customer.retrieve(current_user.stripeCustomerId).shipping
+        shipping = Stripe::Customer.retrieve(current_user.stripe_customer_id).shipping
         @shipping_address = ShippingAddress.new(
             address1: shipping.address.line1,
             address2: shipping.address.line2,
@@ -20,17 +19,19 @@ class VehiclesController < ApplicationController
     end
 
     def create
-        order = current_user.order_options.build(order_params['order_options_attributes']['0'])
-        order.initialize_stripe_products
+        order = OrderOption.create(order_params)
+        order.shipping = Shipping.new
+        order.shipping.save
 
         # Create the subscription
         subscription = Stripe::Subscription.create(
-            customer: current_user.stripeCustomerId,
+            customer: current_user.stripe_customer_id,
             items: order.get_products_hash,
             default_tax_rates: [ 'txr_1HDKxXK9cC716JE2NSsbfS5r' ],
             expand: ['latest_invoice.payment_intent']
         )
 
+        order.user_id = current_user.id
         order.subscription_id = subscription.id
         order.add_subscription_ids(subscription)
         order.period_end = subscription.current_period_end
@@ -70,7 +71,7 @@ class VehiclesController < ApplicationController
         @models = get_models(vehicle_details[:make]).as_json
         @years = get_years(vehicle_details[:make], vehicle_details[:model]).as_json
 
-        shipping = Stripe::Customer.retrieve(current_user.stripeCustomerId).shipping
+        shipping = Stripe::Customer.retrieve(current_user.stripe_customer_id).shipping
         @shipping_address = ShippingAddress.new(
             address1: shipping.address.line1,
             address2: shipping.address.line2,
@@ -112,10 +113,6 @@ class VehiclesController < ApplicationController
     private
      
     def order_params
-        params.require(:order_option).permit(:vehicle_id, :quality, :frequency)
-    end
-
-    def shipping_params
-        params.require(:shipping_address).permit(:address1, :address2, :city, :state, :postal)
+        params.require(:order_option).permit(:vehicle_id, :quality, :frequency, :continue)
     end
 end

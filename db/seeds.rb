@@ -11,7 +11,7 @@ def getQuality(qualityString)
   elsif(qualityString.include? "Better")
     1
   else
-    1
+    2
   end
 end
 
@@ -22,6 +22,15 @@ def getFrequency(interval, count)
     1
   end
 end
+
+User.create(
+  name: "Admin",
+  email: "admin@wiperstoyou.com",
+  password: Rails.application.credentials.admin_password,
+  password_confirmation: Rails.application.credentials.admin_password,
+  admin: true
+)
+
 
 #Seed method for vehicles
 CSV.foreach(Rails.root.join('lib', 'seeds', 'wipersizes.csv'), headers: false) do |row|

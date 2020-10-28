@@ -2,6 +2,7 @@ class OrderOption < ApplicationRecord
     include ActiveModel::Dirty
 
     belongs_to :user, optional: true
+    has_one :shipping
     before_save :update_subscription
     before_save :initialize_stripe_products
 
@@ -29,7 +30,6 @@ class OrderOption < ApplicationRecord
     end
 
 private
-
     #Generates hash of Stripe products and their quantities
     def initialize_stripe_products
         if self.stripe_products.empty?
@@ -79,7 +79,7 @@ private
 
     def update_subscription
         #Only update if this subscription is already active
-        if (self.active && !active_changed?)
+        if (self.active && !active_changed? && !self.stripe_products.empty?)
             changes = calculate_stripe_changes
 
             #Key is Stripe product ID, value is a hash of quantity and subscription_id

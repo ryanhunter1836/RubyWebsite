@@ -13,6 +13,9 @@ Rails.application.routes.draw do
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
   resources :users
+  get 'api/query_user',             to: 'api_endpoint#query_user'
+  get 'api/query_vehicle',          to: 'api_endpoint#query_vehicle'
+  post 'api/save_order_status',     to: 'api_endpoint#save_order_status'
   resources :vehicles
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]

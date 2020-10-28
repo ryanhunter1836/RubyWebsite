@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_01_021408) do
+ActiveRecord::Schema.define(version: 2020_10_27_182710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,12 +22,19 @@ ActiveRecord::Schema.define(version: 2020_10_01_021408) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_id"
     t.integer "total_price"
-    t.boolean "active"
+    t.boolean "active", default: true
     t.string "subscription_id"
     t.integer "vehicle_id"
     t.json "stripe_products", default: {}
     t.bigint "period_end"
+    t.datetime "next_shipment_date", default: -> { "CURRENT_TIMESTAMP" }
     t.index ["user_id"], name: "index_order_options_on_user_id"
+  end
+
+  create_table "shippings", force: :cascade do |t|
+    t.bigint "order_option_id"
+    t.boolean "shipped", default: false
+    t.datetime "shipped_at"
   end
 
   create_table "shopping_carts", force: :cascade do |t|
@@ -57,9 +64,9 @@ ActiveRecord::Schema.define(version: 2020_10_01_021408) do
     t.datetime "activated_at"
     t.string "reset_digest"
     t.datetime "reset_sent_at"
-    t.string "stripeCustomerId"
-    t.string "paymentMethodId"
-    t.boolean "accountCreated"
+    t.string "stripe_customer_id"
+    t.string "payment_method_id"
+    t.boolean "account_created"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

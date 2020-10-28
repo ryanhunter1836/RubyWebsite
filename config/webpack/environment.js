@@ -6,7 +6,8 @@ environment.plugins.append(
 new webpack.ProvidePlugin({
 $: "jquery",
 jQuery: "jquery",
-Popper: ["popper.js", "default"]
+Popper: ["popper.js", "default"],
+moment: 'moment/moment'
 })
 );
 environment.loaders.prepend('erb', erb)

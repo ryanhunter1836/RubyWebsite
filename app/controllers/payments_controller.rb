@@ -19,7 +19,7 @@ class PaymentsController < ApplicationController
         existing_user = User.find_by(email: params[:user][:email])
 
         #Update an existing record
-        if (!existing_user.nil? && existing_user.accountCreated == false)
+        if (!existing_user.nil? && existing_user.account_created == false)
             msg = nil
             existing_user.assign_attributes(signup_params)
 
@@ -39,7 +39,7 @@ class PaymentsController < ApplicationController
             else
                 msg = nil
                 new_user = User.create(signup_params)
-                new_user.accountCreated = false
+                new_user.account_created = false
 
                 address = ShippingAddress.new(shipping_params)
                 address.valid?
@@ -84,14 +84,14 @@ class PaymentsController < ApplicationController
             }
             )
         
-            user.stripeCustomerId = customer.id
+            user.stripe_customer_id = customer.id
             user.save
 
             #Assign all the items in the shopping cart to the user
             cart = ShoppingCart.find(session[:shopping_cart])
             cart.order_options_ids.each do |id|
                 order = OrderOption.find(id)
-                order.user_id = user.id
+                order.user_id = user.id 
                 order.save
             end
 
@@ -123,7 +123,7 @@ class PaymentsController < ApplicationController
 
         
             #Save the payment id to the user
-            user.paymentMethodId = data['paymentMethodId']
+            user.payment_method_id = data['paymentMethodId']
             user.save
         
             # Set the default payment method on the customer
@@ -159,7 +159,7 @@ class PaymentsController < ApplicationController
     user = User.find(params[:id])
     
     if !user.nil?
-        user.accountCreated = true
+        user.account_created = true
         user.save
         #user.send_activation_email
     
@@ -172,10 +172,10 @@ class PaymentsController < ApplicationController
     end
     
     def success
-    user = User.find(params[:id])
-    log_in user
-    session[:shopping_cart] = nil
-    @userId = user.id
+        user = User.find(params[:id])
+        log_in user
+        session[:shopping_cart] = nil
+        @userId = user.id
     end
     
     def stripe_webhook
@@ -219,7 +219,7 @@ class PaymentsController < ApplicationController
         # The status of the invoice will show up as paid. Store the status in your
         # database to reference when a user accesses your service to avoid hitting rate
         # limits.
-        user = User.find_by(stripeCustomerId: data_object.customer)
+        user = User.find_by(stripe_customer_id: data_object.customer)
     
         if !user.nil?
         #Find the subscription 

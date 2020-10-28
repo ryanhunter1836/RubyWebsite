@@ -1,4 +1,7 @@
 module VehicleHelper
+    include ActionView::Helpers::NumberHelper
+    require 'date'
+
     def get_quality_string(quality)
         if quality == 'good'
             "Good"
@@ -53,7 +56,11 @@ module VehicleHelper
         Vehicle.where(make: make, model: model, year: year).select('DISTINCT ON ("year") id, year').pluck(:id)
     end
 
-    # def pretty_amount(amount_in_cents)
-    #     number_to_currency(amount_in_cents / 100)
-    # end
+    def pretty_amount(amount_in_cents)
+        number_to_currency(amount_in_cents / 100)
+    end
+
+    def epoch_to_datetime(epoch) 
+        Time.at(epoch).to_datetime
+    end
 end

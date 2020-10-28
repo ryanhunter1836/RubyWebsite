@@ -28,6 +28,8 @@ end
 def create
   cart = ShoppingCart.find(session[:shopping_cart])
   order = OrderOption.create(order_params)
+  order.shipping = Shipping.new
+  order.shipping.save
   
   if order.save!
     #Tie the order option to the cart
