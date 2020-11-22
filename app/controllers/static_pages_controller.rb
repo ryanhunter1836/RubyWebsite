@@ -9,7 +9,23 @@ class StaticPagesController < ApplicationController
     end
   end
   
-  def help
+  #Contact form submission
+  def create
+    message = ContactForm.new(contact_params)
+    if message.valid?
+      #Send email
+      redirect_to '/message-confirmation'
+    else
+      #Rerender the page
+    end
+      
+  end
+
+  def message_confirmation
+  end
+  
+  def contact
+    @contact_form = ContactForm.new
   end
 
   def overview
@@ -24,4 +40,9 @@ class StaticPagesController < ApplicationController
   def javascript
     render 'shared/javascript_warning'
   end
+
+  private
+    def contact_params
+      params.require(:contact_form).permit(:name, :email, :message)
+    end
 end

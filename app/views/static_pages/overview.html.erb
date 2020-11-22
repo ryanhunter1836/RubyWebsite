@@ -1,3 +1,57 @@
 <% provide(:title, "Overview") %>
-
-<h1>Overview</h1>
+<h1>How It Works...</h1>
+<div class="row">
+  <div class="col-12 col-md-6 col-lg-3 text-center">
+    <i class="fa fa-car fa-5x mb-2"></i>
+    <h5>Enter Vehicle Information</h5>
+    <p>Enter information about your car.  We'll find the right sized wipers for you</p>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3 text-center">
+    <i class="fa fa-calendar-check fa-5x mb-2"></i>
+    <h5>Enter Frequency</h5>
+    <p>Select how often you would like a new set of wipers sent to you</p>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3 text-center">
+    <i class="fa fa-check-square fa-5x mb-2"></i>
+    <h5>Select Quality</h5>
+    <p>Determine the type of wiper that best fits your needs</p>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3 text-center">
+    <i class="fa fa-truck fa-5x mb-2"></i>
+    <h5>Automate Delivery</h5>
+    <p>The correct size and type of wiper is shipped to you on your schedule</p>
+  </div>
+</div>
+<div class="row mb-3">
+  <div class="col-12 col-md-6 offset-md-3 text-center">
+    <h1>We Make It Easy!</h1>
+    <%= link_to 'Let\'s Get Started', new_checkout_path, class: "btn btn-primary btn-lg"%>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 col-md-6 offset-md-3 text-center">
+    <p>We will ship a brand new set of wipers to your door just when your existing wipers are starting to wear out!</p>
+  </div>
+</div>
+<div class="row mb-4 justify-content-center">
+  <div class="col-12 col-md-3 text-center p-1">
+    <div class="border border-secondary rounded">
+      <p>No need to remeber to replace your wipers</p>
+    </div>
+  </div>
+  <div class="col-12 col-md-3 text-center p-1 ml-md-5 mr-md-5">
+    <div class="border border-secondary rounded">
+      <p>No need to keep looking up the right size wipers for your car</p>
+    </div>
+  </div>
+  <div class="col-12 col-md-3 text-center p-1">
+    <div class="border border-secondary rounded">
+      <p>No need to get caught in the rain or snow with streaky wipers</p>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col text-center">
+    <%= link_to 'Walk Me Through The Process', '/faq', class: "btn btn-primary btn-lg"%>
+  </div>
+</div>
