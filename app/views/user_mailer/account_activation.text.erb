@@ -1,3 +1,14 @@
-Hi <%= @user.name %>,
+<%= @name %>, Welcome to WipersToYou.com!
+Your first set of wipers will be on their way shortly and should arrive within 3-5 business days.
 
-Welcome to the Sample App! Click on the link below to activate your account:
+Please click the link below to activate your account:
+<%= link_to "Activate", edit_account_activation_url(@user.activation_token, email: @user.email) %>
+
+What happens next?
+We will send you a courtsey reminder two weeks prior to your next scheduled delivery.  
+If you are raedy for your wipers, do nothing and we'll ship them to your door.  We won't charge your credit card until the order is shipped
+
+What if I change my mind?
+You can modify or cancel your order at any time prior to us shipping your wipers.
+
+If you have any comments or suggestions about the WipersToYou.com experience, we would love to hear from you though the contact page on our website!

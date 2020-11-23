@@ -161,7 +161,7 @@ class PaymentsController < ApplicationController
     if !user.nil?
         user.account_created = true
         user.save
-        #user.send_activation_email
+        user.send_activation_email
     
         log_in user
         @userId = user.id

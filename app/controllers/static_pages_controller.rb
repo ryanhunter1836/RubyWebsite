@@ -14,6 +14,7 @@ class StaticPagesController < ApplicationController
     message = ContactForm.new(contact_params)
     if message.valid?
       #Send email
+      ContactMailer.with(form: message).contact_request.deliver_now
       redirect_to '/message-confirmation'
     else
       #Rerender the page
