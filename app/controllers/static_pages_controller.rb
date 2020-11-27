@@ -2,11 +2,11 @@ class StaticPagesController < ApplicationController
 
   def home
     #Take the user straight to their account if logged in
-    if logged_in?
-      redirect_to user_path(:id => current_user.id)
-    else
-      render 'home'
-    end
+    # if logged_in?
+    #   redirect_to user_path(:id => current_user.id)
+    # else
+    #   render 'home'
+    # end
   end
   
   #Contact form submission

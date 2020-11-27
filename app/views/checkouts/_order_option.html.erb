@@ -1,4 +1,4 @@
-<div class="col-12 col-md-4 text-center">
+<div class="col-12 col-md-4 text-center" id="<%= order_option.id %>">
     <div class="border border-secondary rounded p-2  ml-2 mr-2 ">
         <h4>Vehicle</h4>
         <p><%= get_vehicle_name(order_option.vehicle_id) %></p>
@@ -6,5 +6,25 @@
         <p><%= get_quality_string(order_option.quality) %></p>
         <h4>Frequency</h4>
         <p><%= get_frequency_string(order_option.frequency) %></p>
+    </div>
+    <div class="p-2">
+        <button type="button" class="btn btn-danger w-100 mt-3" data-toggle="modal" data-target="#modal">Remove Vehicle</button>
+    </div>
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger remove-vehicle-button" value="<%= order_option.id %>" data-dismiss="modal">Remove Vehicle</button>
+        </div>
+        </div>
     </div>
 </div>

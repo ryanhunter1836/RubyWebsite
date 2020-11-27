@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   resources :vehicles
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
-  resources :checkouts,           only: [:new, :create]
+  resources :checkouts,           only: [:new, :create, :destroy]
   resources :payments,            only: [:new, :create]
   get '/get_models_by_make',          to: 'vehicles#get_models_by_make'
   get '/get_years_by_model',          to: 'vehicles#get_years_by_model'

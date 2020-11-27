@@ -1,5 +1,7 @@
 import 'smartwizard/dist/js/jquery.smartWizard.min.js'
 
+let validateInput = true;
+
 function updateMake(makeId) {
   $.get( "/get_models_by_make", { id: makeId }, function(data) {
     $("#model-selector").html("");
@@ -24,49 +26,71 @@ function updateModel(modelId) {
 };
 
 function validatePage(stepIndex, stepDirection) {
-  if(stepIndex === 1 && stepDirection == "forward") {
-    //Verify all vehicles selectors have been filled out
-    if($("#vehicle-id").length) {
-      if($("#vehicle-id").val() === "") {
-        $('#smartwizard').smartWizard({
-          errorSteps: [1]
-        });
-        $("#smartwizard").smartWizard("goToStep", 1)
-        return;
+  if(validateInput == true) {
+    if(stepIndex === 1 && stepDirection == "forward") {
+      //Verify all vehicles selectors have been filled out
+      if($("#vehicle-id").length) {
+        if($("#vehicle-id").val() === "") {
+          $('#smartwizard').smartWizard({
+            errorSteps: [1]
+          });
+          $("#smartwizard").smartWizard("goToStep", 1)
+          return;
+        }
       }
     }
-  }
-  else if (stepIndex === 2 && stepDirection == "forward") {
-    //Verify a quality has been selected
-    if ($("input[name='order_option[quality]']:checked").val()) {
-      $('#smartwizard').smartWizard({
-        errorSteps: []
-      });
+    else if (stepIndex === 2 && stepDirection == "forward") {
+      //Verify a quality has been selected
+      if ($("input[name='order_option[quality]']:checked").val()) {
+        $('#smartwizard').smartWizard({
+          errorSteps: []
+        });
+      }
+      else {
+        $('#smartwizard').smartWizard({
+          errorSteps: [2]
+        });
+        $("#smartwizard").smartWizard("goToStep", 2)
+      }
     }
-    else {
-      $('#smartwizard').smartWizard({
-        errorSteps: [2]
-      });
-      $("#smartwizard").smartWizard("goToStep", 2)
-    }
-  }
-  else if (stepIndex === 3 && stepDirection == "forward") {
-    //Verify a frequency has been selected
-    if ($("input[name='order_option[frequency]']:checked").val()) {
-      $('#smartwizard').smartWizard({
-        errorSteps: []
-      });
-    }
-    else {
-      $('#smartwizard').smartWizard({
-        errorSteps: [3]
-      });
-      $("#smartwizard").smartWizard("goToStep", 3)
+    else if (stepIndex === 3 && stepDirection == "forward") {
+      //Verify a frequency has been selected
+      if ($("input[name='order_option[frequency]']:checked").val()) {
+        $('#smartwizard').smartWizard({
+          errorSteps: []
+        });
+      }
+      else {
+        $('#smartwizard').smartWizard({
+          errorSteps: [3]
+        });
+        $("#smartwizard").smartWizard("goToStep", 3)
+      }
     }
   }
 }
 
+function removeVehicle(vehicleId) {
+  $.ajax({
+    url: `/checkouts/${vehicleId}`,
+    beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
+    type: 'DELETE',
+    success: function(result) {
+      if(result.success == true) {
+        //Display a success message
+        $(`#${vehicleId}`).hide();
+      }
+      else {
+        window.alert("Oops, something went wrong");
+      }
+    }
+  });
+}
+
 function addListeners() {
+  validateInput = true;
+  let vehicleCount = parseInt($("#num_vehicles").val())
+
   $('#make-selector').change(function() {
       var makeId = $(this).val();
       updateMake(makeId);
@@ -95,18 +119,60 @@ function addListeners() {
 
   $("#good-button").click(function() {
     $("#quality-preview").text("Good");
-  })
+  });
 
   $("#better-button").click(function() {
     $("#quality-preview").text("Better");
-  })
+  });
 
   $("#best-button").click(function() {
     $("#quality-preview").text("Best");
-  })
+  });
 
-  $("#smartwizard").on("stepContent", function(e, anchorObject, stepIndex, stepDirection) {
-    validatePage(stepIndex, stepDirection);
+  $(".remove-vehicle-button").click(function() {
+    let vehicleId = $(this).val();
+    removeVehicle(vehicleId);
+
+    vehicleCount -= 1;
+    if(vehicleCount <= 0) {
+      $("#continue_button").prop('disabled', true);
+    }    
+  });
+
+  // $("#review_button").click(function() {
+  //   validateInput = false;
+  //   //Hide the button
+  //   $("#review_button").hide();
+
+  //   //Set the submit input to false
+  //   $("#submit").val("false");
+
+  //   //Hide the preview
+  //   $("#vehicle_preview").hide();
+
+  //   //Go to the review step and disable all the other steps
+  //   $('#smartwizard').smartWizard("goToStep", 3);
+  //   $('#smartwizard').smartWizard("stepState", [0], "disable");
+  //   $('#smartwizard').smartWizard("stepState", [1], "disable");
+  //   $('#smartwizard').smartWizard("stepState", [2], "disable");
+  // });
+
+  $("#remove_current_vehicle").click(function() {
+    //Disable the previous steps
+    $('#smartwizard').smartWizard("stepState", [0], "disable");
+    $('#smartwizard').smartWizard("stepState", [1], "disable");
+    $('#smartwizard').smartWizard("stepState", [2], "disable");
+
+    //Set the submit input to false
+    $("#submit").val("false");
+
+    //Hide the preview
+    $("#vehicle_preview").hide();
+
+    vehicleCount -= 1;
+    if(vehicleCount <= 0) {
+      $("#continue_button").prop('disabled', true);
+    }
   });
 
   $('#smartwizard').smartWizard({
@@ -130,6 +196,31 @@ function addListeners() {
       enableAnchorOnDoneStep: true
     }
   });
+
+  if($("#num_vehicles").val() != '0') {
+    if($("#new_vehicle").val() == 'false') {
+      $('#smartwizard').smartWizard("goToStep", 3);
+      $('#smartwizard').smartWizard("stepState", [0], "disable");
+      $('#smartwizard').smartWizard("stepState", [1], "disable");
+      $('#smartwizard').smartWizard("stepState", [2], "disable");
+
+      //Set the submit input to false
+      $("#submit").val("false");
+
+      //Hide the preview
+      $("#vehicle_preview").hide();
+    }
+    else {
+      $("#smartwizard").on("stepContent", function(e, anchorObject, stepIndex, stepDirection) {
+        validatePage(stepIndex, stepDirection);
+      });
+    }
+  }
+  else {
+    $("#smartwizard").on("stepContent", function(e, anchorObject, stepIndex, stepDirection) {
+      validatePage(stepIndex, stepDirection);
+    });
+  }
 }
 
 document.addEventListener('turbolinks:load', () => {

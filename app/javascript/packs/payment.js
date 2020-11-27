@@ -119,18 +119,18 @@ function createPaymentMethod({ card, customerId, billingName, userId, isPaymentR
     var postal = "";
 
     if ($("#same_as_shipping").is(':checked')) {
-    address1 = document.getElementById("address1_field").value;
-    address2 = document.getElementById("address2_field").value;
-    city = document.getElementById("city_field").value;
-    state = document.getElementById("state_field").value;
-    postal = document.getElementById("postal_field").value;
+        address1 = document.getElementById("address1_field").value;
+        address2 = document.getElementById("address2_field").value;
+        city = document.getElementById("city_field").value;
+        state = document.getElementById("state_field").value;
+        postal = document.getElementById("postal_field").value;
     }
     else {
-    address1 = document.getElementById("billing_address1_field").value;
-    address2 = document.getElementById("billing_address2_field").value;
-    city = document.getElementById("billing_city_field").value;
-    state = document.getElementById("billing_state_field").value;
-    postal = document.getElementById("billing_postal_field").value;
+        address1 = document.getElementById("billing_address1_field").value;
+        address2 = document.getElementById("billing_address2_field").value;
+        city = document.getElementById("billing_city_field").value;
+        state = document.getElementById("billing_state_field").value;
+        postal = document.getElementById("billing_postal_field").value;
     }
 
     // Set up payment method for recurring usage
@@ -141,12 +141,12 @@ function createPaymentMethod({ card, customerId, billingName, userId, isPaymentR
         name: billingName,
         email: document.getElementById('email_field').value,
         address: {
-        city: city,
-        country: "US",
-        line1: address1,
-        line2: address2,
-        postal_code: postal,
-        state: state
+            city: city,
+            country: "US",
+            line1: address1,
+            line2: address2,
+            postal_code: postal,
+            state: state
         }
     },
     }).then((result) => {
@@ -396,19 +396,24 @@ $(document).on('ajax:success', '#user-form', event => {
 function addListeners() {
     $("#same_as_shipping").change(function(){
         if ($(this).is(':checked')) {
-            //document.getElementById("billing_address_fields").style.display = 'none';
             $("#billing_address_fields").hide();
         }
         else {
-            //document.getElementById("billing_address_fields").style.display = 'block';
             $("#billing_address_fields").show();
         }
     });
 
-    $("#user-form").submit(function() { 
-        var button = $("#submit-button");
-        button.prop("disabled", true);
-        button.html("<i class='fa fa-spinner fa-spin'></i><span class='sr-only'>Processing...</span>")
+    $("#user-form").submit(function(e) {
+        //Check to make sure the user has agreed to the privacy policy
+        if($("#privacy_check").is(":checked")) {
+            var button = $("#submit-button");
+            button.prop("disabled", true);
+            button.html("<i class='fa fa-spinner fa-spin'></i><span class='sr-only'>Processing...</span>")
+        }
+        else {
+            window.alert("Please accept the privacy policy before continuing");
+            e.preventDefault();
+        }
     });
 }
 
