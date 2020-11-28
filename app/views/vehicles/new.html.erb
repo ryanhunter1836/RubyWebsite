@@ -10,76 +10,75 @@
         <h1>Add a new vehicle</h1>
     </div>
     <div class="container full-width p-0 p-md-auto">
-            <div id="smartwizard">
-                <ul class="nav">
-                    <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
-                    <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
-                    <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
-                    <li><a class="nav-link" href="#step-4">Step 4<br /><small>Review</small></a></li>
-                </ul>
-                <%= form_for @order_options, url: vehicles_path, html: { id: 'vehicle-form' }, local: true do |f| %>
-                    <div class="tab-content">
-                        <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                            <div class="col-12 col-md-8 col-lg-6 ml-auto mr-auto">
-                                <h1>Select Vehicle</h1>
-                                <%= f.label :Make %>
-                                <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), 
-                                    id: "make-selector", include_blank: true, class: 'form-control make-selector' %>
-                                <%= f.label :Model %>
-                                <%= select_tag "", "", id: "model-selector", include_blank: true, class: 'form-control model-selector' %>
-                                <%= f.label :Year %>
-                                <%= f.select :vehicle_id, 'vehicle_id', { include_blank: true }, { id: 'vehicle-id', class: 'form-control year-selector' } %> 
+        <div id="smartwizard">
+            <ul class="nav">
+                <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
+                <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
+                <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
+                <li><a class="nav-link" href="#step-4">Step 4<br /><small>Review</small></a></li>
+            </ul>
+            <%= form_for @order_options, url: vehicles_path, html: { id: 'vehicle-form' }, local: true do |f| %>
+                <div class="tab-content">
+                    <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                        <div class="col-12 col-md-8 col-lg-6 ml-auto mr-auto">
+                            <h1>Select Vehicle</h1>
+                            <%= f.label :Make %>
+                            <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), 
+                                id: "make-selector", include_blank: true, class: 'form-control make-selector' %>
+                            <%= f.label :Model %>
+                            <%= select_tag "", "", id: "model-selector", include_blank: true, class: 'form-control model-selector' %>
+                            <%= f.label :Year %>
+                            <%= f.select :vehicle_id, 'vehicle_id', { include_blank: true }, { id: 'vehicle-id', class: 'form-control year-selector' } %> 
+                        </div>
+                    </div>
+                    <div id="step-2" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                        <div class="col-12 col-md-6 offset-md-3">
+                            <h1>Select Quality</h1>
+                            <div class="btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2">
+                                    <%= f.radio_button :quality, 'good', :id => 'good-button' %>Good
+                                </label>
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
+                                    <%= f.radio_button :quality, 'better', :id => 'better-button' %>Better
+                                </label>
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
+                                    <%= f.radio_button :quality, 'best', :id => 'best-button' %>Best
+                                </label>
                             </div>
                         </div>
-                        <div id="step-2" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                            <div class="col-12 col-md-6 offset-md-3">
-                                <h1>Select Quality</h1>
-                                <div class="btn-group-toggle" data-toggle="buttons">
-                                    <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2">
-                                        <%= f.radio_button :quality, 'good', :id => 'good-button' %>Good
-                                    </label>
-                                    <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                        <%= f.radio_button :quality, 'better', :id => 'better-button' %>Better
-                                    </label>
-                                    <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                        <%= f.radio_button :quality, 'best', :id => 'best-button' %>Best
-                                    </label>
-                                </div>
+                    </div>
+                    <div id="step-3" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                        <div class="col-12 col-md-6 offset-md-3">
+                            <h1>Select Frequency</h1>
+                            <div class="btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2">
+                                    <%= f.radio_button :frequency, 'six_months', :id => 'months-button' %>
+                                    Every 6 Months
+                                </label>
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2">
+                                    <%= f.radio_button :frequency, 'one_year', :id => 'year-button' %>
+                                    Every 12 Months
+                                </label>
                             </div>
                         </div>
-                        <div id="step-3" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                            <div class="col-12 col-md-6 offset-md-3">
-                                <h1>Select Frequency</h1>
-                                <div class="btn-group-toggle" data-toggle="buttons">
-                                    <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2">
-                                        <%= f.radio_button :frequency, 'six_months', :id => 'months-button' %>
-                                        Every 6 Months
-                                    </label>
-                                    <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2">
-                                        <%= f.radio_button :frequency, 'one_year', :id => 'year-button' %>
-                                        Every 12 Months
-                                    </label>
-                                </div>
+                    </div>
+                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                        <div class="col-12 mb-4">
+                            <div class="row justify-content-center">
+                                <div class="col-12 col-md-8 text-center">
+                                    <div class="border border-secondary rounded p-2  ml-2 mr-2 ">
+                                        <h4>Vehicle</h4>
+                                        <p id="vehicle-preview"></p>
+                                        <h4>Quality</h4>
+                                        <p id="quality-preview"></p>
+                                        <h4>Frequency</h4>
+                                        <p id="frequency-preview"></p>
+                                    </div>
+                                </div>                                    
                             </div>
                         </div>
-                        <div id="step-4" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                            <div class="col-12 mb-4">
-                                <div class="row justify-content-center">
-                                    <div class="col-12 col-md-8 text-center">
-                                        <div class="border border-secondary rounded p-2  ml-2 mr-2 ">
-                                            <h4>Vehicle</h4>
-                                            <p id="vehicle-preview"></p>
-                                            <h4>Quality</h4>
-                                            <p id="quality-preview"></p>
-                                            <h4>Frequency</h4>
-                                            <p id="frequency-preview"></p>
-                                        </div>
-                                    </div>                                    
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-8 col-lg-6 ml-auto mr-auto">
-                                <%= f.submit "Place Order", class: "btn btn-success mb-4 w-100" %>
-                            </div>
+                        <div class="col-12 col-md-8 col-lg-6 ml-auto mr-auto">
+                            <%= f.submit "Place Order", class: "btn btn-success mb-4 w-100" %>
                         </div>
                     </div>
                 </div>

@@ -44,12 +44,15 @@ class VehiclesController < ApplicationController
 
     def destroy
         order = current_user.order_options.find_by(id: params[:id])
+        vehicle_id = order.vehicle_id
         return redirect_to user_path(id: current_user.id) if order.nil?
 
         #Cancel the Stripe subscription
         Stripe::Subscription.delete(order.subscription_id)
         
         if order.destroy
+            #Send a confirmation email
+            UserMailer.subscription_cancel(current_user, vehicle_id).deliver_now
             flash[:success] = "Subscription cancelled"
             redirect_to user_path(current_user.id)
         else
@@ -84,6 +87,8 @@ class VehiclesController < ApplicationController
     def update
         order_options = current_user.order_options.find_by(id: params[:id])
         if order_options.update(order_params)
+            #Send an email confirming the update
+            UserMailer.subscription_change(current_user).deliver_now
             flash[:success] = "Subscription updated successfully"
             redirect_to user_path(id: current_user.id)
         else
