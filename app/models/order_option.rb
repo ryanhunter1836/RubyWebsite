@@ -107,8 +107,9 @@ private
                     self.subscription_id,
                     items: products_map,
                     proration_behavior: 'none',
-                    #Create a trial until the current period ends so the user isn't billed until it's time to renew
-                    trial_end: self.period_end
+                    #The trial end has to be set to when the user should be billed again
+                    #Otherwise, Stripe will immediately bill them as if they started a new subscription
+                    trial_end: self.cycle_anchor + (self.frequency == 'six_months' ? 6.month : 1.year)
                 )
     
                 #Update the database with the new subscription

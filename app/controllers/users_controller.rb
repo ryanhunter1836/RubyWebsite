@@ -35,7 +35,7 @@ class UsersController < ApplicationController
       info[:vehicle_id] = order.vehicle_id
       info[:ship_date] = Time.at(order.next_shipment_date).to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")
       info[:name] = order.name
-      info[:shipped] = Shipping.find_by(order_option_id: order.id).shipped
+      # info[:shipped] = Shipping.find_by(order_option_id: order.id).shipped
 
       sizes = []
       vehicle_info = Vehicle.find(order.vehicle_id)

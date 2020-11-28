@@ -26,14 +26,13 @@ ActiveRecord::Schema.define(version: 2020_10_27_182710) do
     t.string "subscription_id"
     t.integer "vehicle_id"
     t.json "stripe_products", default: {}
-    t.bigint "period_end"
+    t.bigint "cycle_anchor"
     t.datetime "next_shipment_date", default: -> { "CURRENT_TIMESTAMP" }
     t.index ["user_id"], name: "index_order_options_on_user_id"
   end
 
   create_table "shippings", force: :cascade do |t|
     t.bigint "order_option_id"
-    t.boolean "shipped", default: false
     t.datetime "shipped_at"
   end
 

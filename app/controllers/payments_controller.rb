@@ -145,7 +145,7 @@ class PaymentsController < ApplicationController
             
                 order.subscription_id = subscription.id
                 order.add_subscription_ids(subscription)
-                order.period_end = subscription.current_period_end
+                order.cycle_anchor = subscription.current_period_start
                 order.active = true
                 order.save
             end
@@ -225,7 +225,7 @@ class PaymentsController < ApplicationController
         #Find the subscription 
         order = user.order_options.find_by(subscription_id: data_object.data.subscription)
         if !order.nil?
-            order.period_end = data_object.period_end
+            order.cycle_anchor = data_object.cycle_anchor
             order.save
             msg = { status: 200 }
         else

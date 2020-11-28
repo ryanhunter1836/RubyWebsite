@@ -30,7 +30,7 @@ class ApiEndpointController < ApplicationController
           options[:total_price] = pretty_amount(order.total_price)
           options[:subscription_id] = order.subscription_id
           options[:vehicle_id] = get_vehicle_name(order.vehicle_id)
-          options[:period_end] = epoch_to_datetime(order.period_end).to_datetime.in_time_zone("Central Time (US & Canada)")
+          options[:cycle_anchor] = epoch_to_datetime(order.cycle_anchor).to_datetime.in_time_zone("Central Time (US & Canada)")
           options[:next_shipment_date] = Time.at(order.next_shipment_date).to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")
           formatted_orders.append(options)
         end
@@ -76,13 +76,12 @@ class ApiEndpointController < ApplicationController
       changes.each do |change|
         order = OrderOption.find(change['id'].to_i)
         shipping = order.shipping
-        shipping.shipped = change['complete']
         shipping.shipped_at = DateTime.now
         shipping.save!
 
         if(change['complete'])
           #Update the next shipment date of the parent order
-          order.next_shipment_date = DateTime.strptime(order.period_end.to_s,'%s')
+          order.next_shipment_date = Time.at(order.cycle_anchor) + (order.frequency == 'six_months' ? 6.month : 1.year)
           order.save
         end
       end

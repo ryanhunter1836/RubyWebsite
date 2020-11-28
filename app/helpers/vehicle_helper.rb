@@ -63,4 +63,12 @@ module VehicleHelper
     def epoch_to_datetime(epoch) 
         Time.at(epoch).to_datetime
     end
+
+    def next_shipment_date(epoch, frequency)
+        if frequency == 'six_months'
+            (Time.at(epoch) + 6.month).strftime("%m/%d/%Y")
+        else
+            (Time.at(epoch) + 1.year).strftime("%m/%d/%Y") 
+        end
+    end
 end

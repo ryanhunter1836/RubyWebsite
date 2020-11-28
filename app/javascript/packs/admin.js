@@ -88,7 +88,7 @@ function addOrder(order) {
     `<td>${order.total_price}</td>` +
     `<td>${order.subscription_id}</td>` +
     `<td>${order.vehicle_id}</td>` +
-    `<td>${order.period_end}</td>` +
+    `<td>${order.cycle_anchor}</td>` +
     `<td>${order.next_shipment_date}</td></tr>`;
 
     $("#order_options_table").append(htmlToInsert);
