@@ -3,5 +3,5 @@
 <h1>Thank you for your order!</h1>
 <h2>Please check your email to activate your account and for an order confirmation</h2>
 <div class="row col-12">
-    <a class="btn btn-success btn-lg ml-auto mr-auto" role="button" href="<%= user_path(:id => @userId) %>">Continue to account</a>
+    <%= link_to "Continue to Login", login_path, class: "btn btn-success btn-lg ml-auto mr-auto" %>
 </div>

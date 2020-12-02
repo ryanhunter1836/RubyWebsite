@@ -7,6 +7,7 @@ class VehiclesController < ApplicationController
     def new
         @makes = get_makes
         @order_options = OrderOption.new
+        @user_id = current_user.id
 
         shipping = Stripe::Customer.retrieve(current_user.stripe_customer_id).shipping
         @shipping_address = ShippingAddress.new(

@@ -8,7 +8,7 @@ class ContactMailer < ApplicationMailer
         @message = form.message
         mail(
             from: email,
-            to: 'developer@wiperstoyou.com',
+            to: 'jeff@wiperstoyou.com',
             subject: 'Contact Request'
         )
     end

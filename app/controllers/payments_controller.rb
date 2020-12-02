@@ -172,10 +172,7 @@ class PaymentsController < ApplicationController
     end
     
     def success
-        user = User.find(params[:id])
-        log_in user
         session[:shopping_cart] = nil
-        @userId = user.id
     end
     
     def stripe_webhook

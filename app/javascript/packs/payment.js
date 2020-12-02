@@ -411,8 +411,9 @@ function addListeners() {
             button.html("<i class='fa fa-spinner fa-spin'></i><span class='sr-only'>Processing...</span>")
         }
         else {
-            window.alert("Please accept the privacy policy before continuing");
             e.preventDefault();
+            window.alert("Please accept the privacy policy before continuing");
+            return false;
         }
     });
 }

@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
   require 'date'
 
-  before_action :logged_in_user, only: [:show, :new, :edit, :update, :destroy]
-  before_action :correct_user,   only: [:show, :new, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:show, :edit, :update]
+  before_action :correct_user,   only: [:show, :edit, :update]
   before_action :admin_user,     only: [:index, :destroy, :update_admin]
-  # before_action :valid_user,     only: [:show, :new, :edit, :update, :destroy]
+  before_action :valid_user,     only: [:show, :edit, :update]
 
   def index
     start = Date.today.to_s
@@ -129,5 +129,13 @@ class UsersController < ApplicationController
 
   def getCardString(paymentMethod)
     paymentMethod.card.brand.capitalize() + " ••••" + paymentMethod.card.last4
+  end
+
+  # Confirms a valid user.
+  def valid_user
+    unless (@user && @user.activated? && @user.authenticated?(:reset, params[:id]))
+      flash[:danger] = "Please activate your account to continue"
+      redirect_to root_url
+    end
   end
 end
