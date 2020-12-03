@@ -28,7 +28,8 @@ User.create(
   email: "admin@wiperstoyou.com",
   password: Rails.application.credentials.admin_password,
   password_confirmation: Rails.application.credentials.admin_password,
-  admin: true
+  admin: true,
+  activated: true
 )
 
 

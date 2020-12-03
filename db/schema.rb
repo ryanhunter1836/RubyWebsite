@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_27_182710) do
+ActiveRecord::Schema.define(version: 2020_12_02_235839) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,13 +27,15 @@ ActiveRecord::Schema.define(version: 2020_10_27_182710) do
     t.integer "vehicle_id"
     t.json "stripe_products", default: {}
     t.bigint "cycle_anchor"
-    t.datetime "next_shipment_date", default: -> { "CURRENT_TIMESTAMP" }
     t.index ["user_id"], name: "index_order_options_on_user_id"
   end
 
   create_table "shippings", force: :cascade do |t|
     t.bigint "order_option_id"
     t.datetime "shipped_at"
+    t.boolean "shipped", default: false
+    t.string "order_number"
+    t.datetime "scheduled_date"
   end
 
   create_table "shopping_carts", force: :cascade do |t|

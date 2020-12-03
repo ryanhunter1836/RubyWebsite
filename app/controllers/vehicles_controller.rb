@@ -87,12 +87,7 @@ class VehiclesController < ApplicationController
 
     def update
         order_options = current_user.order_options.find_by(id: params[:id])
-        if order_options.update(order_params)
-            #Update the next shipment date if next shipment date is in future
-            if order_options.next_shipment_date.future?
-                order_options.update(next_shipment_date: (Time.at(order_options.cycle_anchor) + (order_options.frequency == 'six_months' ? 6.month : 1.year)).to_datetime)
-            end
-            
+        if order_options.update(order_params)          
             #Send an email confirming the update
             UserMailer.subscription_change(current_user).deliver_now
             flash[:success] = "Subscription updated successfully"

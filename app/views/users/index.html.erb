@@ -55,8 +55,8 @@
                     <td><%= order[:sizes] %></td>
                     <td><%= get_quality_string_enum(order[:quality]) %></td>
                     <td><%= order[:ship_date] %></td>
-                    <!-- <td><input type="checkbox" class="complete" <%= order[:shipped] == true ? 'checked="checked"' : '' %>></td> -->
-                    <td><input type="checkbox" class="complete"></td>
+                    <td><input type="checkbox" class="complete" <%= order[:shipped] == true ? 'checked="checked"' : '' %>></td>
+                    <!-- <td><input type="checkbox" class="complete"></td> -->
                 </tr>
                 <% end %>
             </tbody>
@@ -136,7 +136,7 @@
                         <th scope="col">Total Price</th>
                         <th scope="col">Subscription ID</th>
                         <th scope="col">Vehicle</th>
-                        <th scope="col">Period End</th>
+                        <th scope="col">Stripe Cycle Anchor</th>
                         <th scope="col">Next Shipment Date</th>
                     </tr>
                 </thead>

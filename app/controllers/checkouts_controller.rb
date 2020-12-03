@@ -42,8 +42,6 @@ def create
     #Only add the order if there are 2 or less existing orders in the cart
     if cart.order_options_ids.count < 3
       order = OrderOption.create(order_params)
-      order.shipping = Shipping.new
-      order.shipping.save
       
       if order.save!
         #Tie the order option to the cart

@@ -2,9 +2,10 @@ class OrderOption < ApplicationRecord
     include ActiveModel::Dirty
 
     belongs_to :user, optional: true
-    has_one :shipping
+    has_many :shippings
     before_save :update_subscription
     before_save :initialize_stripe_products
+    after_save :update_shipping_dates, if: :saved_change_to_frequency?
 
     enum frequency: [ :six_months, :one_year ]
     enum quality: [ :good, :better, :best ]
@@ -27,6 +28,27 @@ class OrderOption < ApplicationRecord
             productsMap.append({ price: key, quantity: value["quantity"] })
         end
         productsMap
+    end
+
+    def get_next_shipment_date
+        #Find the shipment object that has the next shipment date
+        # date = Shipping.where(order_option_id: self.id).where('scheduled_date > ?', DateTime.now).first
+        date = self.shippings.where('scheduled_date > ?', DateTime.now).first
+
+        if date.nil?
+            puts frequency
+            #If the date is null, calculate the next scheduled delivery
+            if frequency == 'six_months'
+                date = (Time.at(self.cycle_anchor) + 6.month).to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")
+            else
+                date = (Time.at(self.cycle_anchor) + 1.year).to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")
+            end
+            # date = "null date"
+        else
+            date = date.scheduled_date.to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")
+        end
+
+        return date
     end
 
 private
@@ -168,5 +190,15 @@ private
         #Changed items have been marked
 
         return { new: current_products, updated: updated_products, deleted: previous_products }
+    end
+
+    def update_shipping_dates
+        shipment = self.shippings.where('scheduled_date > ?', DateTime.now).first
+        puts self.frequency
+        #Update the next shipping date if there is one
+        if !shipment.nil?
+            shipment.update(scheduled_date: (Time.at(self.cycle_anchor) + (self.frequency == 'six_months' ? 6.month : 1.year)).to_datetime)
+        end
+        
     end
 end

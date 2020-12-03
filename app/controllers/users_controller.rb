@@ -4,7 +4,6 @@ class UsersController < ApplicationController
   before_action :logged_in_user, only: [:show, :edit, :update]
   before_action :correct_user,   only: [:show, :edit, :update]
   before_action :admin_user,     only: [:index, :destroy, :update_admin]
-  before_action :valid_user,     only: [:show, :edit, :update]
 
   def index
     start = Date.today.to_s
@@ -20,9 +19,9 @@ class UsersController < ApplicationController
     @start_date = start
     @end_date = finish
 
-    result_set = User.find_by_sql("SELECT order_options.id, order_options.quality, order_options.vehicle_id, order_options.next_shipment_date, users.name, users.stripe_customer_id 
-      FROM order_options, users WHERE order_options.user_id = users.id
-       AND order_options.next_shipment_date BETWEEN '#{start}' AND '#{finish}';")
+    result_set = User.find_by_sql("SELECT order_options.quality, order_options.vehicle_id, users.name, users.stripe_customer_id, shippings.id, shippings.scheduled_date, shippings.shipped
+       FROM order_options, users, shippings WHERE order_options.user_id = users.id AND shippings.order_option_id = order_options.id
+       AND shippings.scheduled_date BETWEEN '#{start}' AND '#{finish}';")
 
     @orders = []
 
@@ -33,10 +32,9 @@ class UsersController < ApplicationController
       info[:id] = order.id
       info[:quality] = order.quality
       info[:vehicle_id] = order.vehicle_id
-      info[:ship_date] = Time.at(order.next_shipment_date).to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")
+      info[:ship_date] = Time.at(order.scheduled_date).to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")
       info[:name] = order.name
-      # info[:shipped] = Shipping.find_by(order_option_id: order.id).shipped
-
+      info[:shipped] = order.shipped
       sizes = []
       vehicle_info = Vehicle.find(order.vehicle_id)
       sizes.append(vehicle_info.driver_front)
@@ -130,12 +128,6 @@ class UsersController < ApplicationController
   def getCardString(paymentMethod)
     paymentMethod.card.brand.capitalize() + " ••••" + paymentMethod.card.last4
   end
-
-  # Confirms a valid user.
-  def valid_user
-    unless (@user && @user.activated? && @user.authenticated?(:reset, params[:id]))
-      flash[:danger] = "Please activate your account to continue"
-      redirect_to root_url
-    end
-  end
 end
+
+flash[:danger] = "Please activate your account to continue"
