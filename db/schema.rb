@@ -36,6 +36,8 @@ ActiveRecord::Schema.define(version: 2020_12_02_235839) do
     t.boolean "shipped", default: false
     t.string "order_number"
     t.datetime "scheduled_date"
+    t.string "payment_intent_id"
+    t.boolean "refund_submitted", default: false
   end
 
   create_table "shopping_carts", force: :cascade do |t|

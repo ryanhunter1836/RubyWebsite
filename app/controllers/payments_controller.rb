@@ -151,6 +151,8 @@ class PaymentsController < ApplicationController
                 order.cycle_anchor = subscription.current_period_start
                 order.active = true
                 order.save
+
+                order.add_payment_intent(subscription)
             end
         
             head 200

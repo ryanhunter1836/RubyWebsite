@@ -51,6 +51,12 @@ class OrderOption < ApplicationRecord
         return date
     end
 
+    def add_payment_intent(subscription)
+        #Find the shipping object
+        shipping = self.shippings.first
+        shipping.update(payment_intent_id: subscription.latest_invoice.payment_intent.id)
+    end
+
 private
     #Generates hash of Stripe products and their quantities
     def initialize_stripe_products

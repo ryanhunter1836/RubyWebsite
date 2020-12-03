@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   resources :password_resets,     only: [:new, :create, :edit, :update]
   resources :checkouts,           only: [:new, :create, :destroy]
   resources :payments,            only: [:new, :create]
-  resources :returns,             only: [:new, :create]
+  resources :returns,             only: [:index, :new, :create]
   get '/get_models_by_make',          to: 'vehicles#get_models_by_make'
   get '/get_years_by_model',          to: 'vehicles#get_years_by_model'
   get '/checkouts/success(/:id)',     to: 'payments#success'

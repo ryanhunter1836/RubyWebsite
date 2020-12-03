@@ -1,0 +1,16 @@
+<h1>Request Refund</h1>
+
+<%= form_with model: @return, remote: true do |f| %>
+    <div class="form-group">
+        <%= f.label :Reason %>
+        <%= f.select :reason, options_for_select(@reasons.map { |r| [r[0], r[1]] }), { include_blank: true }, { :class => 'form-control' } %>
+    </div>
+    <div class="form-group">
+        <%= f.label :order_number %>
+        <%= f.text_field :order_number, class: 'form-control' %>
+        <small class="form-text text-muted">The order number can be found in the account activation or subscription modification emails</small>
+    </div>
+    <div class="text-center">
+        <%= f.submit "Submit Request", class: "btn btn-success mb-4 w-50" %>
+    </div>
+<% end %>
