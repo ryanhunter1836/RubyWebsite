@@ -1,5 +1,6 @@
 class PaymentsController < ApplicationController
     include ActionView::Helpers::NumberHelper
+    include PaymentsHelper
     
     def new
         @user = User.new
@@ -273,10 +274,5 @@ class PaymentsController < ApplicationController
     
     def shipping_params
         params.require(:shipping_address).permit(:address1, :address2, :city, :state, :postal, :phone)
-    end
-
-    def calc_total_price(price)
-        price = price * 1.0825
-        number_to_currency(price / 100)
     end
 end

@@ -10,7 +10,7 @@ module Vehicles
     end
 
     def get_years(make, model)
-        Vehicle.where(make: make, model: model).select('DISTINCT ON ("year") id, year')
+        Vehicle.find_by_sql("SELECT DISTINCT ON (\"year\") id, year FROM vehicles WHERE make = '#{make}' AND model = '#{model}' ORDER BY year DESC")
     end
 
     def get_vehicle_details(vehicle_id)

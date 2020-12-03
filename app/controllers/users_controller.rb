@@ -79,9 +79,6 @@ class UsersController < ApplicationController
     )
   end
 
-  def update_admin
-  end
-
   def edit
     @user = User.find(params[:id])
     @paymentMethod = getCardString(Stripe::PaymentMethod.retrieve(@user.payment_method_id))

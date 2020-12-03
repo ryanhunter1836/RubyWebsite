@@ -30,7 +30,7 @@ function validatePage(stepIndex, stepDirection) {
     if(stepIndex === 1 && stepDirection == "forward") {
       //Verify all vehicles selectors have been filled out
       if($("#vehicle-id").length) {
-        if($("#vehicle-id").val() === "") {
+        if($("#vehicle-id").val() === "" || $("#model-selector").val() === "") {
           $('#smartwizard').smartWizard({
             errorSteps: [1]
           });
