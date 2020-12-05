@@ -4,6 +4,19 @@ Your first set of wipers will be on their way shortly and should arrive within 3
 Please click the link below to activate your account:
 <%= link_to "Activate", edit_account_activation_url(@user.activation_token, email: @user.email) %>
 
+Here's a review of all your subscriptions along with their order numbers:
+<%= @orders.each_with_index do |order, index| %>
+    Subscription <%= index + 1 %>
+    Vehicle
+    <%= get_vehicle_name(order.vehicle_id) %>
+    Quality
+    <%= get_quality_string(order.quality) %>
+    Frequency</b>
+    <%= get_frequency_string(order.frequency) %>
+    Order Number
+    <%= @order_numbers[index] %>
+<% end %>
+
 What happens next?
 We will send you a courtsey reminder two weeks prior to your next scheduled delivery.  
 If you are ready for your wipers, do nothing and we'll ship them to your door.  We won't charge your credit card until the order is shipped

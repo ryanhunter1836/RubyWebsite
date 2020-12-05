@@ -28,7 +28,18 @@
  }
 
  .pillboxes {
+    margin-top:5em;
     height:165px;
     background-color: rgb(230,230,230);
     padding:0 10px;
+    border-radius:10px;
+    border-color: rgb(230,230,230);
+    box-shadow: 0 0 15px 10px #6b6b6b;
+ }
+
+ .image-div img {
+    margin-top:1em;
+    margin-left:1em;
+    width:100%;
+    box-shadow: 0 0 15px 10px #6b6b6b;
  }

@@ -5,6 +5,19 @@
 <%= link_to "Activate", edit_account_activation_url(@user.activation_token, email: @user.email) %>
 <br />
 
+<h4>Here's a review of all your subscriptions along with their order numbers:</h4>
+<%= @orders.each_with_index do |order, index| %>
+    <h3>Subscription <%= index + 1 %></h3>
+    <b>Vehicle</b>
+    <p><%= get_vehicle_name(order.vehicle_id) %></p>
+    <b>Quality</b>
+    <p><%= get_quality_string(order.quality) %></p>
+    <b>Frequency</b>
+    <p><%= get_frequency_string(order.frequency) %></p>
+    <b>Order Number</b>
+    <p><%= @order_numbers[index] %></p>
+<% end %>
+
 <b>What happens next?</b>
 <p>We will send you a courtsey reminder two weeks prior to your next scheduled delivery.  
 If you are ready for your wipers, do nothing and we'll ship them to your door.  We won't charge your credit card until the order is shipped</p>

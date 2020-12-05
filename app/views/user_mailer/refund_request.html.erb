@@ -1,17 +1,14 @@
-<h3>Thank you for submitting a return request</h3>
-<p>Once we recieve your shipment, we will issue a refund</p>
-
-<h4>Directions for returning your shipment</h4>
-<p>...</p>
-
-<h4>The following items need to be returned</h4>
+<h4>The following user has requested a refund</h4>
+<p><b>Name:</b> <%= @user.name %></p>
+<p><b>Email:</b> <%= @user.email %></p>
+<h4>Returning the following products</h4>
 <%= @products.each do |product| %>
     <p><b>Size</b> <%= product[0] %>"</p>
     <p><b>Quality</b> <%= product[1] %></p>
     <p><b>Quantity</b> <%= product[2] %></p>
     <br />
 <% end %>
-
-<h4>Please note:</h4>
-<h5>If the wipers were the wrong size or didn't fit the vehicle postage will be paid</h5>
-<h5>If the wipers are no longer needed it will be up to the user to pay for postage</h5>
+<h4>Order Details</h4>
+<p><b>Order Number:</b> <%= @order_number %></p>
+<p><b>Payment Intent ID:</b> <%= @payment_intent_id %></p>
+<p>Use the payment intent ID to issue a refund on Stripe once the return order is recieved</p>

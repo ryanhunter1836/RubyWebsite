@@ -1,8 +1,6 @@
 class CheckoutsController < ApplicationController
 include Vehicles
 
-protect_from_forgery except: :stripe_webhook
-
 #Renders the New Customer page.  Not actually bound to a model in this case
 def new
   #Create a new shopping cart if this is a new customer

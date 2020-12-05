@@ -36,7 +36,6 @@ class OrderOption < ApplicationRecord
         date = self.shippings.where('scheduled_date > ?', DateTime.now).first
 
         if date.nil?
-            puts frequency
             #If the date is null, calculate the next scheduled delivery
             if frequency == 'six_months'
                 date = (Time.at(self.cycle_anchor) + 6.month).to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")

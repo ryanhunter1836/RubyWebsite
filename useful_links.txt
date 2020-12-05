@@ -8,3 +8,9 @@ Storing password in secrets: https://medium.com/@kirill_shevch/encrypted-secrets
 
 Setting up email server: https://www.linuxbabe.com/mail-server/setup-basic-postfix-mail-sever-ubuntu
 https://www.linuxbabe.com/mail-server/secure-email-server-ubuntu-postfix-dovecot
+
+Resetting database
+RAILS_ENV=production bundle exec rake db:drop DISABLE_DATABASE_ENVIRONMENT_CHECK=1 
+createdb -O deploy wipers_production
+yarn install --check-packages
+bundle exec rake db:migrate

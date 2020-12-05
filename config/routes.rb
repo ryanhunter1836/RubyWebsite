@@ -30,5 +30,5 @@ Rails.application.routes.draw do
   post '/create-subscription',        to: 'payments#create_subscription'
   post '/retrieve-customer-payment-method', to: 'payments#retrieve_customer_payment_method'
   get  '/subscription-complete(/:id)', to: 'payments#subscription_complete'
-  post '/stripe-webhook',             to: 'payments#stripe_webhook'
+  post '/webhook',             to: 'webhook#stripe_webhook'
 end

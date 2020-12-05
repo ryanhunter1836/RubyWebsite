@@ -126,5 +126,3 @@ class UsersController < ApplicationController
     paymentMethod.card.brand.capitalize() + " ••••" + paymentMethod.card.last4
   end
 end
-
-flash[:danger] = "Please activate your account to continue"

@@ -4,7 +4,8 @@ class ReturnsController < ApplicationController
     REASONS = [
         ["Wipers are the wrong size", 0],
         ["Wipers don't fit my vehicle", 1],
-        ["Don't need the wipers", 2]
+        ["Wipers are damaged", 2],
+        ["Don't need the wipers", 3]
     ]
 
     def index
@@ -35,8 +36,7 @@ class ReturnsController < ApplicationController
                         shipping.refund_submitted = true
                         shipping.save
 
-                        UserMailer.refund_request(current_user, shipping.order_option_id).deliver_now
-                        UserMailer.document_refund_request(current_user, shipping.order_option_id, refund).deliver_now
+                        UserMailer.refund_request(current_user, shipping.order_option_id, refund).deliver_now
             
                         flash[:success] = "Refund request submitted.  Please check your email for a confirmation"
                         redirect_to user_path(current_user.id)
@@ -50,6 +50,7 @@ class ReturnsController < ApplicationController
                 redirect_to new_return_path
             end
         else
+            flash[:warning] = "Please fill out all the fields before continuing"
             redirect_to new_return_path
         end
     end
