@@ -179,4 +179,14 @@ class PaymentsController < ApplicationController
     def success
         session[:shopping_cart] = nil
     end
+
+    private 	
+    def signup_params	
+        params.require(:user).permit(:name, :email, :password, :password_confirmation, 	
+        order_options_attributes: [:quality, :frequency, vehicle_id: []])	
+    end	
+
+    def shipping_params	
+        params.require(:shipping_address).permit(:address1, :address2, :city, :state, :postal, :phone)
+    end
 end

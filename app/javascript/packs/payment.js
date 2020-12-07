@@ -109,6 +109,8 @@ function displayError(event) {
     var button = document.getElementById('submit-button');
     button.innerHTML = "Submit Order";
     button.disabled = false;
+    var button = document.getElementById('edit-button');
+    button.disabled = false;
 }
 
 function createPaymentMethod({ card, customerId, billingName, userId, isPaymentRetry, invoiceId }) {
@@ -409,6 +411,7 @@ function addListeners() {
             var button = $("#submit-button");
             button.prop("disabled", true);
             button.html("<i class='fa fa-spinner fa-spin'></i><span class='sr-only'>Processing...</span>")
+            $("#edit-button").prop("disabled", true);
         }
         else {
             e.preventDefault();

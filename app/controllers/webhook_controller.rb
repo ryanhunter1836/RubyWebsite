@@ -104,6 +104,11 @@ class WebhookController < ApplicationController
             UserMailer.upcoming_subscription(customer, order).deliver_now
         end
 
-        head :ok
+        # head :ok
+
+        respond_to do |format|
+            msg = { status: 'success' }
+            format.json { render :json => msg } 
+        end
     end
 end
