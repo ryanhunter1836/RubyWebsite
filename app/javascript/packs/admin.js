@@ -8,7 +8,7 @@ function addDays(date, days) {
 
 function formatDate(date) {
     var y = date.getFullYear().toString();
-    var m = (date.getMonth()).toString();
+    var m = (date.getMonth() + 1).toString();
     var d = date.getDate().toString();
     (d.length == 1) && (d = '0' + d);
     (m.length == 1) && (m = '0' + m);
@@ -136,14 +136,15 @@ $(document).ready(function() {
         defaultDate: futureDate
     });
 
-    $("#datetimepicker").on("hide.datetimepicker", function(e) {
-        
+    $("#datetimepicker").on("hide.datetimepicker", function(e) { 
         var date = $("#selected-start-date").val().split("/");
-        var startDate = formatDate(new Date(date[2], date[0], date[1]));
+        //Only take the first 4 digits in the year (in case a time was appended to the end)
+        date[2] = date[2].substring(0,4);
+        var startDate = formatDate(new Date(date[2], date[0] - 1, date[1]));
         $("#datetimepicker2").datetimepicker('minDate', new Date(date[2], date[0] - 1, date[1]));
         
         date =  $("#selected-end-date").val().split("/");
-        var endDate = formatDate(new Date(date[2], date[0], date[1]));
+        var endDate = formatDate(new Date(date[2], date[0] - 1, date[1]));
         $("#datetimepicker").datetimepicker('maxDate', new Date(date[2], date[0] - 1, date[1]));
 
         $("#date-search").attr("href", `/users?finish=${endDate}&start=${startDate}`);
@@ -151,11 +152,13 @@ $(document).ready(function() {
 
     $("#datetimepicker2").on("hide.datetimepicker", function(e) {
         var date = $("#selected-start-date").val().split("/");
-        var startDate = formatDate(new Date(date[2], date[0], date[1]));
+        //Only take the first 4 digits in the year (in case a time was appended to the end)
+        date[2] = date[2].substring(0,4);
+        var startDate = formatDate(new Date(date[2], date[0] - 1, date[1]));
         $("#datetimepicker2").datetimepicker('minDate', new Date(date[2], date[0] - 1, date[1]));
         
         date =  $("#selected-end-date").val().split("/");
-        var endDate = formatDate(new Date(date[2], date[0], date[1]));
+        var endDate = formatDate(new Date(date[2], date[0] - 1, date[1]));
         $("#datetimepicker").datetimepicker('maxDate', new Date(date[2], date[0] - 1, date[1]));
 
         $("#date-search").attr("href", `/users?finish=${endDate}&start=${startDate}`);

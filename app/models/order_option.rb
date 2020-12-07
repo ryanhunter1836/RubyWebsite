@@ -199,7 +199,6 @@ private
 
     def update_shipping_dates
         shipment = self.shippings.where('scheduled_date > ?', DateTime.now).first
-        puts self.frequency
         #Update the next shipping date if there is one
         if !shipment.nil?
             shipment.update(scheduled_date: (Time.at(self.cycle_anchor) + (self.frequency == 'six_months' ? 6.month : 1.year)).to_datetime)

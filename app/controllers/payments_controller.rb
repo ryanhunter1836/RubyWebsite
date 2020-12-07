@@ -94,7 +94,7 @@ class PaymentsController < ApplicationController
                 order = OrderOption.find(id)
                 order.user_id = user.id 
                 #Create a shipment item for each product
-                order.shippings.create(scheduled_date: DateTime.now)
+                order.shippings.create(scheduled_date: DateTime.now, paid: true)
                 order.save
             end
 

@@ -34,8 +34,8 @@
           <h5 class="col-12">Subscription Price</h5>
           <div class="col-12"><%= calc_total_price(order_option.total_price) %></div>
       </div>
-        <%= link_to "Edit Subscription", edit_vehicle_path(:id => order_option.id), class: 'btn btn-success mb-2 mb-md-0 variable-width' %>
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal">Cancel Subscription</button>
+        <%= link_to "Edit Subscription", edit_vehicle_path(:id => order_option.id), class: 'btn btn-success mb-2 w-75' %>
+        <button type="button" class="btn btn-danger w-75" data-toggle="modal" data-target="#modal">Cancel Subscription</button>
     </div>
 </div>
 

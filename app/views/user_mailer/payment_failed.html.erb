@@ -1,1 +1,11 @@
-<h3>Your payment method on record was declined</h3>
+<h3>Oh no, your payment failed</h3>
+<p>Unfortunately, we couldn't process your payment for your pending purchase.</p>
+<b>Vehicle</b>
+<p><%= get_vehicle_details(@order.vehicle_id) %></p>
+<b>Quality</b>
+<p><%= get_quality_string(@order.quality) %></p>
+<br />
+<p>
+    Please take a moment to log into your account and review your billing information to make sure it is correct.
+    If you have any questions about your order, please email us at <a href="mailto:someone@example.com">support@wiperstoyou.com</a>
+</p>

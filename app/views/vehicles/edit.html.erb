@@ -21,8 +21,8 @@
             </ul>
             <%= form_for @order_options, url: vehicle_path, local: true do |f| %>
                 <div class="tab-content">
-                    <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                        <div class="col-12 col-md-8 col-lg-6 ml-auto mr-auto">
+                    <div id="step-1" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                        <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
                             <h1>Edit Vehicle</h1>
                             <% vehicle_details = get_vehicle_details(@order_options.vehicle_id) %>
                             <%= f.label :Make %>
@@ -37,7 +37,7 @@
                             id: 'vehicle-id', class: 'form-control year-selector' %>
                         </div>
                     </div>
-                    <div id="step-2" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                    <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-md-6 offset-md-3">
                             <h1>Select Quality</h1>
                             <div class="btn-group-toggle" data-toggle="buttons">
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="step-3" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                    <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
                             <h1>Select Frequency</h1>
                             <div class="btn-group-toggle" data-toggle="buttons">
@@ -68,7 +68,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
+                    <div id="step-4" class="mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
                         <div class="col-12">
                             <h1>Shipping Information</h1>
                             <div class="p-3">
@@ -95,7 +95,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="step-5" class="row mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
+                    <div id="step-5" class="mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
                         <div class="col-12 col-lg-8 offset-lg-2">
                             <h1>Review Details</h1>
                             <div class="gray-box-rounded">

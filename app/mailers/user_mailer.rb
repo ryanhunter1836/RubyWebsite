@@ -9,7 +9,7 @@ class UserMailer < ApplicationMailer
 
     @order_numbers = []
     @orders.each do |order|
-      @order_numbers.append(order.shippings.all.first.order_number)
+      @order_numbers.append(order.shippings.all.order("scheduled_date DESC").first.order_number)
     end
 
     mail to: user.email, subject: "Account Activation"
@@ -26,7 +26,7 @@ class UserMailer < ApplicationMailer
 
     @order_numbers = []
     @orders.each do |order|
-      @order_numbers.append(order.shippings.all.first.order_number)
+      @order_numbers.append(order.shippings.all.order("scheduled_date DESC").first.order_number)
     end
 
     mail to: user.email, subject: "Subscription Modification"
@@ -92,13 +92,11 @@ class UserMailer < ApplicationMailer
   end
 
   def upcoming_subscription(user, order)
-    @user = user
     @order = order
     mail to: user.email, subject: "Upcoming Subscription"
   end
 
   def payment_failed(user, order)
-    @user = user
     @order = order
     mail to: user.email, subject: "Payment Error"
   end

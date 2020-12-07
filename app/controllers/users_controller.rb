@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     @start_date = start
     @end_date = finish
 
-    result_set = User.find_by_sql("SELECT order_options.quality, order_options.vehicle_id, users.name, users.stripe_customer_id, shippings.id, shippings.scheduled_date, shippings.shipped
+    result_set = User.find_by_sql("SELECT order_options.quality, order_options.vehicle_id, users.name, users.stripe_customer_id, shippings.id, shippings.scheduled_date, shippings.shipped, shippings.paid
        FROM order_options, users, shippings WHERE order_options.user_id = users.id AND shippings.order_option_id = order_options.id
        AND shippings.scheduled_date BETWEEN '#{start}' AND '#{finish}';")
 
@@ -34,6 +34,7 @@ class UsersController < ApplicationController
       info[:vehicle_id] = order.vehicle_id
       info[:ship_date] = Time.at(order.scheduled_date).to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")
       info[:name] = order.name
+      info[:paid] = order.paid
       info[:shipped] = order.shipped
       sizes = []
       vehicle_info = Vehicle.find(order.vehicle_id)

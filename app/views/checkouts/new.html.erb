@@ -29,8 +29,8 @@
                 <input type="hidden" id="submit" name="submit" value="true">
                 <input type="hidden" id="new_vehicle" name="new_vehicle" value="<%= @new_vehicle %>">
                 <div class="tab-content">
-                    <div id="step-1" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                        <div class="col-12 col-md-8 col-lg-6 ml-auto mr-auto">
+                    <div id="step-1" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                        <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
                             <h1>Select Vehicle</h1>
                             <%= f.label :Make %>
                             <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), 
@@ -41,7 +41,7 @@
                             <%= f.select :vehicle_id, 'vehicle_id', { include_blank: true }, { id: 'vehicle-id', class: 'form-control year-selector' } %>
                         </div>
                     </div>
-                    <div id="step-2" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                    <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
                             <h1>Select Quality</h1>
                             <div class="btn-group-toggle" data-toggle="buttons">
@@ -57,7 +57,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="step-3" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                    <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
                             <h1>Select Frequency</h1>
                             <div class="btn-group-toggle" data-toggle="buttons">
@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="step-4" class="row mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                    <div id="step-4" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 mb-4">
                             <div class="row justify-content-center">
                                 <% if !@existing_vehicles.nil? %>

@@ -19,7 +19,6 @@
                     <label for="same-as-shipping">Same as shipping address?</label>
                     <input type="checkbox" name="same_as_shipping" id="same_as_shipping"></label>
                     <br/>
-
                     <div id="billing_address_fields">
                         <label for="address1">Address Line 1</label>
                         <input type="text" name="address1" id="billing_address1_field" placeholder="Address Line 1" class="form-control"></input>
@@ -43,19 +42,16 @@
 
                         <br/>
                     </div>
-                    
                     <div class="gray-box-rounded mb-4">
                         <div id="card-element" class="MyCardElement"></div>
                         <div id="card-element-errors" role="alert"></div>
                     </div>
-
                     <div class="form-check mb-4">
                         <input class="form-check-input" type="checkbox" value="" id="privacy_check">
                         <label class="form-check-label" for="privacy_check">
                           Accept <a data-toggle="modal" data-target="#modal" style="color:blue; cursor:pointer">privacy policy?</a>
                         </label>
                     </div>
-
                     <%= render "shared/privacy_policy" %>
                     <%= f.button "Submit Order", id:"submit-button", class: "btn btn-primary w-100 mb-4" %>
                 </div>
@@ -63,16 +59,20 @@
         </div>
         <div class="col-12 col-md-7">
             <div class="sticky-top">
-                <h1>Review Order</h1>
+                <h1 class="d-none d-md-block">Review Order</h1>
                 <div class="row">
                     <%= render partial: "order_option", collection: @selected_vehicles %>
                 </div>
                 <div class="row">
-                    <h4>Total Price: </h4>
-                    <p>&nbsp&nbsp <%= @total_price %></p>
+                    <div class="col-12 mb-4 text-center text-md-left">
+                        <h4 class="d-inline">Total Price:</h4>
+                        <p class="d-inline">&nbsp&nbsp <%= @total_price %></p>
+                    </div>
                 </div>
                 <div class="row">
-                    <%= link_to 'Edit Vehicles', new_checkout_path, class: "btn btn-success w-50 ml-auto mr-auto"%>
+                    <div class="col-12 col-md-6 offset-md-3">
+                        <%= link_to 'Edit Vehicles', new_checkout_path, class: "btn btn-success w-100 ml-auto mr-auto"%>
+                    </div>
                 </div>
             </div>
         </div>
