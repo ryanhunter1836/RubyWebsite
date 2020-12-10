@@ -1,7 +1,7 @@
 <h3>You have an upcoming subscription</h3>
 <h4>The following subscription is scheduled to ship in 2 weeks:</h4>
 <b>Vehicle</b>
-<p><%= get_vehicle_details(@order.vehicle_id) %></p>
+<p><%= get_vehicle_name(@order.vehicle_id) %></p>
 <b>Quality</b>
 <p><%= get_quality_string(@order.quality) %></p>
 <br />

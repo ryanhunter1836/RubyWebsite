@@ -1,7 +1,7 @@
 <h3>Oh no, your payment failed</h3>
 <p>Unfortunately, we couldn't process your payment for your pending purchase.</p>
 <b>Vehicle</b>
-<p><%= get_vehicle_details(@order.vehicle_id) %></p>
+<p><%= get_vehicle_name(@order.vehicle_id) %></p>
 <b>Quality</b>
 <p><%= get_quality_string(@order.quality) %></p>
 <br />

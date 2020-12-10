@@ -1,0 +1,26 @@
+Starting Debugger:
+    rdebug-ide --host 0.0.0.0 --port 1234 --dispatcher-port 1234 -- bin/rails s -u webrick
+
+Testing Webhooks
+    Date to epoch converter: https://www.epochconverter.com/
+    
+    Start ngrok and copy https endpoint to stripe webhooks
+
+    Payment Succeeded:
+        Make sure the customer credit card is 4242424242424242
+        curl https://api.stripe.com/v1/subscriptions/{subscription_id} \
+        -u sk_test_0ZMd5raETek1W7iTV1JEIb9V006TLZd3Ty: \
+        -d add_invoice_items[0][price]=price_1HwgnqK9cC716JE25R4PPU6X \
+        -d billing_cycle_anchor=now
+
+    Payment Failed:
+        Make sure the customer credit card is 4000000000000341
+        curl https://api.stripe.com/v1/subscriptions/{subscription_id} \
+        -u sk_test_0ZMd5raETek1W7iTV1JEIb9V006TLZd3Ty: \
+        -d add_invoice_items[0][price]=price_1HwgnqK9cC716JE25R4PPU6X \
+        -d billing_cycle_anchor=now
+
+    Upcoming Invoice:
+        curl https://api.stripe.com/v1/subscriptions/sub_IXkai3PgJv2hkA \
+        -u sk_test_0ZMd5raETek1W7iTV1JEIb9V006TLZd3Ty: \
+        -d trial_end={epoch_time_15_days_from_now}

@@ -33,26 +33,29 @@ class WebhookController < ApplicationController
         
         if event_type == 'invoice.payment_succeeded'
             #data_object is an invoice
-        
-            customer = User.find_by(stripe_customer_id: data_object.customer)
-            if customer.nil?
-                head :bad_request
-                return
+
+            #We don't care about the event that occurs right after the subscription is created
+            if(data.object.billing_reason == 'subscription_cycle')
+                customer = User.find_by(stripe_customer_id: data_object.customer)
+                if customer.nil?
+                    head :bad_request
+                    return
+                end
+
+                #Find the associated subscription
+                order = OrderOption.find_by(subscription_id: data_object.subscription)
+                if order.nil?
+                    head :bad_request
+                    return
+                end
+
+                #Mark the shipment as paid
+                shipment = order.shippings.all.order(scheduled_date: :desc).first
+                shipment.update(paid: true)
+
+                #Reset the cycle anchor
+                order.update(cycle_anchor: data_object.period_start)
             end
-
-            #Find the associated subscription
-            order = OrderOption.find_by(subscription_id: data_object.subscription)
-            if order.nil?
-                head :bad_request
-                return
-            end
-
-            #Mark the shipment as paid
-            shipment = self.shippings.where('scheduled_date > ?', DateTime.now).first
-            shipment.update(paid: true)
-
-            #Reset the cycle anchor
-            order.update(cycle_anchor: data_object.period_start)
         end
         
         if event_type == 'invoice.payment_failed'
@@ -82,6 +85,7 @@ class WebhookController < ApplicationController
         if event_type == 'invoice.upcoming'
             #data_object is an invoice
 
+            test = data_object
             #Get the customer that this invoice is associated with
             customer = User.find_by(stripe_customer_id: data_object.customer)
             if customer.nil?
@@ -103,8 +107,6 @@ class WebhookController < ApplicationController
             #Send an email to the customer
             UserMailer.upcoming_subscription(customer, order).deliver_now
         end
-
-        # head :ok
 
         respond_to do |format|
             msg = { status: 'success' }
