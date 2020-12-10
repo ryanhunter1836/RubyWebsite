@@ -1,6 +1,7 @@
 <h3>The following user has requested a refund</h3>
-<p><b>Name:</b> <%= @user.name %></p>
-<p><b>Email:</b> <%= @user.email %></p>
+<p><b>Name:&nbsp</b><%= @user.name %></p>
+<p><b>Email:&nbsp</b><%= @user.email %></p>
+<p><b>Reason for Return:&nbsp</b><%= get_reason(@reason) %></p>
 <% @products.each_with_index do |product, index| %>
     <h4>Product <%= index + 1 %></h4>
     <p>&nbsp&nbsp&nbsp&nbsp<b>Size:&nbsp</b><%= product[0] %>"</p>

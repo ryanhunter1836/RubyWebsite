@@ -8,9 +8,6 @@ class ReturnsController < ApplicationController
         ["Don't need the wipers", 3]
     ]
 
-    def index
-    end
-
     def new
         @return = Return.new
         @reasons = REASONS
@@ -29,9 +26,9 @@ class ReturnsController < ApplicationController
                     flash[:danger] = "Refund has already been requested for this order"
                     redirect_to new_return_path
                 else
-                    range = (DateTime.now - 30.days)..DateTime.now
+                    range = (DateTime.now - 35.days)..DateTime.now
                     test = shipping.shipped_at
-                    #Verify it is within the 30 day return policy
+                    #Verify it is within the 35 day return policy
                     if range.cover?(shipping.shipped_at)       
                         shipping.refund_submitted = true
                         shipping.save
@@ -41,7 +38,7 @@ class ReturnsController < ApplicationController
                         flash[:success] = "Refund request submitted.  Please check your email for a confirmation"
                         redirect_to user_path(current_user.id)
                     else
-                        flash[:warning] = "We're sorry, but refund requests must be submitted within 30 days of shipment"
+                        flash[:warning] = "We're sorry, but refund requests must be submitted within 35 days of payment"
                         redirect_to new_return_path
                     end
                 end                

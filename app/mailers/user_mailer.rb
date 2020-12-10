@@ -60,6 +60,7 @@ class UserMailer < ApplicationMailer
     end
 
     @order_number = return_object.order_number
+    @reason = return_object.reason
     @payment_intent_id = Shipping.find_by(order_number: return_object.order_number).payment_intent_id
 
     mail from: user.email, to: "returns@wiperstoyou.com", subject: "Return Request"

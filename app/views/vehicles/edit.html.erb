@@ -121,7 +121,7 @@
                                 </div>
                             </div>
                             <%= f.button "Update Subscription", class: "btn btn-success w-100 mt-4 mb-2" %>
-                            <a class="btn btn-danger w-100 mb-4" type="button" href="<%= user_path(id: @order_options.user_id) %>">Cancel Changes</a>
+                            <a class="btn btn-danger w-100 mb-4" type="button" href="<%= user_path(id: @order_options.user_id) %>" id="cancel-button">Cancel Changes</a>
                         </div>
                     </div>
                 </div>
