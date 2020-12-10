@@ -1,12 +1,12 @@
 <h3>You have an upcoming subscription</h3>
-<h4>The following subscription is scheduled to ship in 2 weeks:</h4>
-<b>Vehicle</b>
-<p><%= get_vehicle_name(@order.vehicle_id) %></p>
-<b>Quality</b>
-<p><%= get_quality_string(@order.quality) %></p>
-<br />
-<p>If you want to continue with this shipment do nothing and we’ll ship the wipers to your door in the next 14 days.  Your credit card won’t be charged until the order ships.</p>
-<h3>What if I changed my mind?</h3>
+
+<h4>The following subscription is scheduled to ship in 15 days:</h4>
+<p>&nbsp&nbsp&nbsp&nbsp<b>Vehicle:&nbsp</b><%= get_vehicle_name(order.vehicle_id) %></p>
+<p>&nbsp&nbsp&nbsp&nbsp<b>Quality:&nbsp</b><%= get_quality_string(order.quality) %></p>
+<p>&nbsp&nbsp&nbsp&nbsp<b>Frequency:&nbsp</b><%= get_frequency_string(order.frequency) %></p>
+
+<p>If you want to continue with this shipment do nothing and we’ll ship the wipers to your door in the next 15 days.  Your credit card won’t be charged until the order ships.</p>
+<h4>What if I changed my mind?</h4>
 <p>
     You still have time to make changes to your account.  
     If you want to change the type of wipers you receive, modify the date of you next order, or cancel your order altogether please log on to your account and make these changes.  
@@ -15,4 +15,4 @@
     Remember, your credit card will be charge and the wipers you selected as part of your subscription plan will be mailed to 
     your address unless you make changes to your account before the order is processed in the next 14 days.
 </p>
-<h5>If you have any questions, please email us at <a href="mailto:someone@example.com">support@wiperstoyou.com</a></h5>
+<h4>If you have any questions, please email us at <a href="mailto:support@wiperstoyou.com">support@wiperstoyou.com</a></h4>

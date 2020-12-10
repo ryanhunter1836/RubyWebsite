@@ -21,6 +21,17 @@ Testing Webhooks
         -d billing_cycle_anchor=now
 
     Upcoming Invoice:
-        curl https://api.stripe.com/v1/subscriptions/sub_IXkai3PgJv2hkA \
+        curl https://api.stripe.com/v1/subscriptions/{subscription_id} \
         -u sk_test_0ZMd5raETek1W7iTV1JEIb9V006TLZd3Ty: \
         -d trial_end={epoch_time_15_days_from_now}
+
+Resetting Production Database (DON'T EVER DO THIS IN LIVE MODE WITHOUT BACKUP FIRST)
+    sudo service nginx stop
+    RAILS_ENV=production bundle exec rake db:drop DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+    sudo su postgres
+    createdb -O deploy wipers_production
+    exit
+    yarn install --check-packages
+    RAILS_ENV=production bundle exec rake db:migrate
+    RAILS_ENV=production bundle exec rake db:seed
+    sudo service nginx start

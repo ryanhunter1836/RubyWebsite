@@ -1,16 +1,12 @@
 <h3>We are writing to confirm the modification to your WipersToYou.com subscription.</h3>
-<h4>Here is a summary of all your current subscriptions:</h4>
-<%= @orders.each_with_index do |order, index| %>
-    <h3>Subscription <%= index + 1 %></h3>
-    <b>Vehicle</b>
-    <p><%= get_vehicle_name(order.vehicle_id) %></p>
-    <b>Quality</b>
-    <p><%= get_quality_string(order.quality) %></p>
-    <b>Frequency</b>
-    <p><%= get_frequency_string(order.frequency) %></p>
-    <b>Order Number</b>
-    <p><%= @order_numbers[index] %></p>
+<p>Here is a summary of all your current subscriptions:</p>
+<% @orders.each_with_index do |order, index| %>
+<h3>Subscription <%= index + 1 %></h3>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Vehicle:&nbsp</b><%= get_vehicle_name(order.vehicle_id) %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Quality:&nbsp</b><%= get_quality_string(order.quality) %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Frequency:&nbsp</b><%= get_frequency_string(order.frequency) %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Order Number:&nbsp</b><%= @order_numbers[index] %></p>
 <% end %>
-<h4>If you made this change you can ignore this email.  You are all set!</h4>
+<p>If you made this change you can ignore this email.  You are all set!</p>
 <h4>If you did not make these changes, we recommend you log into WipersToYou.com and change your password and review your account information to make sure everything is correct.</h4>
-<h4>If you need any further assistance, please contact us and we will be happy to help.</h4>
+<p>If you need any further assistance, please contact us and we will be happy to help.</p>

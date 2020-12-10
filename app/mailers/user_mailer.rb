@@ -4,7 +4,6 @@ class UserMailer < ApplicationMailer
   default from: 'no-reply@wiperstoyou.com'
 
   def account_activation(user)
-    @user = user
     @orders = @user.order_options.all
 
     @order_numbers = []
@@ -66,30 +65,30 @@ class UserMailer < ApplicationMailer
     mail from: user.email, to: "returns@wiperstoyou.com", subject: "Return Request"
   end
 
-  def document_refund_request(user, order_option_id)
-    order = OrderOption.find(order_option_id)
+  # def document_refund_request(user, order_option_id)
+  #   order = OrderOption.find(order_option_id)
 
-    @products = []
-    order.stripe_products.each do |stripe_product_id, parameters|
-      quantity = parameters["quantity"]
+  #   @products = []
+  #   order.stripe_products.each do |stripe_product_id, parameters|
+  #     quantity = parameters["quantity"]
 
-      stripe_product = StripeProduct.find_by(stripe_id: stripe_product_id)
-      size = stripe_product.size
+  #     stripe_product = StripeProduct.find_by(stripe_id: stripe_product_id)
+  #     size = stripe_product.size
 
-      quality = stripe_product.quality
-      if quality == 0
-        quality = "Good"
-      elsif quality == 1
-        quality = "Better"
-      else
-        quality = "Best"
-      end
+  #     quality = stripe_product.quality
+  #     if quality == 0
+  #       quality = "Good"
+  #     elsif quality == 1
+  #       quality = "Better"
+  #     else
+  #       quality = "Best"
+  #     end
 
-      @products.append([size, quality, quantity])
-    end
+  #     @products.append([size, quality, quantity])
+  #   end
 
-    mail to: user.email, subject: "Return Request"
-  end
+  #   mail to: user.email, subject: "Return Request"
+  # end
 
   def upcoming_subscription(user, order)
     @order = order

@@ -1,28 +1,25 @@
-<h3><%= @user.name %>, Welcome to WipersToYou.com!</h3>
+<h3>Welcome to WipersToYou.com!</h3>
 <p>Your first set of wipers will be on their way shortly and should arrive within 3-5 business days.</p>
 
 <h4>Please click the link below to activate your account:</h4>
-<%= link_to "Activate", edit_account_activation_url(@user.activation_token, email: @user.email) %>
-<br />
+<%= link_to "Activate Account", edit_account_activation_url(@user.activation_token, email: @user.email) %>
 
 <h4>Here's a review of all your subscriptions along with their order numbers:</h4>
-<%= @orders.each_with_index do |order, index| %>
+<% @orders.each_with_index do |order, index| %>
     <h3>Subscription <%= index + 1 %></h3>
-    <b>Vehicle</b>
-    <p><%= get_vehicle_name(order.vehicle_id) %></p>
-    <b>Quality</b>
-    <p><%= get_quality_string(order.quality) %></p>
-    <b>Frequency</b>
-    <p><%= get_frequency_string(order.frequency) %></p>
-    <b>Order Number</b>
-    <p><%= @order_numbers[index] %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Vehicle:&nbsp</b><%= get_vehicle_name(order.vehicle_id) %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Quality:&nbsp</b><%= get_quality_string(order.quality) %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Frequency:&nbsp</b><%= get_frequency_string(order.frequency) %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Order Number:&nbsp</b><%= @order_numbers[index] %></p>
 <% end %>
 
 <b>What happens next?</b>
-<p>We will send you a courtsey reminder two weeks prior to your next scheduled delivery.  
-If you are ready for your wipers, do nothing and we'll ship them to your door.  We won't charge your credit card until the order is shipped</p>
+<p>
+    We will send you a courtsey reminder 15 days prior to your next scheduled delivery.  
+    If you are ready for your wipers, do nothing and we'll ship them to your door.  We won't charge your credit card until the order is shipped
+</p>
 
 <b>What if I change my mind?</b>
 <p>You can modify or cancel your order at any time prior to us shipping your wipers.</p>
 
-<h5>If you have any comments or suggestions about the WipersToYou.com experience, we would love to hear from you though the contact page on our website!</h5>
+<p>If you have any comments or suggestions about the WipersToYou.com experience, we would love to hear from you though the contact page on our website!</p>

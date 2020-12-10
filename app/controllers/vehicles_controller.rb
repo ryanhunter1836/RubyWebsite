@@ -21,8 +21,7 @@ class VehiclesController < ApplicationController
 
     def create
         order = OrderOption.create(order_params)
-        order.shipping = Shipping.new
-        order.shipping.save
+        order.shippings.create(scheduled_date: DateTime.now, paid: true)
 
         # Create the subscription
         subscription = Stripe::Subscription.create(
@@ -50,6 +49,12 @@ class VehiclesController < ApplicationController
 
         #Cancel the Stripe subscription
         Stripe::Subscription.delete(order.subscription_id)
+
+        #Delete the upcoming order unless it has already shipped for some reason
+        shipment = order.shippings.all.order(scheduled_date: :desc).first
+        if !shipment.nil? && shipment.shipped == false
+            shipment.destroy
+        end
         
         if order.destroy
             #Send a confirmation email

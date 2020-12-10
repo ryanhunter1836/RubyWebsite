@@ -411,7 +411,8 @@ function addListeners() {
             var button = $("#submit-button");
             button.prop("disabled", true);
             button.html("<i class='fa fa-spinner fa-spin'></i><span class='sr-only'>Processing...</span>")
-            $("#edit-button").prop("disabled", true);
+            button = $("#edit-button");
+            button.prop("disabled", true);
         }
         else {
             e.preventDefault();
