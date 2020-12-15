@@ -32,6 +32,17 @@ class UserMailer < ApplicationMailer
     mail to: user.email, subject: "Subscription Modification"
   end
 
+  def subscription_addition(user)
+    @orders = user.order_options.all
+
+    @order_numbers = []
+    @orders.each do |order|
+      @order_numbers.append(order.shippings.all.order("scheduled_date DESC").first.order_number)
+    end
+
+    mail to: user.email, subject: "Subscription Confirmation"
+  end 
+
   def subscription_cancel(user, vehicle_id)
     @vehicle_id = vehicle_id
     mail to: user.email, subject: "Subscription Cancellation"

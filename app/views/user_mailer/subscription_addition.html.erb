@@ -1,0 +1,12 @@
+<h3>We are writing to confirm the modification to your WipersToYou.com subscription.</h3>
+<p>Here is a summary of all your current subscriptions:</p>
+<% @orders.each_with_index do |order, index| %>
+<h3>Subscription <%= index + 1 %></h3>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Vehicle:&nbsp</b><%= get_vehicle_name(order.vehicle_id) %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Quality:&nbsp</b><%= get_quality_string(order.quality) %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Frequency:&nbsp</b><%= get_frequency_string(order.frequency) %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Order Number:&nbsp</b><%= @order_numbers[index] %></p>
+<% end %>
+<p>If you made this change you can ignore this email.  You are all set!</p>
+<h4>If you did not make these changes, we recommend you log into WipersToYou.com and change your password and review your account information to make sure everything is correct.</h4>
+<p>If you need any further assistance, please contact us and we will be happy to help.</p>

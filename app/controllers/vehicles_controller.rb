@@ -36,10 +36,12 @@ class VehiclesController < ApplicationController
         order.add_subscription_ids(subscription)
         order.cycle_anchor = subscription.current_period_start
         order.active = true
-        order.save
 
-        flash[:success] = "Subscription created!"
-        redirect_to user_path(current_user.id)
+        if order.save 
+            UserMailer.subscription_addition(current_user).deliver_now
+            flash[:success] = "Subscription created!"
+            redirect_to user_path(current_user.id)
+        end
     end
 
     def destroy
