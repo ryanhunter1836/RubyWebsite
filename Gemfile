@@ -22,6 +22,7 @@ gem 'capistrano-rails',           '~> 1.4'
 gem 'capistrano-passenger',       '~> 0.2.0'
 gem 'capistrano-rbenv',           '~> 2.1', '>= 2.1.4'
 gem 'listen',                     '3.1.5'
+gem 'meta-tags',                  '2.14.0'
 
 group :development do
   gem 'web-console',           '4.0.1'

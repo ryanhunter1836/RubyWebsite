@@ -5,7 +5,7 @@ Deploying Ruby on Rails App: https://gorails.com/deploy/ubuntu/18.04
 Configuring Master Key in Production: https://medium.com/@waiyanyoon/deploying-rails-5-2-applications-with-new-encrypted-credentials-using-capistrano-acfacc2f5619
 Creating Passengerfile: https://www.phusionpassenger.com/library/deploy/standalone/deploy/ruby/
 Storing password in secrets: https://medium.com/@kirill_shevch/encrypted-secrets-credentials-in-rails-6-rails-5-1-5-2-f470accd62fc
-
+SEO: https://medium.com/la-revanche-des-sites/seo-ruby-on-rails-the-comprehensive-guide-2018-b4101cc51b78
 Setting up email server: https://www.linuxbabe.com/mail-server/setup-basic-postfix-mail-sever-ubuntu
 https://www.linuxbabe.com/mail-server/secure-email-server-ubuntu-postfix-dovecot
 

@@ -1,20 +1,24 @@
-<% provide(:title, "Home") %>
-<div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
-    <strong>Warning:  </strong>We are still in alpha testing.  Feel free to look around, but subscriptions cannot be created.
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
+<% description 'Premium wiper blade subscription service.  
+Let us help you select the best quality wiper blades for your car and then automatically ship them to your door just when your old wipers are wearing out.  First order ships free!' %>
+<% title "Windshield Wiper Subscription Service" %>
+<% set_meta_tags index: true %>
+
 <div class="row">
     <div class="col-12 col-md-6">
         <div class="text-center">
             <h1>Get Premium Quality Windshield Wipers Delivered Right To Your Doorstep</h1>
             <h3 class="mt-3 mb-3">Shipping is free on your first order!</h3>
         </div>
+        <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+            <strong>Warning:  </strong>We are still in alpha testing.  Feel free to look around, but subscriptions cannot be created.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
         <div class="row">
             <div class="col-12 col-md-6 p-3">
                 <%= link_to 'Learn More', '/overview', class: "btn btn-primary btn-lg w-100"%>
-            </div>
+            </div> 
             <div class="col-12 col-md-6 p-3">
                 <%= link_to 'Let\'s Get Started', new_checkout_path, class: "btn btn-primary btn-lg w-100"%>
             </div>

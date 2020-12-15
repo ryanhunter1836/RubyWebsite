@@ -408,11 +408,11 @@ function addListeners() {
     $("#user-form").submit(function(e) {
         //Check to make sure the user has agreed to the privacy policy
         if($("#privacy_check").is(":checked")) {
-            var button = $("#submit-button");
+            var button = $("#edit-button");
+            button.prop("disabled", true);
+            button = $("#submit-button");
             button.prop("disabled", true);
             button.html("<i class='fa fa-spinner fa-spin'></i><span class='sr-only'>Processing...</span>")
-            button = $("#edit-button");
-            button.prop("disabled", true);
         }
         else {
             e.preventDefault();
