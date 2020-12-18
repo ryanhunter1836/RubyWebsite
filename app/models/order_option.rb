@@ -32,7 +32,6 @@ class OrderOption < ApplicationRecord
 
     def get_next_shipment_date
         #Find the shipment object that has the next shipment date
-        # date = Shipping.where(order_option_id: self.id).where('scheduled_date > ?', DateTime.now).first
         date = self.shippings.where('scheduled_date > ?', DateTime.now).first
 
         if date.nil?

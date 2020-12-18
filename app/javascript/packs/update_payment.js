@@ -49,13 +49,23 @@ function stripeElements(publishableKey) {
 
 function createPaymentMethod({ card, billingName }) {
   // Set up payment method for recurring usage
-
-  stripe
-    .createPaymentMethod({
+  var address1 = document.getElementById("billing_address1_field").value;
+  var address2 = document.getElementById("billing_address2_field").value;
+  var city = document.getElementById("billing_city_field").value;
+  var state = document.getElementById("billing_state_field").value;
+  
+  stripe.createPaymentMethod({
       type: 'card',
       card: card,
       billing_details: {
         name: billingName,
+        address: {
+          city: city,
+          country: "US",
+          line1: address1,
+          line2: address2,
+          state: state
+        }
       },
     })
     .then((result) => {
@@ -71,6 +81,16 @@ function createPaymentMethod({ card, billingName }) {
       }
       
     });
+}
+
+function displayError(event) {
+  var displayError = document.getElementById('card-element-errors');
+  if (event.error) {
+  displayError.textContent = event.error.message;
+  } 
+  else {
+  displayError.textContent = '';
+  }
 }
 
 function getConfig() {

@@ -134,7 +134,7 @@ function addListeners() {
     removeVehicle(vehicleId);
 
     vehicleCount -= 1;
-    if(vehicleCount <= 0) {
+    if(vehicleCount < 0) {
       $("#continue_button").prop('disabled', true);
     }    
   });
@@ -170,7 +170,7 @@ function addListeners() {
     $("#vehicle_preview").hide();
 
     vehicleCount -= 1;
-    if(vehicleCount <= 0) {
+    if(vehicleCount < 0) {
       $("#continue_button").prop('disabled', true);
     }
   });

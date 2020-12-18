@@ -7,3 +7,4 @@ public/assets
 node_modules
 .bundle
 vendor
+config/credentials.yml.enc

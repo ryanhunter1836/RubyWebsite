@@ -19,7 +19,13 @@ def new
   #Otherwise, retrieve the existing shopping cart
   else
     @makes = get_makes
-    cart = ShoppingCart.find(session[:shopping_cart])
+
+    cart = ShoppingCart.where(id: session[:shopping_cart]).first
+    if cart.nil?
+      cart = ShoppingCart.new
+      session[:shopping_cart] = cart.id
+    end
+
     @order_options = OrderOption.new
     @existing_vehicles = cart.order_options_ids.map { |id| OrderOption.find(id) }
     

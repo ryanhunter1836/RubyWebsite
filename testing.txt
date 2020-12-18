@@ -5,6 +5,7 @@ Testing Webhooks
     Date to epoch converter: https://www.epochconverter.com/
     
     Start ngrok and copy https endpoint to stripe webhooks
+    `ngrok http 3000`
 
     Payment Succeeded:
         Make sure the customer credit card is 4242424242424242
@@ -26,6 +27,7 @@ Testing Webhooks
         -d trial_end={epoch_time_15_days_from_now}
 
 Resetting Production Database (DON'T EVER DO THIS IN LIVE MODE WITHOUT BACKUP FIRST)
+    cd ~/WipersToYou/current
     sudo service nginx stop
     RAILS_ENV=production bundle exec rake db:drop DISABLE_DATABASE_ENVIRONMENT_CHECK=1
     sudo su postgres

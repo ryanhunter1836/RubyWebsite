@@ -35,7 +35,7 @@ User.create(
 
 #Seed method for vehicles
 CSV.foreach(Rails.root.join('lib', 'seeds', 'wipersizes.csv'), headers: false) do |row|
-  Vehicle.create(make: row[0],
+  Vehicle.find_or_create_by(make: row[0],
                  model: row[1],
                  year: row[2],
                  driver_front: row[3].to_i,
@@ -45,11 +45,11 @@ end
 
 #Seed method for Stripe products
 CSV.foreach(Rails.root.join('lib', 'seeds', 'prices.csv'), headers: true) do |row|
-  StripeProduct.create(
+  StripeProduct.find_or_create_by(
     stripe_id: row['Price ID'],
     price: row['Amount'],
     size: getSize(row['Product Name']),
     quality: getQuality(row['Product Name']),
     frequency: getFrequency(row['Interval'], row['Interval Count'])
-    )
+  )
 end

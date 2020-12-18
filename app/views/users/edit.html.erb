@@ -30,7 +30,7 @@
 
         <input type="hidden" value="" name="user[paymentMethodId]" id="user_paymentMethodId">
 
-        <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal">Credit Card<div class="float-right" id="ccLast4"><%= @paymentMethod %></div></div>
+        <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal" style="cursor:pointer">Credit Card<div class="float-right" id="ccLast4"><%= @cardString %></div></div>
 
         <div class="row">
           <div class="col-12 mb-2 text-center">
@@ -57,7 +57,25 @@
         </button>
       </div>
       <div class="modal-body">
-        <div id="card-element" class="MyCardElement"></div>
+        <label for="address1">Address Line 1</label>
+        <input type="text" name="address1" id="billing_address1_field" value="<%= @billing_address[:address1] %>" class="form-control" required></input>
+        <div id = "billing_address1_error" class="help-block"></div>
+
+        <label for="address2">Address Line 2</label>
+        <input type="text" name="address2" id="billing_address2_field" value="<%= @billing_address[:address2] %>" class="form-control"></input>
+        <div id = "billing_address2_error" class="help-block"></div>
+
+        <label for="city">City</label>
+        <input type="text" name="city" id="billing_city_field" value="<%= @billing_address[:city] %>" class="form-control" required></input>
+        <div id = "billing_city_error" class="help-block"></div>
+
+        <label for="state">State</label>
+        <input type="text" name="state" id="billing_state_field" value="<%= @billing_address[:state] %>" class="form-control" required></input>
+        <div id = "billing_state_error" class="help-block"></div>
+
+        <div class="gray-box-rounded mt-4 mb-4">
+          <div id="card-element" class="MyCardElement"></div>
+          <div id="card-element-errors" role="alert"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" id="close_button" data-dismiss="modal">Close</button>

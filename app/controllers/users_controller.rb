@@ -82,7 +82,15 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find(params[:id])
-    @paymentMethod = getCardString(Stripe::PaymentMethod.retrieve(@user.payment_method_id))
+    paymentMethod = Stripe::PaymentMethod.retrieve(@user.payment_method_id)
+    @cardString = getCardString(paymentMethod)
+    @billing_address = {
+      address1: paymentMethod.billing_details.address.line1,
+      address2: paymentMethod.billing_details.address.line2,
+      city: paymentMethod.billing_details.address.city,
+      state: paymentMethod.billing_details.address.state,
+      postal: paymentMethod.billing_details.address.postal_code
+    }
   end
 
   def update

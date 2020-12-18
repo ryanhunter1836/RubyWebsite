@@ -84,8 +84,7 @@ class WebhookController < ApplicationController
 
         if event_type == 'invoice.upcoming'
             #data_object is an invoice
-
-            test = data_object
+            
             #Get the customer that this invoice is associated with
             customer = User.find_by(stripe_customer_id: data_object.customer)
             if customer.nil?
