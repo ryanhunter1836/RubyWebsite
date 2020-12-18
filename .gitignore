@@ -8,3 +8,4 @@ node_modules
 .bundle
 vendor
 config/credentials.yml.enc
+/config/master.key

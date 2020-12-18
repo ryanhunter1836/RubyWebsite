@@ -1,0 +1,15 @@
+Deploying website to production:
+-Commit all changes to GitHub
+-run the command "cap production deploy"
+
+Running the webscraper
+-py WipersizeWebscraper.py {start_year} {end_year}
+-It will spit out 2 files - one with the specified wipersizes and any exceptions for sizes that couldn't be scraped for whatever reason
+-To update the seed method, put the new csv with the wipersizes in lib/seeds/wipersizes.csv
+NOTE: the file must be named wipersizes.csv
+
+Updating the Stripe products
+-Go to the Stripe dashboard, products -> export prices -> columns (custom) and UNCHECK everything except price ID, product name, amount, interval then click export
+-Put the file in lib/seeds/prices.csv
+NOTE: the file must be named prices.csv 
+NOTE: there may be some spacing inconsistencies, so make sure that all columns are the same
