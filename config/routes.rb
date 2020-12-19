@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   get 'api/query_vehicle',          to: 'api_endpoint#query_vehicle'
   post 'api/save_order_status',     to: 'api_endpoint#save_order_status'
   resources :vehicles
-  resources :account_activations, only: [:edit]
+  resources :account_activations, only: [:new, :create, :edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
   resources :checkouts,           only: [:new, :create, :destroy]
   resources :payments,            only: [:new, :create]

@@ -1,0 +1,12 @@
+<% title "Activation Email" %>
+<h1>Resend Activation Email</h1>
+
+<div class="row">
+  <div class="col-12">
+    <%= form_with(url: account_activations_path, scope: :account_activation, local: true, class: 'form-inline mt-4') do |f| %>
+      <b><%= f.label :email %></b>
+      <%= f.email_field :email, class: 'form-control mx-2 w-50' %>
+      <%= f.submit "Submit", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>

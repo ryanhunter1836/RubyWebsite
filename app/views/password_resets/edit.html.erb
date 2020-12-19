@@ -2,7 +2,7 @@
 <h1>Reset password</h1>
 
 <div class="row">
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-12 col-md-6 mx-auto">
     <%= form_with(model: @user, url: password_reset_path(params[:id]), local: true) do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
 
@@ -12,7 +12,7 @@
       <%= f.password_field :password, class: 'form-control' %>
 
       <%= f.label :password_confirmation, "Confirmation" %>
-      <%= f.password_field :password_confirmation, class: 'form-control' %>
+      <%= f.password_field :password_confirmation, class: 'form-control mb-4' %>
 
       <%= f.submit "Update password", class: "btn btn-primary w-100" %>
     <% end %>
