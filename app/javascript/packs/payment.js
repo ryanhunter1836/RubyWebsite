@@ -8,7 +8,7 @@ const userElements = [
 const shippingElements = [
 "address1", 
 "city", 
-"state", 
+"state",
 "postal"
 ];
 
@@ -118,21 +118,18 @@ function createPaymentMethod({ card, customerId, billingName, userId, isPaymentR
     var address2 = "";
     var city = "";
     var state = "";
-    var postal = "";
 
     if ($("#same_as_shipping").is(':checked')) {
         address1 = document.getElementById("address1_field").value;
         address2 = document.getElementById("address2_field").value;
         city = document.getElementById("city_field").value;
         state = document.getElementById("state_field").value;
-        postal = document.getElementById("postal_field").value;
     }
     else {
         address1 = document.getElementById("billing_address1_field").value;
         address2 = document.getElementById("billing_address2_field").value;
         city = document.getElementById("billing_city_field").value;
         state = document.getElementById("billing_state_field").value;
-        postal = document.getElementById("billing_postal_field").value;
     }
 
     // Set up payment method for recurring usage
@@ -147,7 +144,6 @@ function createPaymentMethod({ card, customerId, billingName, userId, isPaymentR
             country: "US",
             line1: address1,
             line2: address2,
-            postal_code: postal,
             state: state
         }
     },
