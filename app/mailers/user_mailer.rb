@@ -43,8 +43,8 @@ class UserMailer < ApplicationMailer
     mail to: user.email, subject: "Subscription Confirmation"
   end 
 
-  def subscription_cancel(user, vehicle_id)
-    @vehicle_id = vehicle_id
+  def subscription_cancel(user, order)
+    @order = order
     mail to: user.email, subject: "Subscription Cancellation"
   end
 

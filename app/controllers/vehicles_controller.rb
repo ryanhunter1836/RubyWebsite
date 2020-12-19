@@ -57,10 +57,11 @@ class VehiclesController < ApplicationController
         if !shipment.nil? && shipment.shipped == false
             shipment.destroy
         end
-        
+
+        order_copy = order.clone
         if order.destroy
             #Send a confirmation email
-            UserMailer.subscription_cancel(current_user, vehicle_id).deliver_now
+            UserMailer.subscription_cancel(current_user, order_copy).deliver_now
             flash[:success] = "Subscription cancelled"
             redirect_to user_path(current_user.id)
         else
