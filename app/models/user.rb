@@ -3,7 +3,7 @@ class User < ApplicationRecord
 
   attr_accessor :remember_token, :activation_token, :reset_token
   has_many :order_options, dependent: :destroy, inverse_of: :user
-  before_save :downcase_email
+  before_validation :downcase_email
   before_save :update_billing_method, if: :will_save_change_to_payment_method_id?
   before_create :create_activation_digest
   validates :name,  presence: true, length: { maximum: 50 }

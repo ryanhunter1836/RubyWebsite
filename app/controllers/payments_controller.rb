@@ -17,7 +17,8 @@ class PaymentsController < ApplicationController
     end
 
     def create
-        existing_user = User.find_by(email: params[:user][:email])
+        email = params[:user][:email].downcase
+        existing_user = User.find_by(email: email)
 
         #Update an existing record
         if (!existing_user.nil? && existing_user.account_created == false)
@@ -35,18 +36,16 @@ class PaymentsController < ApplicationController
             end
 
             render json: msg, status: 200
+        #Create a new record
+        else
+            msg = nil
+            new_user = User.new(signup_params)
+            new_user.account_created = false
 
-            #Create a new record
-            else
-                msg = nil
-                new_user = User.create(signup_params)
-                new_user.account_created = false
+            address = ShippingAddress.new(shipping_params)
+            address.valid?
 
-                address = ShippingAddress.new(shipping_params)
-                address.valid?
-
-            if new_user.valid? && address.valid?
-                new_user.save
+            if address.valid? && new_user.save
                 msg = { success: true, user_id: new_user.id }
             else
                 msg = { success: false, user: new_user.errors, address: address.errors }

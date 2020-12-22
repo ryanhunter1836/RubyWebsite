@@ -364,6 +364,8 @@ $(document).on('ajax:success', '#user-form', event => {
     const [response, status, xhr] = event.detail;
     clearErrors();
 
+    console.log(response);
+    
     //If user account creation was successful, start processing the payment
     if(response['success'] == true) {
         runStripe(response['user_id']);
