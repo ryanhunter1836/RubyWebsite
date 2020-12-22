@@ -5,6 +5,6 @@ class AddShippedToShipping < ActiveRecord::Migration[6.0]
     add_column :shippings, :scheduled_date, :datetime
     add_column :shippings, :payment_intent_id, :string
     add_column :shippings, :refund_submitted, :boolean, default: false
-    add_column :shippings, :paid, :default: false
+    add_column :shippings, :paid, default: false
   end
 end
