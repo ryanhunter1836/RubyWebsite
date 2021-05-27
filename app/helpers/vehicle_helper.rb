@@ -2,19 +2,19 @@ module VehicleHelper
     include ActionView::Helpers::NumberHelper
     require 'date'
 
-    def get_quality_string(quality)
-        if quality == 'good'
-            "Good"
-        elsif quality == 'better'
-            "Better"
+    def get_wipertype_string(wipertype)
+        if wipertype == 'beam'
+            "Beam"
         else
-            "Best"
+            "Hybrid"
         end
     end
 
     def get_frequency_string(frequency)
         if frequency == 'six_months'
             "Every 6 Months"
+        elsif frequency == 'nine_months'
+            "Every 9 Months"
         else
             "Every 12 Months"
         end

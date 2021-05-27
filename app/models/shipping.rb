@@ -19,6 +19,8 @@ class Shipping < ApplicationRecord
                 #Create another shipment that is the appropriate time period away
                 if frequency == 'six_months'
                     parent_order.shippings.create(scheduled_date: self.scheduled_date + 6.months)
+                elsif frequency == 'nine_months'
+                    parent_order.shippings.create(scheduled_date: self.scheduled_date + 9.months)
                 else
                     parent_order.shippings.create(scheduled_date: self.scheduled_date + 12.months)
                 end

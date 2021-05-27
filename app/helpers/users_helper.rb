@@ -1,11 +1,9 @@
 module UsersHelper
-    def get_quality_string_enum(quality)
-        if quality == 0
-            'Good'
-        elsif quality == 1
-            'Better'
+    def get_wipertype_string_enum(wipertype)
+        if wipertype == 0
+            'Beam'
         else
-            'Best'
+            'Hybrid'
         end
     end  
 end

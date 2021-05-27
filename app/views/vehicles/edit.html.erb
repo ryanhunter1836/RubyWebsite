@@ -14,7 +14,7 @@
         <div id="smartwizard">
             <ul class="nav">
                 <li><a class="nav-link" href="#step-1">Step 1<br /><small>Edit Vehicles</small></a></li>
-                <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
+                <li><a class="nav-link" href="#step-2">Step 2<br /><small>Select Wiper Type</small></a></li>
                 <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
                 <li><a class="nav-link" href="#step-4">Step 4<br /><small>Shipping</small></a></li>
                 <li><a class="nav-link" href="#step-5">Step 5<br /><small>Review & Confirm</small></a></li>
@@ -39,23 +39,20 @@
                     </div>
                     <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-md-6 offset-md-3">
-                            <h1>Select Quality</h1>
+                            <h1>Select Wiper Type</h1>
                             <div class="btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2 <%= (@order_options.quality == 'good') ? 'active' : '' %>">
-                                    <%= f.radio_button :quality, 'good', :id => 'good_button', checked: (@order_options.quality == 'good') %>Good
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2 <%= (@order_options.wipertype == 'beam') ? 'active' : '' %>">
+                                    <%= f.radio_button :wipertype, 'beam', :id => 'beam_button', checked: (@order_options.wipertype == 'beam') %>Beam
                                 </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2 <%= (@order_options.quality == 'better') ? 'active' : '' %>">
-                                    <%= f.radio_button :quality, 'better', :id => 'better_button', checked: (@order_options.quality == 'better') %>Better
-                                </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2 <%= (@order_options.quality == 'best') ? 'active' : '' %>">
-                                    <%= f.radio_button :quality, 'best', :id => 'best_button', checked: (@order_options.quality == 'best') %>Best
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2 <%= (@order_options.wipertype == 'hybrid') ? 'active' : '' %>">
+                                    <%= f.radio_button :wipertype, 'hybrid', :id => 'hybrid_button', checked: (@order_options.wipertype == 'hybrid') %>Hybrid
                                 </label>
                             </div>
                         </div>
                         <div class="col-12 mt-5">
-                            <p><b>Recommendation #1:&nbsp</b>Do you drive through snow and ice in the winter?  We recommend you select a Good or Better quality wiper and a frequency of Every 6 months.  Ice and snow on your windshield will damage your wipers so it is a good idea to replace them more frequently.</p>
-                            <p><b>Recommendation #2:&nbsp</b>Do you live in a temperate climate?  We recommend you select a Best quality wiper and replace them Every 12 months.  This will ensure good clear driving all year long.</p>
-                            <p><b>Recommendation #3:&nbsp</b>Do you live in a very sunny and/or hot climate?  We recommend you select a Good or Better quality wiper and a frequency of Every 6 months.  Sun and heat can dry out the rubber on a wiper blade and cause streaking on your windshield.</p>
+                            <p><b>Recommendation #1:&nbsp</b>Do you drive through snow and ice in the winter?  We recommend you select a Hybrid wiper and a frequency of Every 6 months.  Ice and snow on your windshield will damage your wipers so it is a good idea to replace them more frequently.</p>
+                            <p><b>Recommendation #2:&nbsp</b>Do you live in a temperate climate?  We recommend you select a Beam wiper and replace them Every 9-12 months.  This will ensure good clear driving all year long.</p>
+                            <p><b>Recommendation #3:&nbsp</b>Do you live in a very sunny and/or hot climate?  We recommend you select a Beam wiper and a frequency of Every 6 months.  Sun and heat can dry out the rubber on a wiper blade and cause streaking on your windshield.</p>
                         </div>
                     </div>
                     <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
@@ -63,8 +60,12 @@
                             <h1>Select Frequency</h1>
                             <div class="btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2 <%= (@order_options.frequency == 'six_months') ? 'active' : '' %>">
-                                    <%= f.radio_button :frequency, 'six_months', :id => 'months_button', checked: (@order_options.frequency == 'six_months') %>
+                                    <%= f.radio_button :frequency, 'six_months', :id => 'six_months_button', checked: (@order_options.frequency == 'six_months') %>
                                     Every 6 Months
+                                </label>
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2 <%= (@order_options.frequency == 'nine-months') ? 'active' : '' %>">
+                                    <%= f.radio_button :frequency, 'nine_months', :id => 'nine_months_button', checked: (@order_options.frequency == 'nine_months') %>
+                                    Every 9 Months
                                 </label>
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2 <%= (@order_options.frequency == 'one_year') ? 'active' : '' %>">
                                     <%= f.radio_button :frequency, 'one_year', :id => 'year_button', checked: (@order_options.frequency == 'one_year') %>
@@ -111,8 +112,8 @@
                                             <div id="vehicle-preview" class="vehicle-preview col-12"><%= get_vehicle_name(@order_options.vehicle_id) %></div>
                                         </div>
                                         <div class="row mb-2">
-                                            <h5 class="col-12">Quality</h5>
-                                            <div id="quality_preview" class="col-12"><%= get_quality_string(@order_options.quality) %></div>
+                                            <h5 class="col-12">Wiper Type</h5>
+                                            <div id="wipertype_preview" class="col-12"><%= get_wipertype_string(@order_options.wipertype) %></div>
                                         </div>
                                         <div class="row mb-2">
                                             <h5 class="col-6">Frequency</h5>

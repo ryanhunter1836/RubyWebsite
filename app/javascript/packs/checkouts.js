@@ -40,8 +40,8 @@ function validatePage(stepIndex, stepDirection) {
       }
     }
     else if (stepIndex === 2 && stepDirection == "forward") {
-      //Verify a quality has been selected
-      if ($("input[name='order_option[quality]']:checked").val()) {
+      //Verify a wiper type has been selected
+      if ($("input[name='order_option[wipertype]']:checked").val()) {
         $('#smartwizard').smartWizard({
           errorSteps: []
         });
@@ -109,24 +109,24 @@ function addListeners() {
     $("#vehicle-preview").text(`${year} ${make} ${model}`);
   });
 
-  $("#months-button").click(function() {
+  $("#six_months-button").click(function() {
     $("#frequency-preview").text("Every 6 Months");
+  });
+
+  $("#nine_months-button").click(function() {
+    $("#frequency-preview").text("Every 9 Months");
   });
 
   $("#year-button").click(function() {
     $("#frequency-preview").text("Every 12 Months");
   });
 
-  $("#good-button").click(function() {
-    $("#quality-preview").text("Good");
+  $("#beam-button").click(function() {
+    $("#wipertype-preview").text("Beam");
   });
 
-  $("#better-button").click(function() {
-    $("#quality-preview").text("Better");
-  });
-
-  $("#best-button").click(function() {
-    $("#quality-preview").text("Best");
+  $("#hybrid-button").click(function() {
+    $("#wipertype-preview").text("Hybrid");
   });
 
   $(".remove-vehicle-button").click(function() {

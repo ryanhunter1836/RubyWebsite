@@ -7,8 +7,8 @@ class OrderOption < ApplicationRecord
     before_save :initialize_stripe_products
     after_save :update_shipping_dates, if: :saved_change_to_frequency?
 
-    enum frequency: [ :six_months, :one_year ]
-    enum quality: [ :good, :better, :best ]
+    enum frequency: [ :six_months, :nine_months, :one_year ]
+    enum wipertype: [ :beam, :hybrid ]
 
     #Tie the Stripe products to their subscription IDs
     def add_subscription_ids(subscription)
@@ -38,6 +38,8 @@ class OrderOption < ApplicationRecord
             #If the date is null, calculate the next scheduled delivery
             if frequency == 'six_months'
                 date = (Time.at(self.cycle_anchor) + 6.month).to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")
+            elsif frequency == 'nine_months'
+                date = (Time.at(self.cycle_anchor) + 9.month).to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")
             else
                 date = (Time.at(self.cycle_anchor) + 1.year).to_datetime.in_time_zone("Central Time (US & Canada)").strftime("%m/%d/%Y")
             end
@@ -97,9 +99,9 @@ private
     def get_stripe_products_for_vehicle(vehicle_id)
         #Get the associated stripe product for the vehicle and parameters
         vehicle = Vehicle.find(vehicle_id)
-        driver_front = StripeProduct.where(size: vehicle.driver_front, quality: OrderOption.qualities[self.quality] , frequency: OrderOption.frequencies[self.frequency]).first
-        passenger_front = StripeProduct.where(size: vehicle.passenger_front, quality: OrderOption.qualities[self.quality], frequency: OrderOption.frequencies[self.frequency]).first
-        rear = StripeProduct.where(size: vehicle.rear, quality: OrderOption.qualities[self.quality], frequency: OrderOption.frequencies[self.frequency]).first
+        driver_front = StripeProduct.where(size: vehicle.driver_front, wipertype: OrderOption.wipertype[self.wipertype] , frequency: OrderOption.frequencies[self.frequency]).first
+        passenger_front = StripeProduct.where(size: vehicle.passenger_front, wipertype: OrderOption.wipertype[self.wipertype], frequency: OrderOption.frequencies[self.frequency]).first
+        rear = StripeProduct.where(size: vehicle.rear, wipertype: OrderOption.wipertype[self.wipertype], frequency: OrderOption.frequencies[self.frequency]).first
         return { driver_front: driver_front, passenger_front: passenger_front, rear: rear }
     end
 
@@ -129,14 +131,23 @@ private
             end
     
             if !products_map.blank?
+				if self.frequency == 'six_months'
+					trial_end_tmp = self.cycle_anchor + 6.month
+				elsif self.frequency == 'nine_months'
+					trial_end_tmp = self.cycle_anchor + 9.month
+				else
+					trial_end_tmp = self.cycle_anchor + 1.year
+				end
+				
                 updated_subscription = Stripe::Subscription.update(
                     self.subscription_id,
                     items: products_map,
                     proration_behavior: 'none',
                     #The trial end has to be set to when the user should be billed again
                     #Otherwise, Stripe will immediately bill them as if they started a new subscription
-                    trial_end: self.cycle_anchor + (self.frequency == 'six_months' ? 6.month : 1.year)
-                )
+#                    trial_end: self.cycle_anchor + (self.frequency == 'six_months' ? 6.month : 1.year)  -- JLH modified Feb-21 to add 9 months option
+					trial_end: trial_end_tmp
+				)
     
                 #Update the database with the new subscription
                 add_subscription_ids(updated_subscription)

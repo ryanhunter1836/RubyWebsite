@@ -41,8 +41,8 @@ function updateModel(modelId) {
   });
 };
 
-function updateQualityPreview(qualityString) {
-  $("#quality_preview").text(qualityString);
+function updateWiperTypePreview(wipertypeString) {
+  $("#wipertype_preview").text(wipertypeString);
 }
 
 function updateFrequencyPreview(frequencyString) {
@@ -63,8 +63,8 @@ function validatePage(stepIndex, stepDirection) {
     }
   }
   else if (stepIndex === 2 && stepDirection == "forward") {
-    //Verify a quality has been selected
-    if ($("input[name='order_option[quality]']:checked").val()) {
+    //Verify a wiper type has been selected
+    if ($("input[name='order_option[wipertype]']:checked").val()) {
       $('#smartwizard').smartWizard({
         errorSteps: []
       });
@@ -107,22 +107,22 @@ function addListeners() {
     updateVehiclePreview();
   });
 
-  //Quality selection listeners
-  $("#good_button").click(function() {
-    updateQualityPreview("Good");
+  //Wiper type selection listeners
+  $("#beam_button").click(function() {
+    updateWiperTypePreview("Beam");
   });
 
-  $("#better_button").click(function() {
-    updateQualityPreview("Better");
-  });
-
-  $("#best_button").click(function() {
-    updateQualityPreview("Best");
+  $("#hybrid_button").click(function() {
+    updateWiperTypePreview("Hybrid");
   });
 
   //Frequency selection listeners
-  $("#months_button").click(function() {
+  $("#six_months_button").click(function() {
     updateFrequencyPreview("Every 6 Months");
+  });
+
+  $("#nine_months_button").click(function() {
+    updateFrequencyPreview("Every 9 Months");
   });
 
   $("#year_button").click(function() {

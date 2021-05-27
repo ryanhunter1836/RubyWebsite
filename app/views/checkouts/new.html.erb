@@ -16,13 +16,13 @@
 
 <div class="row">
     <div class="col-12">
-        <h1>Create a New Subscription</h1>
+        <h1>Create a New Subscription</h1><br></br>
     </div>
     <div class="container full-width p-0 p-md-auto">
         <div id="smartwizard">
             <ul class="nav">
-                <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
-                <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
+                <li><a class="nav-link" href="#step-1">Step 1<br /><small>Enter Vehicle Information</small></a></li>
+                <li><a class="nav-link" href="#step-2">Step 2<br /><small>Select Wiper Type</small></a></li>
                 <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
                 <li><a class="nav-link" href="#step-4">Step 4<br /><small>Review</small></a></li>
             </ul>
@@ -30,9 +30,10 @@
                 <input type="hidden" id="submit" name="submit" value="true">
                 <input type="hidden" id="new_vehicle" name="new_vehicle" value="<%= @new_vehicle %>">
                 <div class="tab-content">
+
                     <div id="step-1" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
-                            <h1>Select Vehicle</h1>
+                            <h2>Select Vehicle</h2><br></br>
                             <%= f.label :Make %>
                             <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), 
                                 id: "make-selector", include_blank: true, class: 'form-control make-selector' %>
@@ -42,56 +43,92 @@
                             <%= f.select :vehicle_id, 'vehicle_id', { include_blank: true }, { id: 'vehicle-id', class: 'form-control year-selector' } %>
                         </div>
                     </div>
+					
                     <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                        <div class="col-12 col-md-6 offset-md-3">
-                            <h1>Select Quality</h1>
-                            <div class="btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2">
-                                    <%= f.radio_button :quality, 'good', :id => 'good-button' %>Good
-                                </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                    <%= f.radio_button :quality, 'better', :id => 'better-button' %>Better
-                                </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                    <%= f.radio_button :quality, 'best', :id => 'best-button' %>Best
-                                </label>
-                            </div>
-                        </div>
+                        <div class="col col-md-6 offset-md-3">
+                            <h2>Select Wiper Type</h2><br></br>
+							<div class="row">
+								<div class="col">
+									<div class="card mb-6 rounded-3 shadow-sm text-center">
+										<div class="card-header py-2">
+											<h4 class="my-0 fw-normal">Beam Wiper</h4>
+										</div>
+										<div class="card-body">
+											<h4 class="card-title pricing-card-title">$19.99<small class="text-muted fw-light">/pair</small></h4>
+											<ul class="text-left">
+											  <li>Aerodynamic design.</li>
+											  <li>Premium natural rubber.</li>
+											  <li>Zinc-aluminum metal frame</li>
+											  <li>Good for over 200,000 wipes.</li>
+											  <li>6 month warranty.</li>
+											</ul>
+											<div class="btn-group-toggle" data-toggle="buttons"> 
+												<label class="btn btn-outline-primary btn-lg mt-2 mb-2"> 
+													<%= f.radio_button :wipertype, 'beam', :id => 'beam-button' %>Beam 
+												</label> 
+											</div> 
+										</div>
+									</div>
+								</div>
+								<div class="col">								
+									<div class="card mb-6 rounded-3 shadow-sm text-center">
+									  <div class="card-header py-2">
+										<h4 class="my-0 fw-normal">Hybrid Wiper</h4>
+									  </div>
+									  <div class="card-body">
+										<h4 class="card-title pricing-card-title">$22.99<small class="text-muted fw-light">/pair</small></h4>
+										<ul class="text-left">
+										  <li>Best for ice and snow.</li>
+										  <li>Superior aerodynamic design.</li>
+										  <li>Premium natural rubber.</li>
+										  <li>Zinc-aluminum metal frame</li>
+										  <li>Good for over 200,000 wipes.</li>
+										  <li>6 month warranty.</li>
+										</ul>
+										<div class="btn-group-toggle" data-toggle="buttons">
+											<label class="btn btn-outline-primary btn-lg mt-2 mb-2">
+												<%= f.radio_button :wipertype, 'hybrid', :id => 'hyrid-button' %>Hybrid
+											</label>
+										</div>
+									  </div>
+									</div>
+								</div>
+							</div>
+						</div>
                     </div>
+
                     <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
-                            <h1>Select Frequency</h1>
+                            <h2>Select Frequency</h2><br></br>
                             <div class="btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2">
-                                    <%= f.radio_button :frequency, 'six_months', :id => 'months-button' %>
-                                    Every 6 Months
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2">
+                                    <%= f.radio_button :frequency, 'six_months', :id => 'six_months-button' %>Every 6 Months
                                 </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2">
-                                    <%= f.radio_button :frequency, 'one_year', :id => 'year-button' %>
-                                    Every 12 Months
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
+                                    <%= f.radio_button :frequency, 'nine_months', :id => 'nine_months-button' %>Every 9 Months
+                                </label>
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
+                                    <%= f.radio_button :frequency, 'one_year', :id => 'year-button' %>Every 12 Months
                                 </label>
                             </div>
                         </div>
-                        <div class="col-12 mt-5">
-                            <p><b>Recommendation #1:&nbsp</b>Do you drive through snow and ice in the winter?  We recommend you select a Good or Better quality wiper and a frequency of Every 6 months.  Ice and snow on your windshield will damage your wipers so it is a good idea to replace them more frequently.</p>
-                            <p><b>Recommendation #2:&nbsp</b>Do you live in a temperate climate?  We recommend you select a Best quality wiper and replace them Every 12 months.  This will ensure good clear driving all year long.</p>
-                            <p><b>Recommendation #3:&nbsp</b>Do you live in a very sunny and/or hot climate?  We recommend you select a Good or Better quality wiper and a frequency of Every 6 months.  Sun and heat can dry out the rubber on a wiper blade and cause streaking on your windshield.</p>
-                        </div>
                     </div>
+
                     <div id="step-4" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 mb-4">
+                            <h2>Summary</h2>
                             <div class="row justify-content-center">
                                 <% if !@existing_vehicles.nil? %>
                                     <%= render partial: "order_option", collection: @existing_vehicles %>
                                 <% end %>
                                 <% if !@existing_vehicles.nil? && @existing_vehicles.count < 3 %>
-                                    <div class="col-12 col-md-4 text-center" id="vehicle_preview">
+                                    <div class="col-12 col-md-4 text-left" id="vehicle_preview">
                                         <div class="border border-secondary rounded p-2  ml-2 mr-2 ">
-                                            <h4>Vehicle</h4>
+                                            <h5>Vehicle:</h5>
                                             <p id="vehicle-preview"></p>
-                                            <h4>Quality</h4>
-                                            <p id="quality-preview"></p>
-                                            <h4>Frequency</h4>
+                                            <h5>Wiper Type:</h5>
+                                            <p id="wipertype-preview"></p>
+                                            <h5Frequency:</h5>
                                             <p id="frequency-preview"></p>
                                         </div>
                                         <div class="p-2">
@@ -121,7 +158,9 @@
                             <% if @existing_vehicles.nil? || @existing_vehicles.count < 2 %>
                                 <%= f.submit "Add Another Vehicle", :name => 'new_vehicle', class: "btn btn-primary mb-4 w-100" %>
                             <% end %>
-                            <%= f.submit "Continue to Checkout", :name => 'continue', id: 'continue_button', class: "btn btn-success mb-4 w-100" %>
+                            <% if @existing_vehicles.nil? %>						
+								<%= f.submit "Continue to Checkout", :name => 'continue', id: 'continue_button', class: "btn btn-success mb-4 w-100" %>
+							<% end %>
                         </div>
                     </div>
                 </div>
