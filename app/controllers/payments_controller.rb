@@ -182,7 +182,7 @@ class PaymentsController < ApplicationController
     private 	
     def signup_params	
         params.require(:user).permit(:name, :email, :password, :password_confirmation, 	
-        order_options_attributes: [:quality, :frequency, vehicle_id: []])	
+        order_options_attributes: [:wipertype, :frequency, vehicle_id: []])	
     end	
 
     def shipping_params	

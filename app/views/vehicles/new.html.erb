@@ -13,7 +13,7 @@
         <div id="smartwizard">
             <ul class="nav">
                 <li><a class="nav-link" href="#step-1">Step 1<br /><small>Select Vehicle</small></a></li>
-                <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Quality</small></a></li>
+                <li><a class="nav-link" href="#step-2">Step 2<br /><small>Pick Wiper Type</small></a></li>
                 <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
                 <li><a class="nav-link" href="#step-4">Step 4<br /><small>Review</small></a></li>
             </ul>
@@ -33,16 +33,13 @@
                     </div>
                     <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
-                            <h1>Select Quality</h1>
+                            <h1>Select Wiper Type</h1>
                             <div class="btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2">
-                                    <%= f.radio_button :quality, 'good', :id => 'good-button' %>Good
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
+                                    <%= f.radio_button :wipertype, 'beam', :id => 'beam-button' %>Beam
                                 </label>
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                    <%= f.radio_button :quality, 'better', :id => 'better-button' %>Better
-                                </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                    <%= f.radio_button :quality, 'best', :id => 'best-button' %>Best
+                                    <%= f.radio_button :wipertype, 'hybrid', :id => 'hybrid-button' %>Hybrid
                                 </label>
                             </div>
                         </div>
@@ -52,8 +49,11 @@
                             <h1>Select Frequency</h1>
                             <div class="btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2">
-                                    <%= f.radio_button :frequency, 'six_months', :id => 'months-button' %>
+                                    <%= f.radio_button :frequency, 'six_months', :id => 'six_months-button' %>
                                     Every 6 Months
+                                </label>
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
+                                    <%= f.radio_button :frequency, 'nine_months', :id => 'nine_months-button' %>Every 9 Months
                                 </label>
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2">
                                     <%= f.radio_button :frequency, 'one_year', :id => 'year-button' %>
@@ -62,9 +62,9 @@
                             </div>
                         </div>
                         <div class="col-12 mt-5">
-                            <p><b>Recommendation #1:&nbsp</b>Do you drive through snow and ice in the winter?  We recommend you select a Good or Better quality wiper and a frequency of Every 6 months.  Ice and snow on your windshield will damage your wipers so it is a good idea to replace them more frequently.</p>
-                            <p><b>Recommendation #2:&nbsp</b>Do you live in a temperate climate?  We recommend you select a Best quality wiper and replace them Every 12 months.  This will ensure good clear driving all year long.</p>
-                            <p><b>Recommendation #3:&nbsp</b>Do you live in a very sunny and/or hot climate?  We recommend you select a Good or Better quality wiper and a frequency of Every 6 months.  Sun and heat can dry out the rubber on a wiper blade and cause streaking on your windshield.</p>
+                            <p><b>Recommendation #1:&nbsp</b>Do you drive through snow and ice in the winter?  We recommend you select a <b>Hybrid wiper</b> and a frequency of Every 6 months</b>.  Ice and snow on your windshield will damage your wipers so it is a good idea to replace them more frequently.</p>
+                            <p><b>Recommendation #2:&nbsp</b>Do you live in a temperate climate?  We recommend you select a <b>Beam wiper</b> and replace them <b>Every 9-12 months</b>.  This will ensure good clear driving all year long.</p>
+                            <p><b>Recommendation #3:&nbsp</b>Do you live in a very sunny and/or hot climate?  We recommend you select a <b>Beam wiper</b> and a frequency of <b>Every 6 months</b>.  Sun and heat can dry out the rubber on a wiper blade and cause streaking on your windshield.</p>
                         </div>
                     </div>
                     <div id="step-4" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
@@ -74,8 +74,8 @@
                                     <div class="border border-secondary rounded p-2  ml-2 mr-2 ">
                                         <h4>Vehicle</h4>
                                         <p id="vehicle-preview"></p>
-                                        <h4>Quality</h4>
-                                        <p id="quality-preview"></p>
+                                        <h4>Type</h4>
+                                        <p id="wipertype-preview"></p>
                                         <h4>Frequency</h4>
                                         <p id="frequency-preview"></p>
                                     </div>

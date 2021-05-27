@@ -84,7 +84,7 @@ function getVehicleDetails(vehicleId) {
 function addOrder(order) {
     let htmlToInsert = "<tr class='order_row'>" +
     `<td>${order.frequency}</td>` +
-    `<td>${order.quality}</td>` +
+    `<td>${order.wipertype}</td>` +
     `<td>${order.total_price}</td>` +
     `<td>${order.subscription_id}</td>` +
     `<td>${order.vehicle_id}</td>` +

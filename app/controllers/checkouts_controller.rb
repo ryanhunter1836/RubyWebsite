@@ -91,6 +91,6 @@ end
 
 private 
   def order_params
-    params.require(:order_option).permit(:vehicle_id, :quality, :frequency, :continue, :submit, :new_vehicle)
+    params.require(:order_option).permit(:vehicle_id, :wipertype, :frequency, :continue, :submit, :new_vehicle)
   end
 end

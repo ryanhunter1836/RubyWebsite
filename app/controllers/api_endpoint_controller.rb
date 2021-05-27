@@ -26,7 +26,7 @@ class ApiEndpointController < ApplicationController
         orders.each do |order|
           options = Hash.new
           options[:frequency] = get_frequency_string(order.frequency)
-          options[:quality] = get_quality_string(order.quality)
+          options[:wipertype] = get_wipertype_string(order.wipertype)
           options[:total_price] = pretty_amount(order.total_price)
           options[:subscription_id] = order.subscription_id
           options[:vehicle_id] = get_vehicle_name(order.vehicle_id)

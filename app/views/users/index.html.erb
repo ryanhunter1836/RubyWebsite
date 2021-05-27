@@ -41,7 +41,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Address</th>
                 <th scope="col">Sizes</th>
-                <th scope="col">Quality</th>
+                <th scope="col">Wiper Type</th>
                 <th scope="col">Ship Date</th>
                 <th scope="col">Paid?</th>
                 <th scope="col">Complete?</th>
@@ -54,7 +54,7 @@
                     <td><%= order[:name] %></td>
                     <td><%= get_shipping_string(order[:shipping]) %></td>
                     <td><%= order[:sizes] %></td>
-                    <td><%= get_quality_string_enum(order[:quality]) %></td>
+                    <td><%= get_wipertype_string_enum(order[:wipertype]) %></td>
                     <td><%= order[:ship_date] %></td>
                     <td><%= order[:paid] %></td>
                     <td><input type="checkbox" class="complete" <%= order[:shipped] == true ? 'checked="checked"' : '' %>></td>
@@ -134,7 +134,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Frequency</th>
-                        <th scope="col">Quality</th>
+                        <th scope="col">Wiper Type</th>
                         <th scope="col">Total Price</th>
                         <th scope="col">Subscription ID</th>
                         <th scope="col">Vehicle</th>

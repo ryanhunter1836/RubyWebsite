@@ -1,7 +1,7 @@
 <h3>Oh no, your payment failed for your WipersToYou.com subscription</h3>
 <p>Unfortunately, we couldn't process your payment for your pending purchase.</p>
 <p>&nbsp&nbsp&nbsp&nbsp<b>Vehicle:&nbsp</b><%= get_vehicle_name(@order.vehicle_id) %></p>
-<p>&nbsp&nbsp&nbsp&nbsp<b>Quality:&nbsp</b><%= get_quality_string(@order.quality) %></p>
+<p>&nbsp&nbsp&nbsp&nbsp<b>Wiper Type:&nbsp</b><%= get_wipertype_string(@order.wipertype) %></p>
 <p>&nbsp&nbsp&nbsp&nbsp<b>Frequency:&nbsp</b><%= get_frequency_string(order.frequency) %></p>
 <p>
     Please take a moment to log into your account and review your billing information to make sure it is correct.

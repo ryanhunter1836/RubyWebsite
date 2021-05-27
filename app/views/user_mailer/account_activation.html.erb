@@ -8,7 +8,7 @@
 <% @orders.each_with_index do |order, index| %>
     <h3>Subscription <%= index + 1 %></h3>
     <p>&nbsp&nbsp&nbsp&nbsp<b>Vehicle:&nbsp</b><%= get_vehicle_name(order.vehicle_id) %></p>
-    <p>&nbsp&nbsp&nbsp&nbsp<b>Quality:&nbsp</b><%= get_quality_string(order.quality) %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Wiper Type:&nbsp</b><%= get_wipertype_string(order.wipertype) %></p>
     <p>&nbsp&nbsp&nbsp&nbsp<b>Frequency:&nbsp</b><%= get_frequency_string(order.frequency) %></p>
     <p>&nbsp&nbsp&nbsp&nbsp<b>Order Number:&nbsp</b><%= @order_numbers[index] %></p>
 <% end %>

@@ -5,7 +5,7 @@
 <% @products.each_with_index do |product, index| %>
     <h4>Product <%= index + 1 %></h4>
     <p>&nbsp&nbsp&nbsp&nbsp<b>Size:&nbsp</b><%= product[0] %>"</p>
-    <p>&nbsp&nbsp&nbsp&nbsp<b>Quality:&nbsp</b><%= product[1] %></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Wiper Type:&nbsp</b><%= product[1] %></p>
     <p>&nbsp&nbsp&nbsp&nbsp<b>Quantity:&nbsp</b><%= product[2] %></p>
 <% end %>
 <p><b>Order Number:</b> <%= @order_number %></p>
