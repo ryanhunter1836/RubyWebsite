@@ -10,7 +10,7 @@ class CreateVehicle < ActiveRecord::Migration[6.0]
     end
     create_table :order_options do |t|
       t.integer "frequency"
-      t.integer "quality"
+      t.integer "wipertype"
       t.datetime "created_at", precision: 6, null: false
       t.datetime "updated_at", precision: 6, null: false
       t.belongs_to :user
