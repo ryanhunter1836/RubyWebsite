@@ -99,9 +99,9 @@ private
     def get_stripe_products_for_vehicle(vehicle_id)
         #Get the associated stripe product for the vehicle and parameters
         vehicle = Vehicle.find(vehicle_id)
-        driver_front = StripeProduct.where(size: vehicle.driver_front, wipertype: OrderOption.wipertype[self.wipertype] , frequency: OrderOption.frequencies[self.frequency]).first
-        passenger_front = StripeProduct.where(size: vehicle.passenger_front, wipertype: OrderOption.wipertype[self.wipertype], frequency: OrderOption.frequencies[self.frequency]).first
-        rear = StripeProduct.where(size: vehicle.rear, wipertype: OrderOption.wipertype[self.wipertype], frequency: OrderOption.frequencies[self.frequency]).first
+        driver_front = StripeProduct.where(size: vehicle.driver_front, wipertype: OrderOption.wipertypes[self.wipertype] , frequency: OrderOption.frequencies[self.frequency]).first
+        passenger_front = StripeProduct.where(size: vehicle.passenger_front, wipertype: OrderOption.wipertypes[self.wipertype], frequency: OrderOption.frequencies[self.frequency]).first
+        rear = StripeProduct.where(size: vehicle.rear, wipertype: OrderOption.wipertypes[self.wipertype], frequency: OrderOption.frequencies[self.frequency]).first
         return { driver_front: driver_front, passenger_front: passenger_front, rear: rear }
     end
 

@@ -128,7 +128,7 @@
                                             <p id="vehicle-preview"></p>
                                             <h5>Wiper Type:</h5>
                                             <p id="wipertype-preview"></p>
-                                            <h5Frequency:</h5>
+                                            <h5>Frequency:</h5>
                                             <p id="frequency-preview"></p>
                                         </div>
                                         <div class="p-2">
@@ -158,14 +158,14 @@
                             <% if @existing_vehicles.nil? || @existing_vehicles.count < 2 %>
                                 <%= f.submit "Add Another Vehicle", :name => 'new_vehicle', class: "btn btn-primary mb-4 w-100" %>
                             <% end %>
-                            <% if @existing_vehicles.nil? %>						
+                            <% if !@existing_vehicles.nil? %>						
 								<%= f.submit "Continue to Checkout", :name => 'continue', id: 'continue_button', class: "btn btn-success mb-4 w-100" %>
 							<% end %>
                         </div>
                     </div>
                 </div>
                 <!-- <button class="btn btn-success" id="review_button" type="button">Continue to Review</button> -->
-            </div>
-        <% end %>
+			<% end %>
+         </div>
     </div>
 </div>

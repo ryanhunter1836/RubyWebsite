@@ -60,23 +60,20 @@
                             <h1>Select Frequency</h1>
                             <div class="btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2 <%= (@order_options.frequency == 'six_months') ? 'active' : '' %>">
-                                    <%= f.radio_button :frequency, 'six_months', :id => 'six_months_button', checked: (@order_options.frequency == 'six_months') %>
-                                    Every 6 Months
+                                    <%= f.radio_button :frequency, 'six_months', :id => 'six_months_button', checked: (@order_options.frequency == 'six_months') %>Every 6 Months
                                 </label>
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2 <%= (@order_options.frequency == 'nine-months') ? 'active' : '' %>">
-                                    <%= f.radio_button :frequency, 'nine_months', :id => 'nine_months_button', checked: (@order_options.frequency == 'nine_months') %>
-                                    Every 9 Months
+                                    <%= f.radio_button :frequency, 'nine_months', :id => 'nine_months_button', checked: (@order_options.frequency == 'nine_months') %>Every 9 Months
                                 </label>
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2 <%= (@order_options.frequency == 'one_year') ? 'active' : '' %>">
-                                    <%= f.radio_button :frequency, 'one_year', :id => 'year_button', checked: (@order_options.frequency == 'one_year') %>
-                                    Every 12 Months
+                                    <%= f.radio_button :frequency, 'one_year', :id => 'year_button', checked: (@order_options.frequency == 'one_year') %>Every 12 Months
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div id="step-4" class="mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
                         <div class="col-12">
-                            <h1>Shipping Information</h1>
+                            <h3>Shipping Information</h3>
                             <div class="p-3">
                                 <%= f.fields_for :shipping_addresses do |shipping_fields| %>
                                 <%= shipping_fields.label :address1, "Address Line 1" %>

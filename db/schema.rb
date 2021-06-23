@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(version: 2020_12_02_235839) do
     t.string "stripe_id"
     t.integer "price"
     t.integer "size"
-    t.integer "quality"
+    t.integer "wipertype"
     t.integer "frequency"
   end
 

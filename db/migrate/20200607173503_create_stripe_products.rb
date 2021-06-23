@@ -4,7 +4,7 @@ class CreateStripeProducts < ActiveRecord::Migration[6.0]
       t.string "stripe_id"
       t.integer "price"
       t.integer "size"
-      t.integer "quality"
+      t.integer "wipertype"
       t.integer "frequency"
     end
   end

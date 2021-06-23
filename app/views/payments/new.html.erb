@@ -9,6 +9,7 @@
 <% end %>
 
 <h1>Checkout</h1>
+<p></p>
 <%= form_for @user, url: payments_path, html: { id: 'user-form', 'data-type' => 'json' }, remote: true do |f| %>
     <div class="d-flex flex-wrap-reverse">
         <div class="col-12 col-md-5">
@@ -17,7 +18,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-12">
-                    <h1>Billing Information</h1>
+                    <h3>Billing Information</h3>
                     <label for="same-as-shipping">Same as shipping address?</label>
                     <input type="checkbox" name="same_as_shipping" id="same_as_shipping"></label>
                     <br/>
@@ -55,7 +56,7 @@
         </div>
         <div class="col-12 col-md-7">
             <div class="sticky-top">
-                <h1 class="d-none d-md-block">Review Order</h1>
+                <h3 class="d-none d-md-block">Review Order</h3>
                 <div class="row">
                     <%= render partial: "order_option", collection: @selected_vehicles %>
                 </div>

@@ -5,13 +5,11 @@ def getSize(sizeString)
   size.first(2).to_i
 end
 
-def getQuality(qualityString)
-  if(qualityString.include? "Good")
+def getWiperType(wipertypeString)
+  if(wipertypeString.include? "Beam")
     0
-  elsif(qualityString.include? "Better")
-    1
   else
-    2
+    1
   end
 end
 
@@ -49,7 +47,7 @@ CSV.foreach(Rails.root.join('lib', 'seeds', 'prices.csv'), headers: true) do |ro
     stripe_id: row['Price ID'],
     price: row['Amount'],
     size: getSize(row['Product Name']),
-    quality: getQuality(row['Product Name']),
+    wipertype: getWiperType(row['Product Name']),
     frequency: getFrequency(row['Interval'], row['Interval Count'])
   )
 end
