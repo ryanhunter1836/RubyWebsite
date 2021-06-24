@@ -15,9 +15,13 @@ end
 
 def getFrequency(interval, count)
   if(interval.include? "month")
-    0
+    if(count.include? "6")
+      0
+    else
+      1
+    end
   else
-    1
+    2
   end
 end
 
