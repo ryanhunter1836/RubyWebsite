@@ -21,7 +21,7 @@
                 <div class="tab-content">
                     <div id="step-1" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
-                            <h1>Select Vehicle</h1>
+                            <h3>Select Vehicle</h3>
                             <%= f.label :Make %>
                             <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), 
                                 id: "make-selector", include_blank: true, class: 'form-control make-selector' %>
@@ -33,7 +33,7 @@
                     </div>
                     <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
-                            <h1>Select Wiper Type</h1>
+                            <h3>Select Wiper Type</h3>
                             <div class="btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
                                     <%= f.radio_button :wipertype, 'beam', :id => 'beam-button' %>Beam
@@ -46,7 +46,7 @@
                     </div>
                     <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
-                            <h1>Select Frequency</h1>
+                            <h3>Select Frequency</h3>
                             <div class="btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2">
                                     <%= f.radio_button :frequency, 'six_months', :id => 'six_months-button' %>

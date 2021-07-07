@@ -39,7 +39,7 @@
                     </div>
                     <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-md-6 offset-md-3">
-                            <h1>Select Wiper Type</h1>
+                            <h3>Select Wiper Type</h3>
                             <div class="btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2 <%= (@order_options.wipertype == 'beam') ? 'active' : '' %>">
                                     <%= f.radio_button :wipertype, 'beam', :id => 'beam_button', checked: (@order_options.wipertype == 'beam') %>Beam
@@ -57,7 +57,7 @@
                     </div>
                     <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
-                            <h1>Select Frequency</h1>
+                            <h3>Select Frequency</h3>
                             <div class="btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2 <%= (@order_options.frequency == 'six_months') ? 'active' : '' %>">
                                     <%= f.radio_button :frequency, 'six_months', :id => 'six_months_button', checked: (@order_options.frequency == 'six_months') %>Every 6 Months
@@ -100,7 +100,7 @@
                     </div>
                     <div id="step-5" class="mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
                         <div class="col-12 col-lg-8 offset-lg-2">
-                            <h1>Review Details</h1>
+                            <h3>Review Details</h3>
                             <div class="gray-box-rounded">
                                 <div class="row">
                                     <div class="col-12 col-lg-6">

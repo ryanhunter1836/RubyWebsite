@@ -47,6 +47,7 @@
                     <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col col-md-6 offset-md-3">
                             <h2>Select Wiper Type</h2><br></br>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons"> 
 							<div class="row">
 								<div class="col">
 									<div class="card mb-6 rounded-3 shadow-sm text-center">
@@ -59,15 +60,12 @@
 											  <li>Aerodynamic design.</li>
 											  <li>Premium natural rubber.</li>
 											  <li>Zinc-aluminum metal frame</li>
-											  <li>Good for over 200,000 wipes.</li>
-											  <li>6 month warranty.</li>
+											  <li>Guaranteed for over 200,000 wipes.</li>
 											</ul>
-											<div class="btn-group-toggle" data-toggle="buttons"> 
 												<label class="btn btn-outline-primary btn-lg mt-2 mb-2"> 
 													<%= f.radio_button :wipertype, 'beam', :id => 'beam-button' %>Beam 
 												</label> 
-											</div> 
-										</div>
+										</div> 
 									</div>
 								</div>
 								<div class="col">								
@@ -75,27 +73,25 @@
 									  <div class="card-header py-2">
 										<h4 class="my-0 fw-normal">Hybrid Wiper</h4>
 									  </div>
-									  <div class="card-body">
+										<div class="card-body">
 										<h4 class="card-title pricing-card-title">$22.99<small class="text-muted fw-light">/pair</small></h4>
 										<ul class="text-left">
-										  <li>Best for ice and snow.</li>
 										  <li>Superior aerodynamic design.</li>
+										  <li>Best for ice and snow.</li>
 										  <li>Premium natural rubber.</li>
 										  <li>Zinc-aluminum metal frame</li>
-										  <li>Good for over 200,000 wipes.</li>
-										  <li>6 month warranty.</li>
+										  <li>Guaranteed for over 200,000 wipes.</li>
 										</ul>
-										<div class="btn-group-toggle" data-toggle="buttons">
-											<label class="btn btn-outline-primary btn-lg mt-2 mb-2">
+											<label class="btn btn-outline-primary active btn-lg mt-2 mb-2">
 												<%= f.radio_button :wipertype, 'hybrid', :id => 'hyrid-button' %>Hybrid
 											</label>
 										</div>
-									  </div>
 									</div>
 								</div>
 							</div>
+							</div>
 						</div>
-                    </div>
+					</div>
 
                     <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
@@ -164,7 +160,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <button class="btn btn-success" id="review_button" type="button">Continue to Review</button> -->
 			<% end %>
          </div>
     </div>
