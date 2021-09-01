@@ -9,7 +9,7 @@
 <% end %>
 
 <h1>Checkout</h1>
-<p></p>
+<br></br>
 <%= form_for @user, url: payments_path, html: { id: 'user-form', 'data-type' => 'json' }, remote: true do |f| %>
     <div class="d-flex flex-wrap-reverse">
         <div class="col-12 col-md-5">
@@ -18,7 +18,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-12">
-                    <h3>Billing Information</h3>
+                    <h4>Billing Information</h4>
                     <label for="same-as-shipping">Same as shipping address?</label>
                     <input type="checkbox" name="same_as_shipping" id="same_as_shipping"></label>
                     <br/>
@@ -56,15 +56,21 @@
         </div>
         <div class="col-12 col-md-7">
             <div class="sticky-top">
-                <h3 class="d-none d-md-block">Review Order</h3>
-                <div class="row">
-                    <%= render partial: "order_option", collection: @selected_vehicles %>
-                </div>
+                <h4 class="d-none d-md-block">Charges:</h4>
                 <div class="row">
                     <div class="col-12 mb-4 text-center text-md-left">
-                        <h4 class="d-inline">Total Price:</h4>
-                        <p class="d-inline">&nbsp&nbsp <%= @total_price %></p>
+                        <p class="d-inline">  &nbsp&nbsp&nbsp&nbsp&nbspSubtotal:</p>
+						<p class="d-inline">  &nbsp&nbsp <%= @total_price %></p><br>
+						<p class="d-inline">  &nbsp&nbsp&nbsp&nbsp Tax: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp To Be Determined</p><br>
+                        <p class="d-inline">  &nbsp&nbsp&nbsp&nbsp Shipping: &nbsp FREE</p><br>
+                        <p class="d-inline">  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<b>TOTAL:</p>						
+						<p class="d-inline">  &nbsp&nbsp <%= @total_price %></b></p></br>
+						<br></br>
                     </div>
+                </div>
+                <h4 class="d-none d-md-block">Review Order:</h4>
+                <div class="row">
+                    <%= render partial: "order_option", collection: @selected_vehicles %>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-6 offset-md-3">

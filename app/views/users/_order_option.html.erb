@@ -1,38 +1,38 @@
 <div class="card mb-2">
     <div class="card-header">
-        <h5>Subscription #<%= (order_option_counter + 1) %></h5>
+        <h4>Subscription #<%= (order_option_counter + 1) %></h4>
     </div>
     <div class="card-body">
         <div class="row mb-2">
-            <h5 class="col-12">Vehicle</h5>
-            <div class="col-12"><%= get_vehicle_name(order_option.vehicle_id) %></div>
+            <h5 class="col-12 text-left">Vehicle:</h5>
+            <div class="col-12 text-left">&nbsp&nbsp<%= get_vehicle_name(order_option.vehicle_id) %></div>
         </div>
         <div class="row mb-2">
-            <h5 class="col-12">Wiper Type</h5>
-            <div class="col-12"><%= get_wipertype_string(order_option.wipertype) %></div>
+            <h5 class="col-12 text-left">Wiper Type:</h5>
+            <div class="col-12 text-left">&nbsp&nbsp<%= get_wipertype_string(order_option.wipertype) %></div>
         </div>
         <div class="row mb-2">
-            <h5 class="col-12">Frequency</h5>
-            <div class="col-12"><%= get_frequency_string(order_option.frequency) %></div>        
+            <h5 class="col-12 text-left">Frequency:</h5>
+            <div class="col-12 text-left">&nbsp&nbsp<%= get_frequency_string(order_option.frequency) %></div>        
         </div>
         <div class="row mb-2">
-            <h5 class="col-12">Shipping Address</h5>
-            <div class="col-12">
-                <%= @shipping_address.address1 %>
+            <h5 class="col-12 text-left">Shipping Address:</h5>
+            <div class="col-12 text-left">
+                &nbsp&nbsp<%= @shipping_address.address1 %>
                 <%= @shipping_address.address2 %>
                 <br />
-                <%= @shipping_address.city %>,
+                &nbsp&nbsp<%= @shipping_address.city %>,
                 <%= @shipping_address.state %>
                 <%= @shipping_address.postal %>
             </div>
         </div>
         <div class="row mb-3">
-            <h5 class="col-12">Next Shipment</h5>
-            <div class="col-12"><%= order_option.get_next_shipment_date %></div>
+            <h5 class="col-12 text-left">Next Shipment:</h5>
+            <div class="col-12 text-left">&nbsp&nbsp<%= order_option.get_next_shipment_date %></div>
         </div>
         <div class="row mb-3">
-          <h5 class="col-12">Subscription Price</h5>
-          <div class="col-12"><%= calc_total_price(order_option.total_price) %></div>
+          <h5 class="col-12 text-left">Subscription Price:</h3>
+          <div class="col-12 text-left">&nbsp&nbsp<%= calc_total_price(order_option.total_price) %></div>
       </div>
         <%= link_to "Edit Subscription", edit_vehicle_path(:id => order_option.id), class: 'btn btn-success mb-2 w-75' %>
         <button type="button" class="btn btn-danger w-75" data-toggle="modal" data-target="#modal">Cancel Subscription</button>

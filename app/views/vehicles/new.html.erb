@@ -7,7 +7,7 @@
     
 <div class="row">
     <div class="col-12">
-        <h1>Add a new vehicle</h1>
+        <h1>Add a New Vehicle</h1>
     </div>
     <div class="container full-width p-0 p-md-auto">
         <div id="smartwizard">
@@ -32,39 +32,65 @@
                         </div>
                     </div>
                     <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                        <div class="col-12 col-md-6 offset-md-3">
-                            <h3>Select Wiper Type</h3>
-                            <div class="btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                    <%= f.radio_button :wipertype, 'beam', :id => 'beam-button' %>Beam
-                                </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                    <%= f.radio_button :wipertype, 'hybrid', :id => 'hybrid-button' %>Hybrid
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                        <div class="col col-md-6 offset-md-3">
+                            <h2>Select Wiper Type</h2><br></br>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons"> 
+								<div class="col">
+									<div class="card mb-6 rounded-3 shadow-sm text-center">
+										<div class="card-header py-2">
+											<h4 class="my-0 fw-normal">Beam Wiper</h4>
+										</div>
+										<div class="card-body">
+											<h4 class="card-title pricing-card-title">$19.99<small class="text-muted fw-light">/pair</small></h4>
+											<ul class="text-left">
+											  <li>Aerodynamic design.</li>
+											  <li>Premium natural rubber.</li>
+											  <li>Zinc-aluminum metal frame</li>
+											  <li>Guaranteed for over 200,000 wipes.</li>
+											</ul>
+                                            <label class="btn btn-outline-primary btn-lg mt-2 mb-2"> 
+                                                <%= f.radio_button :wipertype, 'beam', :id => 'beam-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Beam 
+                                            </label> 
+										</div> 
+									</div>
+								</div>
+								<div class="col">								
+									<div class="card mb-6 rounded-3 shadow-sm text-center">
+									  <div class="card-header py-2">
+										<h4 class="my-0 fw-normal">Hybrid Wiper</h4>
+									  </div>
+										<div class="card-body">
+                                            <h4 class="card-title pricing-card-title">$22.99<small class="text-muted fw-light">/pair</small></h4>
+                                            <ul class="text-left">
+                                            <li>Superior aerodynamic design.</li>
+                                            <li>Best for ice and snow.</li>
+                                            <li>Premium natural rubber.</li>
+                                            <li>Zinc-aluminum metal frame</li>
+                                            <li>Guaranteed for over 200,000 wipes.</li>
+                                            </ul>
+                                            <label class="btn btn-outline-primary active btn-lg mt-2 mb-2">
+                                                <%= f.radio_button :wipertype, 'hybrid', :id => 'hybrid-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Hybrid
+                                            </label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
                     <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
-                            <h3>Select Frequency</h3>
+                            <h2>Select Frequency</h2><br></br>
                             <div class="btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2">
-                                    <%= f.radio_button :frequency, 'six_months', :id => 'six_months-button' %>
-                                    Every 6 Months
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2">
+                                    <%= f.radio_button :frequency, 'six_months', :id => 'six_months-button' %>Every 6 Months
                                 </label>
                                 <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
                                     <%= f.radio_button :frequency, 'nine_months', :id => 'nine_months-button' %>Every 9 Months
                                 </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2">
-                                    <%= f.radio_button :frequency, 'one_year', :id => 'year-button' %>
-                                    Every 12 Months
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
+                                    <%= f.radio_button :frequency, 'one_year', :id => 'year-button' %>Every 12 Months
                                 </label>
                             </div>
-                        </div>
-                        <div class="col-12 mt-5">
-                            <p><b>Recommendation #1:&nbsp</b>Do you drive through snow and ice in the winter?  We recommend you select a <b>Hybrid wiper</b> and a frequency of Every 6 months</b>.  Ice and snow on your windshield will damage your wipers so it is a good idea to replace them more frequently.</p>
-                            <p><b>Recommendation #2:&nbsp</b>Do you live in a temperate climate?  We recommend you select a <b>Beam wiper</b> and replace them <b>Every 9-12 months</b>.  This will ensure good clear driving all year long.</p>
-                            <p><b>Recommendation #3:&nbsp</b>Do you live in a very sunny and/or hot climate?  We recommend you select a <b>Beam wiper</b> and a frequency of <b>Every 6 months</b>.  Sun and heat can dry out the rubber on a wiper blade and cause streaking on your windshield.</p>
                         </div>
                     </div>
                     <div id="step-4" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">

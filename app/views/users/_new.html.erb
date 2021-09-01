@@ -1,6 +1,6 @@
 <div class="row mb-5">
   <div class="col-12">
-    <h3>Account Information</h3>
+    <h4>Account Information</h4>
     <%= f.label :name %>
     <%= f.text_field :name, class: 'form-control', id: 'name_field', placeholder: "Billing Name" %>
     <div id = "name_error" class="help-block"></div>
@@ -20,7 +20,7 @@
 </div>
 <div class="row mb-5">
   <div class="col-12">
-    <h3>Shipping Information</h3>
+    <h4>Shipping Information</h4>
     <%= fields_for :shipping_address, @shipping_address do |shipping_fields| %>
       <%= shipping_fields.label :address1, "Address Line 1" %>
       <%= shipping_fields.text_field :address1, class: 'form-control', id: 'address1_field', placeholder: "Address line 1" %>
@@ -42,7 +42,7 @@
       <div id = "postal_error" class="help-block"></div>
 
       <%= shipping_fields.label :phone, "Phone Number" %>
-      <%= shipping_fields.telephone_field :phone, class: 'form-control', id: 'phone_field', placeholder: "Phone Number" %>
+      <%= shipping_fields.telephone_field :phone, class: 'form-control', id: 'phone_field', placeholder: "XXX-XXX-XXXX" %>
       <div id = "phone_error" class="help-block"></div>
     <% end %>
   </div>

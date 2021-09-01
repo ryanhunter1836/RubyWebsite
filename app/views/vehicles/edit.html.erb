@@ -38,40 +38,95 @@
                         </div>
                     </div>
                     <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                        <div class="col-md-6 offset-md-3">
-                            <h3>Select Wiper Type</h3>
-                            <div class="btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2 <%= (@order_options.wipertype == 'beam') ? 'active' : '' %>">
-                                    <%= f.radio_button :wipertype, 'beam', :id => 'beam_button', checked: (@order_options.wipertype == 'beam') %>Beam
-                                </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2 <%= (@order_options.wipertype == 'hybrid') ? 'active' : '' %>">
-                                    <%= f.radio_button :wipertype, 'hybrid', :id => 'hybrid_button', checked: (@order_options.wipertype == 'hybrid') %>Hybrid
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-12 mt-5">
-                            <p><b>Recommendation #1:&nbsp</b>Do you drive through snow and ice in the winter?  We recommend you select a Hybrid wiper and a frequency of Every 6 months.  Ice and snow on your windshield will damage your wipers so it is a good idea to replace them more frequently.</p>
-                            <p><b>Recommendation #2:&nbsp</b>Do you live in a temperate climate?  We recommend you select a Beam wiper and replace them Every 9-12 months.  This will ensure good clear driving all year long.</p>
-                            <p><b>Recommendation #3:&nbsp</b>Do you live in a very sunny and/or hot climate?  We recommend you select a Beam wiper and a frequency of Every 6 months.  Sun and heat can dry out the rubber on a wiper blade and cause streaking on your windshield.</p>
-                        </div>
-                    </div>
+                        <div class="col col-md-6 offset-md-3">
+                            <h2>Select Wiper Type</h2><br></br>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons"> 
+								<div class="col">
+									<div class="card mb-6 rounded-3 shadow-sm text-center">
+										<div class="card-header py-2">
+											<h4 class="my-0 fw-normal">Beam Wiper</h4>
+										</div>
+										<div class="card-body">
+											<h4 class="card-title pricing-card-title">$19.99<small class="text-muted fw-light">/pair</small></h4>
+											<ul class="text-left">
+											  <li>Aerodynamic design.</li>
+											  <li>Premium natural rubber.</li>
+											  <li>Zinc-aluminum metal frame</li>
+											  <li>Guaranteed for over 200,000 wipes.</li>
+											</ul>
+                                            <label class="btn btn-outline-primary btn-lg mt-2 mb-2"> 
+                                                <%= f.radio_button :wipertype, 'beam', :id => 'beam-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Beam 
+                                            </label> 
+										</div> 
+									</div>
+								</div>
+								<div class="col">								
+									<div class="card mb-6 rounded-3 shadow-sm text-center">
+									  <div class="card-header py-2">
+										<h4 class="my-0 fw-normal">Hybrid Wiper</h4>
+									  </div>
+										<div class="card-body">
+                                            <h4 class="card-title pricing-card-title">$22.99<small class="text-muted fw-light">/pair</small></h4>
+                                            <ul class="text-left">
+                                            <li>Superior aerodynamic design.</li>
+                                            <li>Best for ice and snow.</li>
+                                            <li>Premium natural rubber.</li>
+                                            <li>Zinc-aluminum metal frame</li>
+                                            <li>Guaranteed for over 200,000 wipes.</li>
+                                            </ul>
+                                            <label class="btn btn-outline-primary active btn-lg mt-2 mb-2">
+                                                <%= f.radio_button :wipertype, 'hybrid', :id => 'hybrid-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Hybrid
+                                            </label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
                     <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
-                            <h3>Select Frequency</h3>
+                            <h2>Select Frequency</h2><br></br>
                             <div class="btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-5 mb-2 <%= (@order_options.frequency == 'six_months') ? 'active' : '' %>">
-                                    <%= f.radio_button :frequency, 'six_months', :id => 'six_months_button', checked: (@order_options.frequency == 'six_months') %>Every 6 Months
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2">
+                                    <%= f.radio_button :frequency, 'six_months', :id => 'six_months-button' %>Every 6 Months
                                 </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2 <%= (@order_options.frequency == 'nine-months') ? 'active' : '' %>">
-                                    <%= f.radio_button :frequency, 'nine_months', :id => 'nine_months_button', checked: (@order_options.frequency == 'nine_months') %>Every 9 Months
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
+                                    <%= f.radio_button :frequency, 'nine_months', :id => 'nine_months-button' %>Every 9 Months
                                 </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-5 offset-md-1 mb-2 <%= (@order_options.frequency == 'one_year') ? 'active' : '' %>">
-                                    <%= f.radio_button :frequency, 'one_year', :id => 'year_button', checked: (@order_options.frequency == 'one_year') %>Every 12 Months
+                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
+                                    <%= f.radio_button :frequency, 'one_year', :id => 'year-button' %>Every 12 Months
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div id="step-4" class="mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
+                        <div class="col-12">
+                            <h3>Billing Information</h3>
+                            <div class="p-3">
+                                <%= f.fields_for :billing_addresses do |billing_fields| %>
+                                <%= billing_fields.label :address1, "Address Line 1" %>
+                                <%= billing_fields.text_field :address1, class: 'form-control', id: 'address1_field', placeholder: "Address line 1", value: @billing_address.address1 %>
+                                <div id = "address1_error" class="help-block"></div>
+
+                                <%= billing_fields.label :address2, "Address Line 2" %>
+                                <%= billing_fields.text_field :address2, class: 'form-control', id: 'address2_field', placeholder: "Address line 2", value: @billing_address.address2 %>
+
+                                <%= billing_fields.label :city, "City" %>
+                                <%= billing_fields.text_field :city, class: 'form-control', id: 'city_field', placeholder: "City", value: @billing_address.city %>
+                                <div id = "city_error" class="help-block"></div>
+
+                                <%= billing_fields.label :state, "State" %>
+                                <%= billing_fields.text_field :state, class: 'form-control', id: 'state_field', placeholder: "State", value: @billing_address.state %>
+                                <div id = "state_error" class="help-block"></div>
+
+                                <%= billing_fields.label :postal, "Zip Code" %>
+                                <%= billing_fields.text_field :postal, class: 'form-control mb-4', id: 'postal_field', placeholder: "Zip code", value: @billing_address.postal %>
+                                <div id = "postal_error" class="help-block"></div>
+                            <% end %>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="step-5" class="mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
                         <div class="col-12">
                             <h3>Shipping Information</h3>
                             <div class="p-3">
@@ -98,26 +153,26 @@
                             </div>
                         </div>
                     </div>
-                    <div id="step-5" class="mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
+                    <div id="step-6" class="mt-4 tab-pane smartwizard-tab h-auto" role="tabpanel">
                         <div class="col-12 col-lg-8 offset-lg-2">
                             <h3>Review Details</h3>
                             <div class="gray-box-rounded">
                                 <div class="row">
                                     <div class="col-12 col-lg-6">
                                         <div class="row mb-2">
-                                            <h5 class="col-12">Vehicle</h5>
-                                            <div id="vehicle-preview" class="vehicle-preview col-12"><%= get_vehicle_name(@order_options.vehicle_id) %></div>
+                                            <h5 class="col-12">Vehicle:</h5>
+                                            <div id="vehicle-preview" class="vehicle-preview col-12">&nbsp&nbsp<%= get_vehicle_name(@order_options.vehicle_id) %></div>
                                         </div>
                                         <div class="row mb-2">
-                                            <h5 class="col-12">Wiper Type</h5>
-                                            <div id="wipertype_preview" class="col-12"><%= get_wipertype_string(@order_options.wipertype) %></div>
+                                            <h5 class="col-12">Wiper Type:</h5>
+                                            <div id="wipertype_preview" class="col-12">&nbsp&nbsp<%= get_wipertype_string(@order_options.wipertype) %></div>
                                         </div>
                                         <div class="row mb-2">
-                                            <h5 class="col-6">Frequency</h5>
-                                            <div id="frequency_preview" class="col-12"><%= get_frequency_string(@order_options.frequency) %></div>
+                                            <h5 class="col-6">Frequency:</h5>
+                                            <div id="frequency_preview" class="col-12">&nbsp&nbsp<%= get_frequency_string(@order_options.frequency) %></div>
                                         </div>
                                         <div class="row"> 
-                                            <h5 class="col-12">Shipping Address</h5>
+                                            <h5 class="col-12">Shipping Address:</h5>
                                             <div class="col-12" id="shipping_preview"><%= get_shipping_string(@shipping_address) %></div>
                                         </div>
                                     </div>
