@@ -91,6 +91,14 @@ class VehiclesController < ApplicationController
             state: shipping.address.state,
             postal: shipping.address.postal_code
         )
+        paymentMethod = Stripe::PaymentMethod.retrieve(@user.payment_method_id)
+        @billing_address = {
+        address1: paymentMethod.billing_details.address.line1,
+        address2: paymentMethod.billing_details.address.line2,
+        city: paymentMethod.billing_details.address.city,
+        state: paymentMethod.billing_details.address.state,
+        postal: paymentMethod.billing_details.address.postal_code
+        }
     end
 
     def update
