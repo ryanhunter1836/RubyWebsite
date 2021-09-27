@@ -17,111 +17,117 @@
                 <li><a class="nav-link" href="#step-3">Step 3<br /><small>Choose Frequency</small></a></li>
                 <li><a class="nav-link" href="#step-4">Step 4<br /><small>Review</small></a></li>
             </ul>
+            
             <%= form_for @order_options, url: vehicles_path, html: { id: 'vehicle-form' }, local: true do |f| %>
                 <div class="tab-content">
+
                     <div id="step-1" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
-                            <h3>Select Vehicle</h3>
-                            <%= f.label :Make %>
-                            <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), 
-                                id: "make-selector", include_blank: true, class: 'form-control make-selector' %>
-                            <%= f.label :Model %>
-                            <%= select_tag "", "", id: "model-selector", include_blank: true, class: 'form-control model-selector' %>
-                            <%= f.label :Year %>
-                            <%= f.select :vehicle_id, 'vehicle_id', { include_blank: true }, { id: 'vehicle-id', class: 'form-control year-selector' } %> 
+                          <h3>Select Vehicle</h3>
+                          <%= f.label :Make %>
+                          <%= select_tag "", options_from_collection_for_select(@makes, "id", "make"), 
+                             id: "make-selector", include_blank: true, class: 'form-control make-selector' %>
+                          <%= f.label :Model %>
+                          <%= select_tag "", "", id: "model-selector", include_blank: true, class: 'form-control model-selector' %>
+                          <%= f.label :Year %>
+                          <%= f.select :vehicle_id, 'vehicle_id', { include_blank: true }, { id: 'vehicle-id', class: 'form-control year-selector' } %> 
                         </div>
                     </div>
+
                     <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col col-md-6 offset-md-3">
                             <h2>Select Wiper Type</h2><br></br>
-							<div class="btn-group btn-group-toggle" data-toggle="buttons"> 
-								<div class="col">
-									<div class="card mb-6 rounded-3 shadow-sm text-center">
-										<div class="card-header py-2">
-											<h4 class="my-0 fw-normal">Beam Wiper</h4>
-										</div>
-										<div class="card-body">
-											<h4 class="card-title pricing-card-title">$19.99<small class="text-muted fw-light">/pair</small></h4>
-                                                <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal-Beam" style="cursor:pointer"><b><i>Details</i></b>
-                                                <div class="float-right" id="ccLast4"><%= @cardString %></div>
-                                                </div>
-											<ul class="text-left">
-											  <li>Aerodynamic design.</li>
-											  <li>Premium natural rubber.</li>
-											  <li>Zinc-aluminum metal frame</li>
-											  <li>Guaranteed for over 200,000 wipes.</li>
-											</ul>
-                                            <label class="btn btn-outline-primary btn-lg mt-2 mb-2"> 
-                                                <%= f.radio_button :wipertype, 'beam', :id => 'beam-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Beam 
-                                            </label> 
-										</div> 
-									</div>
-								</div>
-								<div class="col">								
-									<div class="card mb-6 rounded-3 shadow-sm text-center">
-									  <div class="card-header py-2">
-										<h4 class="my-0 fw-normal">Hybrid Wiper</h4>
-									  </div>
-										<div class="card-body">
-                                            <h4 class="card-title pricing-card-title">$22.99<small class="text-muted fw-light">/pair</small></h4>
-                                                <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal-Hybrid" style="cursor:pointer"><b><i>Details</i></b>
-                                                <div class="float-right" id="ccLast4"><%= @cardString %></div>
-                                                </div>
-                                            <ul class="text-left">
-                                            <li>Superior aerodynamic design.</li>
-                                            <li>Best for ice and snow.</li>
-                                            <li>Premium natural rubber.</li>
-                                            <li>Zinc-aluminum metal frame</li>
-                                            <li>Guaranteed for over 200,000 wipes.</li>
-                                            </ul>
-                                            <label class="btn btn-outline-primary active btn-lg mt-2 mb-2">
-                                                <%= f.radio_button :wipertype, 'hybrid', :id => 'hybrid-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Hybrid
-                                            </label>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-                    <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                        <div class="col-12 col-md-6 offset-md-3">
-                            <h2>Select Frequency</h2><br></br>
-                            <div class="btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2">
-                                    <%= f.radio_button :frequency, 'six_months', :id => 'six_months-button' %>Every 6 Months
-                                </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                    <%= f.radio_button :frequency, 'nine_months', :id => 'nine_months-button' %>Every 9 Months
-                                </label>
-                                <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
-                                    <%= f.radio_button :frequency, 'one_year', :id => 'year-button' %>Every 12 Months
-                                </label>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons"> 
+                              <div class="col">
+                                <div class="card mb-6 rounded-3 shadow-sm text-center">
+                                  <div class="card-header py-2">
+                                    <h4 class="my-0 fw-normal">Beam Wiper</h4>
+                                  </div>
+                                  <div class="card-body">
+                                    <h4 class="card-title pricing-card-title">$19.99<small class="text-muted fw-light">/pair</small></h4>
+                                    <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal-Beam" style="cursor:pointer"><b><i>Details</i></b>
+                                      <div class="float-right" id="ccLast4"><%= @cardString %> </div>
+                                    </div>
+                                    <ul class="text-left">
+                                      <li>Aerodynamic design.</li>
+                                      <li>Premium natural rubber.</li>
+                                      <li>Zinc-aluminum metal frame</li>
+                                      <li>Guaranteed for over 200,000 wipes.</li>
+                                    </ul>
+                                      <label class="btn btn-outline-primary btn-lg mt-2 mb-2"> 
+                                        <%= f.radio_button :wipertype, 'beam', :id => 'beam-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Beam 
+                                      </label> 
+                                  </div> 
+                                </div>
+                              </div>
+                              <div class="col">								
+                                <div class="card mb-6 rounded-3 shadow-sm text-center">
+                                  <div class="card-header py-2">
+                                  <h4 class="my-0 fw-normal">Hybrid Wiper</h4>
+                                  </div>
+                                  <div class="card-body">
+                                    <h4 class="card-title pricing-card-title">$22.99<small class="text-muted fw-light">/pair</small></h4>
+                                    <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal-Hybrid" style="cursor:pointer"><b><i>Details</i></b>
+                                      <div class="float-right" id="ccLast4"><%= @cardString %> </div>
+                                    </div>
+                                    <ul class="text-left">
+                                      <li>Superior aerodynamic design.</li>
+                                      <li>Best for ice and snow.</li>
+                                      <li>Premium natural rubber.</li>
+                                      <li>Zinc-aluminum metal frame</li>
+                                      <li>Guaranteed for over 200,000 wipes.</li>
+                                    </ul>
+                                    <label class="btn btn-outline-primary active btn-lg mt-2 mb-2">
+                                      <%= f.radio_button :wipertype, 'hybrid', :id => 'hybrid-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Hybrid
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                         </div>
                     </div>
+
+                    <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
+                      <div class="col-12 col-md-6 offset-md-3">
+                        <h2>Select Frequency</h2><br></br>
+                          <div class="btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-primary btn-lg col-12 col-md-3 mb-2">
+                              <%= f.radio_button :frequency, 'six_months', :id => 'six_months-button' %>Every 6 Months
+                            </label>
+                            <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
+                              <%= f.radio_button :frequency, 'nine_months', :id => 'nine_months-button' %>Every 9 Months
+                            </label>
+                            <label class="btn btn-outline-primary btn-lg col-12 col-md-3 offset-md-1 mb-2">
+                              <%= f.radio_button :frequency, 'one_year', :id => 'year-button' %>Every 12 Months
+                            </label>
+                          </div>
+                      </div>
+                    </div>
+                
                     <div id="step-4" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                        <div class="col-12 mb-4">
-                            <div class="row justify-content-center">
-                                <div class="col-12 col-md-8 text-center">
-                                    <div class="border border-secondary rounded p-2  ml-2 mr-2 ">
-                                        <h4>Vehicle</h4>
-                                        <p id="vehicle-preview"></p>
-                                        <h4>Type</h4>
-                                        <p id="wipertype-preview"></p>
-                                        <h4>Frequency</h4>
-                                        <p id="frequency-preview"></p>
-                                    </div>
-                                </div>                                    
+                      <div class="col-12 mb-4">
+                        <div class="row justify-content-center">
+                          <div class="col-12 col-md-8 text-center">
+                            <div class="border border-secondary rounded p-2  ml-2 mr-2 ">
+                              <h4>Vehicle</h4>
+                              <p id="vehicle-preview"></p>
+                              <h4>Type</h4>
+                              <p id="wipertype-preview"></p>
+                              <h4>Frequency</h4>
+                              <p id="frequency-preview"></p>
                             </div>
+                          </div>
                         </div>
                         <div class="col-12 col-md-8 col-lg-6 ml-auto mr-auto">
-                            <%= f.submit "Place Order", class: "btn btn-success mb-4 w-100" %>
-                            <a class="btn btn-danger w-100 mb-4" type="button" href="<%= user_path(id: @user_id) %>">Cancel Changes</a>
+                          <%= f.submit "Place Order", class: "btn btn-success mb-4 w-100" %>
+                          <a class="btn btn-danger w-100 mb-4" type="button" href="<%= user_path(id: @user_id) %>">Cancel Changes</a>
                         </div>
+                      </div>
                     </div>
                 </div>
-            </div>
-        <% end %>
+            <% end %>
+
+        </div>
     </div>
 </div>
 
@@ -136,11 +142,11 @@
       </div>
       <div class="modal-body">
         <p>Beam blades are made with a Memory Curve metal beam that conforms to the curve of your windshield, in turn 
-        maximizing pressure across the entire length of the wiper blade.  Beam blades are fast becoming the standard 
-        fit on new vehicles.</p>
+        maximizing pressure across the entire length of the wiper blade.  </p>
         <div class="center">
             <%= image_tag("beam.jpeg") %>
-        </div>
+        </div><br></br>
+        <p>Beam blades are fast becoming the standard offering on new vehicles.</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" id="close_button" data-dismiss="modal">Close</button>
@@ -160,13 +166,14 @@
       <div class="modal-body">
         <p>Hybrid wipers combine the aerodynamic shape of a beam blade with the solid construction of a 
         conventional wiper.  An articulated plastic frame forms the aerodynamic 'skin' on top of the metal 
-        sub-structure which provides a sturdy support for the rubber wiping element.  This allows for a 
-        smoother airflow, which in turn creates an even down force along the entire length of the blade.  
-        This design allows the whole wiper to flex to the shape of the windscreen producing a smooth, efficient 
-        and quiet wiping action while providing a more stylish look.</p>
+        sub-structure which provides a sturdy support for the rubber wiping element.    
+        </p>
         <div class="center">
             <%= image_tag("hybrid.jpg") %>
-        </div>
+        </div><br></br>
+        <p>The design allows for a smoother airflow, which in turn creates an even down force along the 
+        entire length of the blade and allows the whole wiper to flex to the shape of the windscreen 
+        producing a smooth, efficient and quiet wiping action while providing a more stylish look.</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" id="close_button" data-dismiss="modal">Close</button>
