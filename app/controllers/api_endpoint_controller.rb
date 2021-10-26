@@ -12,8 +12,8 @@ class ApiEndpointController < ApplicationController
         return 
       else
         #Get the user's billing address
-        shipping = Stripe::Customer.retrieve(user.stripe_customer_id).billing
-        address = ShippingAddress.new(
+        billing = Stripe::Customer.retrieve(user.stripe_customer_id).billing
+        address = BillingAddress.new(
           address1: billing.address.line1,
           address2: billing.address.line2,
           city: billing.address.city,

@@ -9,80 +9,96 @@
 
 <h1>Update your profile</h1>
 
-<div class="row">
-  <div class="col-md-12 col-md-offset-3">
-    <div class="card">
-      <div class="card-body">
-        <%= form_with(model: @user, local: true) do |f| %>
-        <%= render 'shared/error_messages', object: f.object %>
-  
-        <%= f.label :name %>
-        <%= f.text_field :name, class: 'form-control' %>
-  
-        <%= f.label :email %>
-        <%= f.email_field :email, class: 'form-control' %>
-  
-        <%= f.label :password %>
-        <%= f.password_field :password, class: 'form-control' %>
-  
-        <%= f.label :password_confirmation, "Confirmation" %>
-        <%= f.password_field :password_confirmation, class: 'form-control' %>
+<%= form_with(model: @user, local: true) do |f| %>
+  <div class="row">
+    <div class="col-md-12 col-md-offset-3">
+      <div class="card">
+        <div class="card-body">
+          <%= render 'shared/error_messages', object: f.object %>
 
-        <input type="hidden" value="" name="user[paymentMethodId]" id="user_paymentMethodId">
+          <input type="hidden" value="" name="user[payment_method_id]" id="user_paymentMethodId">
 
-        <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal" style="cursor:pointer"><b>Edit Credit Card Information</b>
-          <div class="float-right" id="ccLast4"><%= @cardString %></div>
-        </div>
-
-        <div class="row">
-          <div class="col-12 mb-2 text-center">
-            <%= f.submit "Save changes", class: "btn btn-success update-profile-buttons" %>
-          </div>
-          <div class="col-12 text-center">
-            <%= link_to("Cancel", user_path(:id => @user.id), class: 'btn btn-danger update-profile-buttons') %>
-          </div>
-        </div>
+          <div class="card">
+            <div class="card-body">
+              <%= f.label :name %>
+              <%= f.text_field :name, class: 'form-control' %>
         
-      <% end %>
+              <%= f.label :email %>
+              <%= f.email_field :email, class: 'form-control' %>
+            </div>
+          </div>
+          <div class="card mt-2">
+            <div class="card-body">
+              <%= f.label :password %>
+              <%= f.password_field :password, class: 'form-control', id: 'password_field', placeholder: "**********" %>
+
+              <%= f.label :password_confirmation, "Confirmation" %>
+              <%= f.password_field :password_confirmation, class: 'form-control', id: 'password_confirmation_field', placeholder: "Password Confirmation" %>
+              <div id = "password_confirmation_error" class="help-block"></div>
+            </div>
+          </div>
+          <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal" style="cursor:pointer"><b>Edit Payment Information...</b>
+            <div class="float-right" id="ccLast4"><%= @cardString %></div>
+          </div>
+          <div class="row">
+            <div class="col-12 mb-2 text-center">
+              <%= f.submit "Save changes", class: "btn btn-success update-profile-buttons" %>
+            </div>
+            <div class="col-12 text-center">
+              <%= link_to("Cancel", user_path(:id => @user.id), class: 'btn btn-danger update-profile-buttons') %>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Update Credit Card</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <label for="address1">Address Line 1</label>
-        <input type="text" name="address1" id="billing_address1_field" value="<%= @billing_address[:address1] %>" class="form-control" required></input>
-        <div id = "billing_address1_error" class="help-block"></div>
+  <div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Update Credit Card Information</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="gray-box-rounded mt-4 mb-4">
+            <div>
+              <h5>Credit Card Information</h5>
+              
+              <div class="gray-box-rounded mb-4 mt-4">
+                <div id="card-element" class="MyCardElement"></div>
+                <div id="card-element-errors" role="alert"></div>
+              </div>
+            </div>
+          </div>
+          <div class="gray-box-rounded mt-4 mb-4">
+            <h5>Billing Information</h5>
+            
+            <label for="address1">Address Line 1</label>
+            <input type="text" name="address1" id="billing_address1_field" value="<%= @billing_address[:address1] %>" class="form-control" required></input>
+            <div id = "billing_address1_error" class="help-block"></div>
 
-        <label for="address2">Address Line 2</label>
-        <input type="text" name="address2" id="billing_address2_field" value="<%= @billing_address[:address2] %>" class="form-control"></input>
-        <div id = "billing_address2_error" class="help-block"></div>
+            <label for="address2">Address Line 2</label>
+            <input type="text" name="address2" id="billing_address2_field" value="<%= @billing_address[:address2] %>" class="form-control"></input>
+            <div id = "billing_address2_error" class="help-block"></div>
 
-        <label for="city">City</label>
-        <input type="text" name="city" id="billing_city_field" value="<%= @billing_address[:city] %>" class="form-control" required></input>
-        <div id = "billing_city_error" class="help-block"></div>
+            <label for="city">City</label>
+            <input type="text" name="city" id="billing_city_field" value="<%= @billing_address[:city] %>" class="form-control" required></input>
+            <div id = "billing_city_error" class="help-block"></div>
 
-        <label for="state">State</label>
-        <input type="text" name="state" id="billing_state_field" value="<%= @billing_address[:state] %>" class="form-control" required></input>
-        <div id = "billing_state_error" class="help-block"></div>
+            <label for="state">State</label>
+            <input type="text" name="state" id="billing_state_field" value="<%= @billing_address[:state] %>" class="form-control" required></input>
+            <div id = "billing_state_error" class="help-block"></div>
 
-        <div class="gray-box-rounded mt-4 mb-4">
-          <div id="card-element" class="MyCardElement"></div>
-          <div id="card-element-errors" role="alert"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" id="close_button" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-success" id="save_button">Save</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="billing_close_button" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="billing_save_button">Save</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<% end %>
