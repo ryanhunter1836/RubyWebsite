@@ -45,57 +45,55 @@
                     </div>
 					
                     <div id="step-2" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
-                        <div class="col col-md-6 offset-md-3">
-                            <h2>Select Wiper Type</h2><br></br>
-							<div class="btn-group btn-group-toggle" data-toggle="buttons"> 
-								<div class="col">
-									<div class="card mb-6 rounded-3 shadow-sm text-center">
-										<div class="card-header py-2">
-											<h4 class="my-0 fw-normal">Beam Wiper</h4>
-										</div>
-										<div class="card-body">
-											<h4 class="card-title pricing-card-title">$19.99<small class="text-muted fw-light">/pair</small></h4>
-                                            <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal-Beam" style="cursor:pointer"><b><i>Details</i></b>
-                                            <div class="float-right" id="ccLast4"><%= @cardString %> </div>
-                                            </div>
-											<ul class="text-left">
-											  <li>Aerodynamic design.</li>
-											  <li>Premium natural rubber.</li>
-											  <li>Zinc-aluminum metal frame</li>
-											  <li>Guaranteed for over 200,000 wipes.</li>
-											</ul>
-                                            <label class="btn btn-outline-primary btn-lg mt-2 mb-2"> 
-                                                <%= f.radio_button :wipertype, 'beam', :id => 'beam-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Beam 
-                                            </label> 
-										</div> 
-									</div>
-								</div>
-								<div class="col">								
-									<div class="card mb-6 rounded-3 shadow-sm text-center">
-									  <div class="card-header py-2">
-										<h4 class="my-0 fw-normal">Hybrid Wiper</h4>
-									  </div>
-										<div class="card-body">
-                                            <h4 class="card-title pricing-card-title">$22.99<small class="text-muted fw-light">/pair</small></h4>
-                                            <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal-Hybrid" style="cursor:pointer"><b><i>Details</i></b>
-                                            <div class="float-right" id="ccLast4"><%= @cardString %> </div>
-                                            </div>
-                                            <ul class="text-left">
-                                            <li>Superior aerodynamic design.</li>
-                                            <li>Best for ice and snow.</li>
-                                            <li>Premium natural rubber.</li>
-                                            <li>Zinc-aluminum metal frame</li>
-                                            <li>Guaranteed for over 200,000 wipes.</li>
-                                            </ul>
-                                            <label class="btn btn-outline-primary active btn-lg mt-2 mb-2">
-                                                <%= f.radio_button :wipertype, 'hybrid', :id => 'hybrid-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Hybrid
-                                            </label>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+                        <h2>Select Wiper Type</h2><br></br>
+                        <div class="btn-group btn-group-toggle col-12 mb-5" data-toggle="buttons"> 
+                            <div class="col">
+                                <div class="card h-100 rounded-3 shadow-sm text-center">
+                                    <div class="card-header py-2">
+                                        <h4 class="my-0 fw-normal">Beam Wiper</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="card-title pricing-card-title">$19.99<small class="text-muted fw-light">/pair</small></h4>
+                                        <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal-Beam" style="cursor:pointer"><b><i>Details</i></b>
+                                        <div class="float-right" id="ccLast4"><%= @cardString %> </div>
+                                        </div>
+                                        <ul class="text-left">
+                                        <li>Aerodynamic design.</li>
+                                        <li>Premium natural rubber.</li>
+                                        <li>Zinc-aluminum metal frame</li>
+                                        <li>Guaranteed for over 200,000 wipes.</li>
+                                        </ul>
+                                        <label class="btn btn-outline-primary btn-lg mt-2 mb-2"> 
+                                            <%= f.radio_button :wipertype, 'beam', :id => 'beam-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Beam 
+                                        </label> 
+                                    </div> 
+                                </div>
+                            </div>
+                            <div class="col">								
+                                <div class="card h-100 rounded-3 shadow-sm text-center">
+                                <div class="card-header py-2">
+                                    <h4 class="my-0 fw-normal">Hybrid Wiper</h4>
+                                </div>
+                                    <div class="card-body">
+                                        <h4 class="card-title pricing-card-title">$22.99<small class="text-muted fw-light">/pair</small></h4>
+                                        <div class="mt-4 mb-4 form-control w-100" data-toggle="modal" data-target="#cardModal-Hybrid" style="cursor:pointer"><b><i>Details</i></b>
+                                        <div class="float-right" id="ccLast4"><%= @cardString %> </div>
+                                        </div>
+                                        <ul class="text-left">
+                                        <li>Superior aerodynamic design.</li>
+                                        <li>Best for ice and snow.</li>
+                                        <li>Premium natural rubber.</li>
+                                        <li>Zinc-aluminum metal frame</li>
+                                        <li>Guaranteed for over 200,000 wipes.</li>
+                                        </ul>
+                                        <label class="btn btn-outline-primary active btn-lg mt-2 mb-2">
+                                            <%= f.radio_button :wipertype, 'hybrid', :id => 'hybrid-button', :style => 'visibility:hidden; height:0px; width:0px;' %>Hybrid
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div id="step-3" class="mt-4 tab-pane smartwizard-tab" role="tabpanel">
                         <div class="col-12 col-md-6 offset-md-3">
