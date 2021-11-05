@@ -7,13 +7,6 @@ class PaymentsController < ApplicationController
 
         cart = ShoppingCart.find(session[:shopping_cart])
         @selected_vehicles = cart.order_options_ids.map { |id| OrderOption.find(id) }
-        
-        @total_price = 0
-        @selected_vehicles.each do |order|
-            @total_price += order.total_price
-        end
-
-        @total_price = calc_total_price(@total_price)
     end
 
     def create
@@ -30,12 +23,13 @@ class PaymentsController < ApplicationController
 
             if existing_user.valid? && address.valid?
                 existing_user.save
-                msg = { success: true, user_id: existing_user.id }
+                # msg = { success: true, user_id: existing_user.id }
+                session[:shipping] = address
+                redirect_to action: "billing", id: new_user.id
             else
                 msg = { success: false, user: existing_user.errors, address: address.errors }
+                render json: msg, status: 200
             end
-
-            render json: msg, status: 200
         #Create a new record
         else
             msg = nil
@@ -46,13 +40,33 @@ class PaymentsController < ApplicationController
             address.valid?
 
             if address.valid? && new_user.save
-                msg = { success: true, user_id: new_user.id }
+                # msg = { success: true, user_id: new_user.id }
+                session[:shipping] = address
+                redirect_to action: "billing", id: new_user.id, shipping: address
             else
                 msg = { success: false, user: new_user.errors, address: address.errors }
+                render json: msg, status: 200
             end
-
-            render json: msg, status: 200
         end
+    end
+
+    def billing
+        user = User.find(params[:id])
+
+        shipping_address = session[:shipping]
+
+        puts(shipping_address)
+        cart = ShoppingCart.find(session[:shopping_cart])
+        @selected_vehicles = cart.order_options_ids.map { |id| OrderOption.find(id) }
+        
+        @subtotal = 0
+        @selected_vehicles.each do |order|
+            @subtotal += order.total_price
+        end
+
+        @tax = format_price(1.0825 * @subtotal * shipping_address[:tax_required])
+        @subtotal = format_price(@subtotal)
+
     end
 
     def setup
