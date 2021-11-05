@@ -1,9 +1,9 @@
 class ShippingAddress
     include ActiveModel::Model
     include ActiveModel::Validations::Callbacks
-    before_validation :downcase_state
+    before_validation :upcase_state, :calc_tax
 
-    attr_accessor :address1, :address2, :city, :state, :postal, :phone
+    attr_accessor :address1, :address2, :city, :state, :postal, :phone, :tax_required
 
     STATE_LIST = %w(ALABAMA
         ALASKA
@@ -110,8 +110,12 @@ class ShippingAddress
     validates :state, presence: true, inclusion: { in: STATE_LIST, message: "is invalid" }
     validates :postal, presence: true, format: { with: /(^\d{5}$)|(^\d{5}-\d{4}$)/, message: "is invalid" }
 
-    def downcase_state
+    def upcase_state
         self.state = state.upcase
+    end
+
+    def calc_tax
+        self.tax_required = (state == "TX" || state == "TEXAS") ? true : false
     end
 
 end
