@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   resources :returns,             only: [:index, :new, :create]
   get '/get_models_by_make',          to: 'vehicles#get_models_by_make'
   get '/get_years_by_model',          to: 'vehicles#get_years_by_model'
+  get '/payments/billing(/:id)',      to: 'payments#billing'
   get '/checkouts/success(/:id)',     to: 'payments#success'
   get '/setup',                       to: 'payments#setup'
   post '/create-customer',            to: 'payments#create_customer'
