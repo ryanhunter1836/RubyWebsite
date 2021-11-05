@@ -1,0 +1,48 @@
+<h4 class="d-none d-md-block">Charges:</h4>
+<div class="row">
+    <div class="col-12 mb-4 text-center text-md-left">
+        <p class="d-inline">  &nbsp&nbsp&nbsp&nbsp&nbspSubtotal:</p>
+        <p class="d-inline">  &nbsp&nbsp <%= @total_price %></p><br>
+        <p class="d-inline">  &nbsp&nbsp&nbsp&nbsp Tax: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <%= @tax %></p><br>
+        <p class="d-inline">  &nbsp&nbsp&nbsp&nbsp Shipping: &nbsp FREE</p><br>
+        <p class="d-inline">  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<b>TOTAL:</p>						
+        <p class="d-inline">  &nbsp&nbsp <%= @subtotal %></b></p></br>
+        <br></br>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-12">
+        <h4>Billing Information</h4>
+        <label for="same-as-shipping">Same as shipping address?</label>
+        <input type="checkbox" name="same_as_shipping" id="same_as_shipping"></label>
+        <br/>
+        <div id="billing_address_fields">
+            <label for="address1">Address Line 1</label>
+            <input type="text" name="address1" id="billing_address1_field" placeholder="Address Line 1" class="form-control"></input>
+            <div id = "billing_address1_error" class="help-block"></div>
+
+            <label for="address2">Address Line 2</label>
+            <input type="text" name="address2" id="billing_address2_field" placeholder="Address Line 2" class="form-control"></input>
+            <div id = "billing_address2_error" class="help-block"></div>
+
+            <label for="city">City</label>
+            <input type="text" name="city" id="billing_city_field" placeholder="City" class="form-control"></input>
+            <div id = "billing_city_error" class="help-block"></div>
+
+            <label for="state">State</label>
+            <input type="text" name="state" id="billing_state_field" placeholder="State" class="form-control"></input>
+            <div id = "billing_state_error" class="help-block"></div>
+        </div>
+        <div class="gray-box-rounded mb-4 mt-4">
+            <div id="card-element" class="MyCardElement"></div>
+            <div id="card-element-errors" role="alert"></div>
+        </div>
+        <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" value="" id="privacy_check">
+            <label class="form-check-label" for="privacy_check">
+                Accept <a data-toggle="modal" data-target="#modal" style="color:blue; cursor:pointer">privacy policy?</a>
+            </label>
+        </div>
+        <%= render "shared/privacy_policy" %>
+    </div>
+</div>
