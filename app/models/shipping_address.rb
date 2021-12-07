@@ -17,7 +17,8 @@ class ShippingAddress
         GEORGIA
         HAWAII
         IDAHO
-        ILLINOISINDIANA
+        ILLINOIS
+        INDIANA
         IOWA
         KANSAS
         KENTUCKY
@@ -29,7 +30,8 @@ class ShippingAddress
         MINNESOTA
         MISSISSIPPI
         MISSOURI
-        MONTANANEBRASKA
+        MONTANA
+        NEBRASKA
         NEVADA
         NEW HAMPSHIRE
         NEW JERSEY
@@ -40,7 +42,8 @@ class ShippingAddress
         OHIO
         OKLAHOMA
         OREGON
-        PENNSYLVANIARHODE ISLAND
+        PENNSYLVANIA
+        RHODE ISLAND
         SOUTH CAROLINA
         SOUTH DAKOTA
         TENNESSEE
@@ -115,7 +118,7 @@ class ShippingAddress
     end
 
     def calc_tax
-        self.tax_required = (state == "TX" || state == "TEXAS") ? true : false
+        self.tax_required = (self.state == "TX" || self.state == "TEXAS") ? 1 : 0
     end
 
 end
