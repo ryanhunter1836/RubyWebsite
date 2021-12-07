@@ -25,7 +25,7 @@ class PaymentsController < ApplicationController
                 existing_user.save
                 # msg = { success: true, user_id: existing_user.id }
                 session[:shipping] = address
-                redirect_to action: "billing", id: new_user.id
+                redirect_to action: "billing", id: existing_user.id
             else
                 msg = { success: false, user: existing_user.errors, address: address.errors }
                 render json: msg, status: 200
@@ -64,8 +64,8 @@ class PaymentsController < ApplicationController
             @subtotal += order.total_price
         end
 
-        @tax = format_price(1.0825 * @subtotal * shipping_address[:tax_required])
-        @subtotal = format_price(@subtotal)
+        @tax = format_price(0.0825 * @subtotal * shipping_address[:tax_required])
+        @subtotal = format_price(@subtotal+@tax)
 
     end
 
